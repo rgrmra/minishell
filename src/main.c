@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/02 22:13:31 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/03 19:40:34 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,28 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "ft_stdio.h"
-#include <stdlib.h>
 #include "prompt.h"
 #include "types.h"
 
 static void	prompt(void)
 {
-	char	*prompt;
+	char	*input;
 
 	while (true)
 	{
-		prompt = readline("minishell $> ");
-		if (!prompt)
+		input = readline("$> ");
+		if (!input)
 			break ;
-		ft_putendl(prompt);
-		add_history(prompt);
-		free(prompt);
+		else
+			add_history(input);
+		ft_putendl(input);
+		free(input);
 	}
+	rl_clear_history();
 }
 
 int	main(void)
 {
 	prompt();
-	rl_clear_history();
 	return (EXIT_SUCCESS);
 }
