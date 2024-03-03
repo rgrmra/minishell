@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/02 19:57:40 by rde-mour          #+#    #+#              #
-#    Updated: 2024/03/02 20:09:57 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/03/02 21:51:49 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,7 @@ CC			:=	cc
 CFLAGS		:=	-Wall -Wextra -Werror
 CPPFLAGS	:=	$(addprefix -I,$(INCS)) -MMD -MP
 LDFLAGS		:=	$(addprefix -L,$(dir $(LIBS)))
-LDLIBS		:=	-lft
+LDLIBS		:=	-lft -lreadline
 
 ifdef WITH_DEBUG
 	TITLE += $(MAGENTA)debug$(RESET)
