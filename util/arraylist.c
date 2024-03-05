@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:43:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/02 19:13:18 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/05 11:08:44 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 #include "ft_stdlib.h"
 #include <stdlib.h>
 
-void	**arradd(t_arraylist **array, void **node)
+void	*arradd(t_arraylist **array, void *node)
 {
 	t_arraylist	*arr;
 
-	if (!array || !(*array)->list || !node || !(*node))
+	if (!array || !(*array)->list || !node)
 		return (NULL);
 	arr = *array;
-	if (arr->index >= arr->size)
+	if (arr->index == arr->size - 1)
 	{
 		arr->list = (void *) ft_mexpand(arr->list,
 				sizeof(void *) * arr->size * 2,
@@ -30,9 +30,10 @@ void	**arradd(t_arraylist **array, void **node)
 			return (NULL);
 		arr->size *= 2;
 	}
-	arr->list[arr->index] = *node;
+	arr->list[arr->index] = node;
 	arr->index++;
-	return (node);
+	arr->list[arr->index] = NULL;
+	return (arr->list[arr->index - 1]);
 }
 
 void	arrdel(t_arraylist **array, void *node, int (*c)(), void (*f)())
@@ -44,15 +45,16 @@ void	arrdel(t_arraylist **array, void *node, int (*c)(), void (*f)())
 		return ;
 	arr = *array;
 	i = 0;
-	while (i < arr->index)
+	while (arr->list[i])
 	{
 		if (c(arr->list[i], node))
 		{
 			if (f)
-				f(&arr->list[i]);
+				f(arr->list[i]);
 			if (arr->index > 1)
 			{
-				arr->list[i] = arr->list[arr->index - 1];
+				ft_memmove(arr->list[i], arr->list[arr->index - 1],
+					sizeof(void *) * (arr->index - i));
 				arr->index--;
 				i--;
 			}
@@ -71,13 +73,13 @@ void	arrclear(t_arraylist **array, void (*f)())
 	while (arr->index--)
 	{
 		if (f)
-			f(&arr->list[arr->index]);
+			f(arr->list[arr->index]);
 	}
 	free(arr->list);
 	free(arr);
 }
 
-void	**arrget(t_arraylist **array, void *node, int (*c)())
+void	*arrget(t_arraylist **array, void *node, int (*c)())
 {
 	t_arraylist	*arr;
 	size_t		i;
@@ -89,7 +91,7 @@ void	**arrget(t_arraylist **array, void *node, int (*c)())
 	while (i < arr->index)
 	{
 		if (c(arr->list[i], node))
-			return (&arr->list[i]);
+			return (arr->list[i]);
 		i++;
 	}
 	return (NULL);
@@ -107,9 +109,5 @@ t_arraylist	*arrnew(void)
 		return (arr);
 	arr->size = ARRAY_SIZE;
 	arr->index = 0;
-	arr->add = &arradd;
-	arr->clear = &arrclear;
-	arr->get = &arrget;
-	arr->del = &arrdel;
 	return (arr);
 }
