@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 17:36:57 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/02 19:32:25 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/05 10:42:34 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "get_env.h"
 #include "ft_stdio.h"
 
-void	envnew(char **env, t_arraylist **var)
+void	envnew(t_arraylist **var, char **env)
 {
 	size_t	size;
 	char	*tmp;
@@ -34,7 +34,7 @@ void	envnew(char **env, t_arraylist **var)
 			return ;
 		content->name = ft_substr(*env, 0, size);
 		content->values = ft_split(tmp, ':');
-		(*var)->add(var, &content);
+		arradd(var, content);
 		env++;
 	}
 }
@@ -49,7 +49,7 @@ void	envadd(t_arraylist **var, char *name, char *values)
 	content->name = ft_strdup(name);
 	content->values = ft_split(values, ':');
 	envdel(var, name);
-	(*var)->add(var, &content);
+	arradd(var, content);
 }
 
 void	envprint(t_arraylist **var)
