@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/02 19:57:40 by rde-mour          #+#    #+#              #
-#    Updated: 2024/03/02 21:51:49 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/03/08 20:02:29 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,6 +50,7 @@ SRCS		:=	\
 	src/main.c \
 	src/get_env.c \
 	src/get_env_utils.c \
+	src/strfmt.c \
 	util/arraylist.c \
 
 SRCS		:=	$(addprefix $(SRC_DIR)/,$(SRCS))
@@ -63,7 +64,7 @@ OBJS		:=	$(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 DEPS		:=	$(OBJS:.o=.d)
 
 CC			:=	cc
-CFLAGS		:=	-Wall -Wextra -Werror
+CFLAGS		:=	-Wall -Wextra -Werror -g3
 CPPFLAGS	:=	$(addprefix -I,$(INCS)) -MMD -MP
 LDFLAGS		:=	$(addprefix -L,$(dir $(LIBS)))
 LDLIBS		:=	-lft -lreadline
