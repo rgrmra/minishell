@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/03 19:40:34 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/05 18:54:02 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	prompt(void)
 		input = readline("$> ");
 		if (!input)
 			break ;
-		else
+		else if (*input)
 			add_history(input);
 		ft_putendl(input);
 		free(input);
