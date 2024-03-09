@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/08 20:56:49 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/09 18:46:36 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,28 @@ static char	*find_quote(char *tmp)
 	return (tmp);
 }
 
+static char	check_quote(char sign, char *input, int i)
+{
+	if (sign && *(input + i) == sign)
+		return ('\0');
+	else if (!sign && (*(input + i) == '\'' || *(input + i) == '\"'))
+		return (*(input + i));
+	return (sign);
+}
+
 static char	*expand_input(char *tmp, char *input)
 {
 	size_t	i;
 	size_t	j;
+	char	sign;
 
 	i = 0;
 	j = 0;
+	sign = '\0';
 	while (*(input + i))
 	{
-		if (ft_strchr("&|<>;", *(input + i)))
+		sign = check_quote(sign, input, i);
+		if (!sign && ft_strchr("|<>", *(input + i)))
 		{
 			if (i && *(input + i - 1) != *(input + i))
 				*(tmp + j++) = ' ';
