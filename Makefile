@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/02 19:57:40 by rde-mour          #+#    #+#              #
-#    Updated: 2024/03/08 20:02:29 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/03/09 16:57:32 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,7 @@ SRCS		:=	\
 	src/get_env.c \
 	src/get_env_utils.c \
 	src/strfmt.c \
+	src/tokenizer.c \
 	util/arraylist.c \
 
 SRCS		:=	$(addprefix $(SRC_DIR)/,$(SRCS))
