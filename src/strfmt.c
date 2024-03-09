@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/08 19:48:07 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/08 20:56:49 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static char	*expand_input(char *tmp, char *input)
 			*(tmp + j++) = *(input + i);
 		i++;
 	}
-	*(tmp + i) = '\0';
+	*(tmp + j) = '\0';
 	free(input);
 	return (tmp);
 }
