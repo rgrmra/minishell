@@ -3,40 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/10 15:26:00 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/12 01:23:03 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#include "ft_linkedlist.h"
 #include "ft_string.h"
 #include "prompt.h"
-#include "types.h"
 #include "tokens.h"
-#include "ft_linkedlist.h"
+#include "types.h"
+#include <readline/history.h>
+#include <readline/readline.h>
+#include <stdio.h>
 
-static void	tokens(char **splitted)
+static void	loop_prompt(void);
+static void	tokens(char **splitted);
+
+int	main(void)
 {
-	t_list	*tokens;
-	t_list	*tmp;
-
-	tokens = tokenizer(splitted);
-	while (tokens)
-	{
-		tmp = tokens;
-		tokens = tokens->next;
-		printf("%d %s\n", ((t_content *) tmp->content)->token,
-			((t_content *) tmp->content)->string);
-		free(tmp->content);
-		free(tmp);
-	}
+	loop_prompt();
+	return (EXIT_SUCCESS);
 }
 
-static void	prompt(void)
+static void	loop_prompt(void)
 {
 	char	*input;
 	char	**splitted;
@@ -51,14 +43,25 @@ static void	prompt(void)
 		splitted = format_input(input);
 		tokens(splitted);
 		if (splitted)
-			ft_memclear((void **) splitted, free);
+			ft_memclear((void **)splitted, free);
 		free(input);
 	}
 	rl_clear_history();
 }
 
-int	main(void)
+static void	tokens(char **splitted)
 {
-	prompt();
-	return (EXIT_SUCCESS);
+	t_list	*tokens;
+	t_list	*tmp;
+
+	tokens = tokenizer(splitted);
+	while (tokens)
+	{
+		tmp = tokens;
+		tokens = tokens->next;
+		printf("%d %s\n", ((t_content *)tmp->content)->token,
+			((t_content *)tmp->content)->literal);
+		free(tmp->content);
+		free(tmp);
+	}
 }

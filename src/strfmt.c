@@ -5,32 +5,32 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/09 18:46:36 by rde-mour         ###   ########.org.br   */
+/*   Created: 2024/03/12 02:27:15 by rde-mour          #+#    #+#             */
+/*   Updated: 2024/03/12 02:27:17 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "ft_ctype.h"
 #include "ft_string.h"
+#include <stdlib.h>
 
 static char	*find_quote(char *tmp)
 {
-	int		i;
+	size_t	i;
 	char	sign;
 
 	i = 0;
-	sign = 0;
-	while (tmp && *(tmp + i))
+	sign = '\0';
+	while (tmp && tmp[i] != '\0')
 	{
-		if (sign && *(tmp + i) == sign)
-			sign = 0;
-		else if (!sign && (*(tmp + i) == '\"' || *(tmp + i) == '\''))
-			sign = *(tmp + i);
-		else if (!sign && ft_isspace(*(tmp + i)))
-			*(tmp + i) = ' ';
-		else if (sign && *(tmp + i) == ' ')
-			*(tmp + i) = 0x1A;
+		if (sign != '\0' && tmp[i] == sign)
+			sign = '\0';
+		else if (sign == '\0' && (tmp[i] == '\"' || tmp[i] == '\''))
+			sign = tmp[i];
+		else if (sign == '\0' && ft_isspace(tmp[i]))
+			tmp[i] = ' ';
+		else if (sign != '\0' && tmp[i] == ' ')
+			tmp[i] = 0x1A;
 		i++;
 	}
 	return (tmp);
@@ -38,10 +38,10 @@ static char	*find_quote(char *tmp)
 
 static char	check_quote(char sign, char *input, int i)
 {
-	if (sign && *(input + i) == sign)
+	if (sign != '\0' && input[i] == sign)
 		return ('\0');
-	else if (!sign && (*(input + i) == '\'' || *(input + i) == '\"'))
-		return (*(input + i));
+	else if (sign == '\0' && (input[i] == '\'' || input[i] == '\"'))
+		return (input[i]);
 	return (sign);
 }
 
@@ -54,22 +54,22 @@ static char	*expand_input(char *tmp, char *input)
 	i = 0;
 	j = 0;
 	sign = '\0';
-	while (*(input + i))
+	while (input[i] != '\0')
 	{
 		sign = check_quote(sign, input, i);
-		if (!sign && ft_strchr("|<>", *(input + i)))
+		if (sign == '\0' && ft_strchr("|<>", input[i]))
 		{
-			if (i && *(input + i - 1) != *(input + i))
-				*(tmp + j++) = ' ';
-			*(tmp + j++) = *(input + i);
-			if (*(input + i + 1) && *(input + i + 1) != *(input + i))
-				*(tmp + j++) = ' ';
+			if (i != 0 && input[i - 1] != input[i])
+				tmp[j++] = ' ';
+			tmp[j++] = input[i];
+			if (input[i + 1] && input[i + 1] != input[i])
+				tmp[j++] = ' ';
 		}
 		else
-			*(tmp + j++) = *(input + i);
+			tmp[j++] = input[i];
 		i++;
 	}
-	*(tmp + j) = '\0';
+	tmp[j] = '\0';
 	free(input);
 	return (tmp);
 }
@@ -81,10 +81,10 @@ static void	strrplc(char *str, char old, char new)
 	if (!str)
 		return ;
 	i = 0;
-	while (*(str + i))
+	while (str[i] != '\0')
 	{
-		if (*(str + i) == old)
-			*(str + i) = new;
+		if (str[i] == old)
+			str[i] = new;
 		i++;
 	}
 }
@@ -96,19 +96,19 @@ char	**format_input(char *input)
 	size_t	size;
 	int		i;
 
-	splitted = 0;
-	if (!input || !(*input))
+	splitted = NULL;
+	if (!input || !*input)
 		return (splitted);
 	size = ft_strlen(input);
 	input = find_quote(ft_strdup(input));
-	tmp = (char *) malloc(size * 2 * sizeof(char));
+	tmp = malloc(size * 2 * sizeof(char));
 	if (!tmp)
-		return (splitted);
+		return (NULL);
 	tmp = expand_input(tmp, input);
 	splitted = ft_split(tmp, ' ');
 	free(tmp);
 	i = 0;
-	while (*(splitted + i))
-		strrplc(*(splitted + i++), 0x1A, ' ');
+	while (splitted[i] != NULL)
+		strrplc(splitted[i++], 0x1A, ' ');
 	return (splitted);
 }

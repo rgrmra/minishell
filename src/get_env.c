@@ -6,16 +6,16 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 17:36:57 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/05 10:42:34 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/12 02:46:51y rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "arraylist.h"
+#include "ft_stdio.h"
 #include "ft_stdlib.h"
 #include "ft_string.h"
-#include "arraylist.h"
 #include "get_env.h"
-#include "ft_stdio.h"
+#include <stdlib.h>
 
 void	envnew(t_arraylist **var, char **env)
 {
@@ -25,11 +25,11 @@ void	envnew(t_arraylist **var, char **env)
 
 	if (!env || !var)
 		return ;
-	while (*env)
+	while (*env != NULL)
 	{
 		tmp = ft_strchr(*env, '=');
 		size = ++tmp - (*env) - 1;
-		content = (t_var *) ft_calloc(1, sizeof(t_var));
+		content = ft_calloc(1, sizeof(t_var));
 		if (!content)
 			return ;
 		content->name = ft_substr(*env, 0, size);
@@ -43,7 +43,7 @@ void	envadd(t_arraylist **var, char *name, char *values)
 {
 	t_var	*content;
 
-	content = (t_var *) ft_calloc(1, sizeof(t_var));
+	content = ft_calloc(1, sizeof(t_var));
 	if (!content)
 		return ;
 	content->name = ft_strdup(name);
@@ -66,16 +66,16 @@ void	envprint(t_arraylist **var)
 			break ;
 		if (content->name)
 		{
-			ft_putstr_fd(content->name, STDOUT_FILENO);
-			ft_putstr_fd("=", STDOUT_FILENO);
+			ft_putstr(content->name);
+			ft_putchar('=');
 		}
 		j = 0;
 		while (content->values[j])
 		{
-			ft_putstr_fd(content->values[j++], STDOUT_FILENO);
+			ft_putstr(content->values[j++]);
 			if (content->values[j])
-				ft_putstr_fd(":", STDOUT_FILENO);
+				ft_putchar(':');
 		}
-		ft_putstr_fd("\n", STDOUT_FILENO);
+		ft_putchar('\n');
 	}
 }

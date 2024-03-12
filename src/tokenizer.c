@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/09 21:46:50 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/12 02:49:33 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ static void	check_token(t_list **tokens, char *string)
 
 	if (!string)
 		return ;
-	content = (t_content *) malloc(1 * sizeof(t_content));
+	content = malloc(1 * sizeof(t_content));
 	if (!content)
 		return ;
-	content->string = string;
+	content->literal = string;
 	last_token = 0;
 	if (*tokens)
 	{
@@ -63,19 +63,19 @@ static void	check_token(t_list **tokens, char *string)
 		last_token = last_content->token;
 	}
 	content->token = get_token(string, last_token);
-	ft_lstaddcontent_back(tokens, (void *) content);
+	ft_lstaddcontent_back(tokens, (void *)content);
 }
 
 t_list	*tokenizer(char **splitted)
 {
 	t_list	*tokens;
-	int		i;
+	size_t	i;
 
 	if (!splitted)
 		return (NULL);
 	i = 0;
 	tokens = NULL;
-	while (*(splitted + i))
-		check_token(&tokens, *(splitted + i++));
+	while (splitted[i] != NULL)
+		check_token(&tokens, splitted[i++]);
 	return (tokens);
 }

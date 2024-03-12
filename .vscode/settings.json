@@ -1,4 +1,11 @@
 {
-  "42header.email": "rde-mour@student.42.fr",
-  "42header.username": "rde-mour"
+  "42header.email": "rde-mour@student.42sp.org.br",
+  "42header.username": "rde-mour",
+  "files.associations": {
+    "ft_string.h": "c",
+    "history.h": "c",
+    "stdlib.h": "c",
+    "ft_linkedlist.h": "c",
+    "readline.h": "c"
+  }
 }
