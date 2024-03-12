@@ -2,3 +2,5 @@
 include
 -I
 lib/libft/include
+-I
+lib/ft_printf/includes

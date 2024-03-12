@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/02 19:57:40 by rde-mour          #+#    #+#              #
-#    Updated: 2024/03/09 16:57:32 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/03/12 11:39:41 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,10 +36,12 @@ MAKEFLAGS	+=	--silent --no-print-directory
 # **************************************************************************** #
 LIBS		:=	\
 	lib/libft/libft.a \
+	lib/ft_printf/printf.a \
 
 INCS		:=	\
 	include \
 	lib/libft/include \
+	lib/ft_printf/includes \
 
 # **************************************************************************** #
 #    Sources                                                                   #
@@ -52,6 +54,7 @@ SRCS		:=	\
 	src/get_env_utils.c \
 	src/strfmt.c \
 	src/tokenizer.c \
+	src/expansions.c \
 	util/arraylist.c \
 
 SRCS		:=	$(addprefix $(SRC_DIR)/,$(SRCS))
@@ -68,7 +71,7 @@ CC			:=	cc
 CFLAGS		:=	-Wall -Wextra -Werror -g3
 CPPFLAGS	:=	$(addprefix -I,$(INCS)) -MMD -MP
 LDFLAGS		:=	$(addprefix -L,$(dir $(LIBS)))
-LDLIBS		:=	-lft -lreadline
+LDLIBS		:=	-lft -lreadline ./lib/ft_printf/printf.a
 
 ifdef WITH_DEBUG
 	TITLE += $(MAGENTA)debug$(RESET)
