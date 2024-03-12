@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/02 19:57:40 by rde-mour          #+#    #+#              #
-#    Updated: 2024/03/12 11:39:41 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/03/12 14:48:22 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,12 +36,10 @@ MAKEFLAGS	+=	--silent --no-print-directory
 # **************************************************************************** #
 LIBS		:=	\
 	lib/libft/libft.a \
-	lib/ft_printf/printf.a \
 
 INCS		:=	\
 	include \
 	lib/libft/include \
-	lib/ft_printf/includes \
 
 # **************************************************************************** #
 #    Sources                                                                   #
@@ -56,6 +54,17 @@ SRCS		:=	\
 	src/tokenizer.c \
 	src/expansions.c \
 	util/arraylist.c \
+	util/ft_printf/ft_build_bonus.c \
+	util/ft_printf/ft_build_character_bonus.c \
+	util/ft_printf/ft_build_config_bonus.c \
+	util/ft_printf/ft_build_hexadecimal_bonus.c \
+	util/ft_printf/ft_build_number_bonus.c \
+	util/ft_printf/ft_build_pointer_bonus.c \
+	util/ft_printf/ft_build_string_bonus.c \
+	util/ft_printf/ft_build_unsigned_bonus.c \
+	util/ft_printf/ft_find_characters_bonus.c \
+	util/ft_printf/ft_printf_bonus.c \
+	util/ft_printf/ft_printf_utils_bonus.c \
 
 SRCS		:=	$(addprefix $(SRC_DIR)/,$(SRCS))
 
@@ -71,7 +80,7 @@ CC			:=	cc
 CFLAGS		:=	-Wall -Wextra -Werror -g3
 CPPFLAGS	:=	$(addprefix -I,$(INCS)) -MMD -MP
 LDFLAGS		:=	$(addprefix -L,$(dir $(LIBS)))
-LDLIBS		:=	-lft -lreadline ./lib/ft_printf/printf.a
+LDLIBS		:=	-lft -lreadline
 
 ifdef WITH_DEBUG
 	TITLE += $(MAGENTA)debug$(RESET)
