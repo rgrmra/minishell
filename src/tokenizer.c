@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/09 21:46:50 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/12 20:54:30 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,13 @@ static int	get_token(char *string, int last_token)
 		return (APPEND);
 	else if (!ft_strncmp(string, ">", 2))
 		return (RIGHT_REDIRECT);
-	else if (*string == '\"' || *(string + ft_strlen(string) - 1) == '\"')
-		return (DOUBLE_QUOTE);
-	else if (*string == '\'' || *(string + ft_strlen(string) - 1) == '\'')
-		return (QUOTE);
 	else if (last_token == HEREDOC)
 		return (HEREDOC_FILE);
 	else if (last_token == HEREDOC_FILE)
 		return (LIMITER);
 	else if (ft_strchr("|<>", *string))
 		return (INVALID);
-	else if (last_token >= 6 && last_token <= 9)
+	else if (last_token >= 4 && last_token <= 7)
 		return (PUT_FILE);
 	else if (last_token == COMMAND || last_token == FLAG)
 		return (FLAG);

@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/12 14:20:51 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/12 20:55:47 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	expansions(t_env *env, t_list **tokens)
 	while (tmp)
 	{
 		content = (t_content *) tmp->content;
-		while (content->token != QUOTE && ft_strchr(content->string, '$'))
+		while (*(content->string) != '\'' && ft_strchr(content->string, '$'))
 		{
 			string = check_expansion(env, content->string);
 			free(content->string);

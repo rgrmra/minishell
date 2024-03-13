@@ -6,35 +6,14 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/09 18:46:36 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/12 20:44:37 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include "ft_ctype.h"
 #include "ft_string.h"
-
-static char	*find_quote(char *tmp)
-{
-	int		i;
-	char	sign;
-
-	i = 0;
-	sign = 0;
-	while (tmp && *(tmp + i))
-	{
-		if (sign && *(tmp + i) == sign)
-			sign = 0;
-		else if (!sign && (*(tmp + i) == '\"' || *(tmp + i) == '\''))
-			sign = *(tmp + i);
-		else if (!sign && ft_isspace(*(tmp + i)))
-			*(tmp + i) = ' ';
-		else if (sign && *(tmp + i) == ' ')
-			*(tmp + i) = 0x1A;
-		i++;
-	}
-	return (tmp);
-}
 
 static char	check_quote(char sign, char *input, int i)
 {
@@ -43,6 +22,29 @@ static char	check_quote(char sign, char *input, int i)
 	else if (!sign && (*(input + i) == '\'' || *(input + i) == '\"'))
 		return (*(input + i));
 	return (sign);
+}
+
+static char	*find_quote(char *tmp)
+{
+	int		i;
+	char	sign;
+
+	i = 0;
+	sign = '\0';
+	while (tmp && *(tmp + i))
+	{
+		sign = check_quote(sign, tmp, i);
+		if (!sign && ft_isspace(*(tmp + i)))
+			*(tmp + i) = ' ';
+		else if (sign && *(tmp + i) == ' ')
+			*(tmp + i) = 0x1A;
+		i++;
+	}
+	if (!sign)
+		return (tmp);
+	free(tmp);
+	printf("%s %c\n", "unclosed quote parser error", sign);
+	return (NULL);
 }
 
 static char	*expand_input(char *tmp, char *input)
@@ -96,11 +98,13 @@ char	**format_input(char *input)
 	size_t	size;
 	int		i;
 
-	splitted = 0;
+	splitted = NULL;
 	if (!input || !(*input))
 		return (splitted);
 	size = ft_strlen(input);
 	input = find_quote(ft_strdup(input));
+	if (!input)
+		return (splitted);
 	tmp = (char *) malloc(size * 2 * sizeof(char));
 	if (!tmp)
 		return (splitted);
