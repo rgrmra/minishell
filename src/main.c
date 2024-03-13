@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/12 14:20:36 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/13 09:56:44 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static void	tokens(t_env *env, char **splitted)
 	t_list	*tmp;
 
 	tokens = tokenizer(splitted);
-	expansions(env, &tokens);
+	var_expansions(env, &tokens);
+	command_expansions(env, &tokens);
 	while (tokens)
 	{
 		tmp = tokens;
