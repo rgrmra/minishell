@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:43:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/05 11:08:44 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/13 09:16:08 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,34 +36,36 @@ void	*arradd(t_arraylist **array, void *node)
 	return (arr->list[arr->index - 1]);
 }
 
-void	arrdel(t_arraylist **array, void *node, int (*c)(), void (*f)())
+void	arrdel(t_arraylist **array, void *node, int (*compare)(void *, void *),
+		void (*delete)(void *))
 {
 	t_arraylist	*arr;
 	size_t		i;
+	size_t		j;
 
-	if (!array || !(*array)->list || !node || !c)
+	if (!array || !(*array)->list || !node || !compare)
 		return ;
 	arr = *array;
 	i = 0;
 	while (arr->list[i])
 	{
-		if (c(arr->list[i], node))
+		if (compare(arr->list[i], node))
 		{
-			if (f)
-				f(arr->list[i]);
+			if (delete)
+				delete(arr->list[i]);
 			if (arr->index > 1)
 			{
-				ft_memmove(arr->list[i], arr->list[arr->index - 1],
-					sizeof(void *) * (arr->index - i));
-				arr->index--;
-				i--;
+				j = --i;
+				while (j++ < arr->index)
+					arr->list[j] = arr->list[j + 1];
 			}
+			arr->index--;
 		}
 		i++;
 	}
 }
 
-void	arrclear(t_arraylist **array, void (*f)())
+void	arrclear(t_arraylist **array, void (*delete)(void *))
 {
 	t_arraylist	*arr;
 
@@ -72,25 +74,25 @@ void	arrclear(t_arraylist **array, void (*f)())
 	arr = *array;
 	while (arr->index--)
 	{
-		if (f)
-			f(arr->list[arr->index]);
+		if (delete)
+			delete(arr->list[arr->index]);
 	}
 	free(arr->list);
 	free(arr);
 }
 
-void	*arrget(t_arraylist **array, void *node, int (*c)())
+void	*arrget(t_arraylist **array, void *node, int (*compare)(void *, void *))
 {
 	t_arraylist	*arr;
 	size_t		i;
 
-	if (!array || !(*array)->list || !node | !c)
+	if (!array || !(*array)->list || !node | !compare)
 		return (NULL);
 	arr = *array;
 	i = 0;
 	while (i < arr->index)
 	{
-		if (c(arr->list[i], node))
+		if (compare(arr->list[i], node))
 			return (arr->list[i]);
 		i++;
 	}
