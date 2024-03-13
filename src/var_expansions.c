@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansions.c                                       :+:      :+:    :+:   */
+/*   var_expansions.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/13 09:55:01 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/13 13:38:19 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,29 @@
 #include "get_env.h"
 #include "tokens.h"
 #include "ft_printf_bonus.h"
+
+static void	remove_quotes(char *word)
+{
+	size_t	i;
+	size_t	size;
+	char	sign;
+
+	i = 0;
+	sign = word[i];
+	if (word && sign && (word[i] == '\"' || word[i] == '\''))
+	{
+		size = ft_strlen(word);
+		while (word[i] && ft_strchr(word, sign))
+		{
+			if (word[i] && word[i] == sign)
+			{
+				ft_strlcpy(&word[i], &word[i + 1], size--);
+				i--;
+			}
+			i++;
+		}
+	}
+}
 
 static char	*expand(char	*begin, char *var, char *end)
 {
@@ -105,6 +128,7 @@ void	var_expansions(t_env *env, t_list **tokens)
 			free(content->string);
 			content->string = string;
 		}
+		remove_quotes(content->string);
 		tmp = tmp->next;
 	}
 }
