@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/13 13:38:19 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/14 09:18:53 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,31 +16,37 @@
 #include "get_env.h"
 #include "tokens.h"
 #include "ft_printf_bonus.h"
+#include <stdlib.h>
 
-static void	remove_quotes(char *word)
+static void	remove_quotes(char *word, size_t size)
 {
-	size_t	i;
-	size_t	size;
+	int		i;
+	int		quote;
 	char	sign;
 
 	i = 0;
-	sign = word[i];
-	if (word && sign && (word[i] == '\"' || word[i] == '\''))
+	quote = 0;
+	sign = '\0';
+	while (word && word[i])
 	{
-		size = ft_strlen(word);
-		while (word[i] && ft_strchr(word, sign))
+		if (sign != '\0' && quote == 2)
 		{
-			if (word[i] && word[i] == sign)
-			{
-				ft_strlcpy(&word[i], &word[i + 1], size--);
-				i--;
-			}
-			i++;
+			quote = 0;
+			sign = '\0';
 		}
+		if (sign == '\0' && quote == 0 && ft_strchr("\'\"", word[i]))
+			sign = word[i];
+		if (sign != '\0' && quote < 2 && word[i] == sign)
+		{
+			quote++;
+			ft_strlcpy(&word[i], &word[i + 1], size--);
+			i--;
+		}
+		i++;
 	}
 }
 
-static char	*expand(char	*begin, char *var, char *end)
+static char	*expand(char *begin, char *var, char *end)
 {
 	char	*tmp;
 	char	*string;
@@ -128,7 +134,7 @@ void	var_expansions(t_env *env, t_list **tokens)
 			free(content->string);
 			content->string = string;
 		}
-		remove_quotes(content->string);
+		remove_quotes(content->string, ft_strlen(content->string));
 		tmp = tmp->next;
 	}
 }
