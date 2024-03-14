@@ -6,10 +6,11 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/14 09:18:53 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/14 11:37:02 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_ctype.h"
 #include "ft_linkedlist.h"
 #include "ft_string.h"
 #include "expansions.h"
@@ -100,7 +101,7 @@ static char	*check_expansion(t_env *env, char *word)
 	while (!ft_strchr("$\0", *(word + start)))
 		start++;
 	end = ++start;
-	while (!ft_strchr(" $\t\"\'\0", *(word + end)))
+	while (ft_isalnum(*(word + end)) || *(word + end) == '_')
 		end++;
 	tmp = ft_substr(word, start, end - start);
 	value = var_to_string(envget(&(env->envp), tmp));
@@ -118,23 +119,29 @@ static char	*check_expansion(t_env *env, char *word)
 
 void	var_expansions(t_env *env, t_list **tokens)
 {
+	size_t		i;
 	char		*string;
 	t_list		*tmp;
-	t_content	*content;
 
 	if (!env || !tokens)
 		return ;
 	tmp = *tokens;
 	while (tmp)
 	{
-		content = (t_content *) tmp->content;
-		while (*(content->string) != '\'' && ft_strchr(content->string, '$'))
+		i = 0;
+		string = ((t_content *) tmp->content)->string;
+		while (string[0] && string[i] != '\0')
 		{
-			string = check_expansion(env, content->string);
-			free(content->string);
-			content->string = string;
+			if (string[i] == '$' && (ft_isalpha(string[i + 1])
+					|| string[i + 1] == '_'))
+			{
+				string = check_expansion(env, string);
+				free(((t_content *) tmp->content)->string);
+				((t_content *) tmp->content)->string = string;
+			}
+			i++;
 		}
-		remove_quotes(content->string, ft_strlen(content->string));
+		remove_quotes(string, ft_strlen(string));
 		tmp = tmp->next;
 	}
 }
