@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/17 21:14:12 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/18 07:28:12 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ static int	get_token(char *string, int last_token)
 	else if (ft_strchr("()|<>&", *string))
 		return (INVALID);
 	else if (last_token == HEREDOC)
-		return (HEREDOC_FILE);
-	else if (last_token == HEREDOC_FILE)
 		return (LIMITER);
 	else if (last_token >= 4 && last_token <= 7)
 		return (PUT_FILE);
