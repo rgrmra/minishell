@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/18 10:55:23 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/18 11:42:33 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ static int	get_token(char *string, int last_token)
 		return (SUB_OUT);
 	else if (ft_strchr("()|<>&", *string))
 		return (INVALID);
-	else if (last_token == HEREDOC)
+	else if (last_token & HEREDOC)
 		return (LIMITER);
-	else if (last_token >= 8 && last_token <= 14)
+	else if (last_token & (HEREDOC | LEFT_REDIRECT | APPEND | RIGHT_REDIRECT))
 		return (PUT_FILE);
-	else if (last_token == COMMAND || last_token == FLAG)
+	else if (last_token & (COMMAND | FLAG))
 		return (FLAG);
 	return (COMMAND);
 }
@@ -67,14 +67,14 @@ static int	check_token(t_list **tokens, char *string)
 	}
 	content->token = get_token(string, last_token);
 	ft_lstaddcontent_front(tokens, (void *) content);
-	if (content->token == SUB_IN)
+	if (content->token & SUB_IN)
 		return (1);
-	else if (content->token == SUB_OUT)
+	else if (content->token & SUB_OUT)
 		return (-1);
 	return (0);
 }
 
-static void	token_clear(void *content)
+void	token_clear(void *content)
 {
 	free(((t_content *) content)->string);
 	free(content);

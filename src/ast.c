@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/18 10:56:11 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/18 11:51:36 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static t_ast	*ast_build(t_list **tokens)
 	free(tmp);
 	if (!ast)
 		return (NULL);
-	if (ast->content->token == SUB_IN || ast->content->token == AND_IF || ast->content->token == OR_IF)
+	if (ast->content->token  & (SUB_IN | AND_IF | OR_IF))
 		ast->right = ast_build(tokens);
 	ast->left = ast_build(tokens);
 	return (ast);
@@ -69,8 +69,21 @@ void	ast_print(t_ast **ast)
 
 t_ast	*ast_new(t_list	**tokens)
 {
+	t_list	*tmp;
 	t_ast	*ast;
 
+	tmp = *tokens;
+	while (tmp)
+	{
+		if (!((t_content *) tmp->content)->token)
+		{
+			printf("syntax error near unexpected token %s\n",
+				((t_content *) tmp->content)->string);
+			ft_lstclear(tokens, &token_clear);
+			return (NULL);
+		}
+		tmp = tmp->next;
+	}
 	if (!tokens)
 		return (NULL);
 	ast = ast_build(tokens);
