@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/02 19:57:40 by rde-mour          #+#    #+#              #
-#    Updated: 2024/03/13 09:57:29 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/03/18 10:12:46 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,6 +54,7 @@ SRCS		:=	\
 	src/tokenizer.c \
 	src/var_expansions.c \
 	src/command_expansions.c \
+	src/ast.c \
 	util/arraylist.c \
 	util/ft_printf/ft_build_bonus.c \
 	util/ft_printf/ft_build_character_bonus.c \
