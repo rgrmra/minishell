@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/13 10:44:56 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/17 21:22:20 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 
 static char	check_quote(char sign, char *input, int i)
 {
-	if (sign && *(input + i) == sign)
+	if (sign && (*(input + i) == sign))
 		return ('\0');
-	else if (!sign && (*(input + i) == '\'' || *(input + i) == '\"'))
+	else if (!sign && ft_strchr("\'\"", *(input + i)))
 		return (*(input + i));
 	return (sign);
 }
@@ -56,16 +56,16 @@ static char	*expand_input(char *tmp, char *input)
 	i = 0;
 	j = 0;
 	sign = '\0';
-	while (*(input + i))
+	while (input[i])
 	{
 		sign = check_quote(sign, input, i);
-		if (!sign && ft_strchr("|<>&", *(input + i)))
+		if (!sign && ft_strchr("()|<>&", input[i]))
 		{
-			if (i && *(input + i - 1) != *(input + i))
-				*(tmp + j++) = ' ';
-			*(tmp + j++) = *(input + i);
-			if (*(input + i + 1) && *(input + i + 1) != *(input + i))
-				*(tmp + j++) = ' ';
+			if (i && (ft_strchr("()", input[i]) || input[i - 1] != input[i]))
+				tmp[j++] = ' ';
+			tmp[j++] = input[i];
+			if (ft_strchr("()", input[i]) || input[i + 1] != input[i])
+				tmp[j++] = ' ';
 		}
 		else
 			*(tmp + j++) = *(input + i);

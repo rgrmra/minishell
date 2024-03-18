@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:22:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/12 20:54:40 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/17 16:23:14 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,11 @@ enum	e_token
 	APPEND,
 	PUT_FILE,
 	HEREDOC_FILE,
-	LIMITER
+	LIMITER,
+	AND_IF,
+	OR_IF,
+	SUB_IN,
+	SUB_OUT
 };
 
 t_list	*tokenizer(char **splitted);
