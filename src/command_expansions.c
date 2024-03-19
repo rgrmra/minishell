@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 09:57:54 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/13 11:12:48 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/18 11:13:49 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	command_expansions(t_env *env, t_list **tokens)
 	{
 		string = NULL;
 		content = (t_content *) tmp->content;
-		if (!ft_strchr("./", *(content->string)) && content->token == COMMAND)
+		if (!ft_strchr("./", *(content->string)) && content->token & COMMAND)
 			string = check_expansion(env, content->string);
 		if (string)
 		{

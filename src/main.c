@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/18 07:32:40 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/19 09:50:26 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,18 @@
 #include "ft_linkedlist.h"
 #include "expansions.h"
 #include "get_env.h"
+#include "ast.h"
 
 static void	tokens(t_env *env, char **splitted)
 {
 	t_list	*tokens;
-	t_list	*tmp;
+	t_ast	*ast;
 
 	tokens = tokenizer(splitted);
 	var_expansions(env, &tokens);
 	command_expansions(env, &tokens);
-	while (tokens)
-	{
-		tmp = tokens;
-		tokens = tokens->next;
-		printf("%d %s\n", ((t_content *) tmp->content)->token,
-			((t_content *) tmp->content)->string);
-		free(((t_content *) tmp->content)->string);
-		free(tmp->content);
-		free(tmp);
-	}
+	ast = ast_new(&tokens);
+	ast_print(&ast);
 }
 
 static void	prompt(t_env *env)
