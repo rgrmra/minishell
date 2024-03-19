@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/17 21:22:20 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/19 11:46:40 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ char	**format_input(char *input)
 	splitted = NULL;
 	if (!input || !(*input))
 		return (splitted);
-	size = ft_strlen(input);
+	size = ft_strlen(input) + 1;
 	input = find_quote(ft_strdup(input));
 	if (!input)
 		return (splitted);
