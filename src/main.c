@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/18 10:22:21 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/19 09:50:26 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 static void	tokens(t_env *env, char **splitted)
 {
 	t_list	*tokens;
-//	t_list	*tmp;
 	t_ast	*ast;
 
 	tokens = tokenizer(splitted);
@@ -32,16 +31,6 @@ static void	tokens(t_env *env, char **splitted)
 	command_expansions(env, &tokens);
 	ast = ast_new(&tokens);
 	ast_print(&ast);
-//	while (tokens)
-//	{
-//		tmp = tokens;
-//		tokens = tokens->next;
-//		printf("%d %s\n", ((t_content *) tmp->content)->token,
-//			((t_content *) tmp->content)->string);
-//		free(((t_content *) tmp->content)->string);
-//		free(tmp->content);
-//		free(tmp);
-//	}
 }
 
 static void	prompt(t_env *env)

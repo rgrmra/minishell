@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/18 11:51:36 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/19 09:49:57 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static t_ast	*ast_node(t_list *tokens)
 
 	if (!tokens)
 		return (NULL);
-	ast	= (t_ast *) malloc(1 * sizeof(t_ast));
+	ast = (t_ast *) malloc(1 * sizeof(t_ast));
 	if (!ast)
 		return (NULL);
 	ast->left = NULL;
@@ -29,25 +29,49 @@ static t_ast	*ast_node(t_list *tokens)
 	return (ast);
 }
 
-static t_ast	*ast_build(t_list **tokens)
+static t_ast	*ast_build_command(t_list **tokens, t_ast *prev)
 {
 	t_list	*tmp;
 	t_ast	*ast;
 
-	if (!tokens)
-		return (NULL);
-	if (!(*tokens))
-		return (NULL);
+	if (!tokens || !(*tokens))
+		return (prev);
+	if (prev && prev->content && prev->content->token & (AND_IF | OR_IF))
+		return (prev);
 	tmp = *tokens;
 	ast = ast_node(*tokens);
 	*tokens = (*tokens)->next;
 	free(tmp);
 	if (!ast)
-		return (NULL);
-	if (ast->content->token  & (SUB_IN | AND_IF | OR_IF))
-		ast->right = ast_build(tokens);
-	ast->left = ast_build(tokens);
-	return (ast);
+		return (prev);
+	ast->left = prev;
+	return (ast_build_command(tokens, ast));
+}
+
+static void	ast_build(t_list **tokens, t_ast **ast)
+{
+	t_ast	*tmp;
+
+	if (!tokens || !(*tokens))
+		return ;
+	tmp = ast_build_command(tokens, NULL);
+	if (!tmp)
+		return ;
+	if (*ast && (*ast)->content && (*ast)->content->token & (AND_IF | OR_IF)
+		&& tmp->content->token & (AND_IF | OR_IF))
+	{
+		if (!(*ast)->right)
+		{
+			(*ast)->right = tmp->left;
+			tmp->left = (*ast);
+			(*ast) = tmp;
+		}
+	}
+	else if (*ast)
+		(*ast)->right = tmp;
+	else if (!(*ast))
+		*ast = tmp;
+	ast_build(tokens, ast);
 }
 
 void	ast_print(t_ast **ast)
@@ -72,6 +96,8 @@ t_ast	*ast_new(t_list	**tokens)
 	t_list	*tmp;
 	t_ast	*ast;
 
+	if (!tokens)
+		return (NULL);
 	tmp = *tokens;
 	while (tmp)
 	{
@@ -84,8 +110,7 @@ t_ast	*ast_new(t_list	**tokens)
 		}
 		tmp = tmp->next;
 	}
-	if (!tokens)
-		return (NULL);
-	ast = ast_build(tokens);
+	ast = NULL;
+	ast_build(tokens, &ast);
 	return (ast);
 }

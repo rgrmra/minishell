@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/18 11:42:33 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/19 09:48:47 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,11 @@ static int	check_token(t_list **tokens, char *string)
 	last_token = 0;
 	if (*tokens)
 	{
-		last_content = (*tokens)->content;
+		last_content = ft_lstlast(*tokens)->content;
 		last_token = last_content->token;
 	}
 	content->token = get_token(string, last_token);
-	ft_lstaddcontent_front(tokens, (void *) content);
+	ft_lstaddcontent_back(tokens, (void *) content);
 	if (content->token & SUB_IN)
 		return (1);
 	else if (content->token & SUB_OUT)
