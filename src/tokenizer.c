@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/19 09:48:47 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/20 08:59:01 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,8 @@ t_list	*tokenizer(char **splitted)
 		return (tokens);
 	ft_lstclear(&tokens, &token_clear);
 	if (parentesis > 0)
-		printf("%s %c\n", "unclosed parentesis parser error", ')');
-	if (parentesis < 0)
 		printf("%s %c\n", "unclosed parentesis parser error", '(');
-	return (0);
+	if (parentesis < 0)
+		printf("%s %c\n", "unclosed parentesis parser error", ')');
+	return (NULL);
 }

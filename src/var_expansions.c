@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/14 11:37:02 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/20 11:39:35 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,17 @@ static char	*expand(char *begin, char *var, char *end)
 	char	*tmp;
 	char	*string;
 
-	string = ft_strjoin(begin, var);
-	free(begin);
+	if (begin && var)
+		string = ft_strjoin(begin, var);
+	if (begin)
+		free(begin);
 	tmp = string;
-	string = ft_strjoin(tmp, end);
-	free(end);
-	free(tmp);
+	if (tmp && end)
+		string = ft_strjoin(tmp, end);
+	if (end)
+		free(end);
+	if (tmp)
+		free(tmp);
 	return (string);
 }
 
@@ -105,7 +110,7 @@ static char	*check_expansion(t_env *env, char *word)
 		end++;
 	tmp = ft_substr(word, start, end - start);
 	value = var_to_string(envget(&(env->envp), tmp));
-	if (!(*value))
+	if (!value || !(*value))
 	{
 		free(value);
 		value = var_to_string(envget(&(env->exports), tmp));
@@ -130,16 +135,18 @@ void	var_expansions(t_env *env, t_list **tokens)
 	{
 		i = 0;
 		string = ((t_content *) tmp->content)->string;
-		while (string[0] && string[i] != '\0')
+		while (string && string[0] && string[i] != '\0')
 		{
 			if (string[i] == '$' && (ft_isalpha(string[i + 1])
-					|| string[i + 1] == '_'))
+						|| string[i + 1] == '_'))
 			{
 				string = check_expansion(env, string);
 				free(((t_content *) tmp->content)->string);
 				((t_content *) tmp->content)->string = string;
+				i = 0;
 			}
-			i++;
+			else
+				i++;
 		}
 		remove_quotes(string, ft_strlen(string));
 		tmp = tmp->next;
