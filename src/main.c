@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/19 09:50:26 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/20 09:22:58 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include "expansions.h"
 #include "get_env.h"
 #include "ast.h"
+#include "parser.h"
 
 static void	tokens(t_env *env, char **splitted)
 {
@@ -27,6 +28,7 @@ static void	tokens(t_env *env, char **splitted)
 	t_ast	*ast;
 
 	tokens = tokenizer(splitted);
+	parser(&tokens);
 	var_expansions(env, &tokens);
 	command_expansions(env, &tokens);
 	ast = ast_new(&tokens);
@@ -62,7 +64,7 @@ int	main(int argc, char **argv, char **envp)
 		return (EXIT_FAILURE);
 	env.envp = arrnew();
 	env.exports = arrnew();
-	envadd(&env.envp, "VAR", "Roger de Moura");
+	envadd(&env.envp, "VAR", "o oi");
 	envnew(&env.envp, envp);
 	prompt(&env);
 	envclear(&env.envp);

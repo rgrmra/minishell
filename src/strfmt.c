@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/19 11:46:40 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/20 08:57:54 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static char	*expand_input(char *tmp, char *input)
 	while (input[i])
 	{
 		sign = check_quote(sign, input, i);
-		if (!sign && ft_strchr("()|<>&", input[i]))
+		if (!sign && ft_strchr("()|<>&", input[i]) && input[i] != ' ')
 		{
 			if (i && (ft_strchr("()", input[i]) || input[i - 1] != input[i]))
 				tmp[j++] = ' ';
@@ -105,7 +105,7 @@ char	**format_input(char *input)
 	input = find_quote(ft_strdup(input));
 	if (!input)
 		return (splitted);
-	tmp = (char *) malloc(size * 2 * sizeof(char));
+	tmp = (char *) malloc(size * 3 * sizeof(char));
 	if (!tmp)
 		return (splitted);
 	tmp = expand_input(tmp, input);
