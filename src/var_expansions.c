@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/20 11:39:35 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/20 18:16:51 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ static char	*expand(char *begin, char *var, char *end)
 	char	*tmp;
 	char	*string;
 
+	string = NULL;
 	if (begin && var)
 		string = ft_strjoin(begin, var);
 	if (begin)
