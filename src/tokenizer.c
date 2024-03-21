@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/21 10:58:52 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/21 17:40:49 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static int	get_token(char *string, int last_token)
+static int	get_token(char *string, int last_token, int *parentesis)
 {
 	if (!ft_strncmp(string, "|", 2))
 		return (PIPE);
@@ -33,9 +33,9 @@ static int	get_token(char *string, int last_token)
 		return (APPEND);
 	else if (!ft_strncmp(string, ">", 2))
 		return (RIGHT_REDIRECT);
-	else if (!ft_strncmp(string, "(", 2))
+	else if (!ft_strncmp(string, "(", 2) && *parentesis % 2 == 0)
 		return (SUB_IN);
-	else if (!ft_strncmp(string, ")", 2))
+	else if (!ft_strncmp(string, ")", 2) && *parentesis % 2 == 1)
 		return (SUB_OUT);
 	else if (ft_strchr("()|<>&", *string))
 		return (INVALID);
@@ -48,7 +48,7 @@ static int	get_token(char *string, int last_token)
 	return (COMMAND);
 }
 
-static int	check_token(t_list **tokens, char *string)
+static int	check_token(t_list **tokens, char *string, int *parentesis)
 {
 	t_content	*last_content;
 	t_content	*content;
@@ -66,7 +66,7 @@ static int	check_token(t_list **tokens, char *string)
 		last_content = ft_lstlast(*tokens)->content;
 		last_token = last_content->token;
 	}
-	content->token = get_token(string, last_token);
+	content->token = get_token(string, last_token, parentesis);
 	ft_lstaddcontent_back(tokens, (void *) content);
 	if (content->token & SUB_IN)
 		return (1);
@@ -93,7 +93,7 @@ t_list	*tokenizer(char **splitted)
 	parentesis = 0;
 	tokens = NULL;
 	while (*(splitted + i))
-		parentesis += check_token(&tokens, *(splitted + i++));
+		parentesis += check_token(&tokens, *(splitted + i++), &parentesis);
 	if (parentesis == 0)
 		return (append_flags(tokens));
 	ft_lstclear(&tokens, &token_clear);
