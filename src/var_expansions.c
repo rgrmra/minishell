@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/20 18:16:51 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/21 08:11:38 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "expansions.h"
 #include "get_env.h"
 #include "tokens.h"
+#include "strjoinsep.h"
 #include "ft_printf_bonus.h"
 #include <stdlib.h>
 
@@ -83,7 +84,7 @@ static char	*var_to_string(t_var *var)
 		if (!tmp)
 			tmp = ft_strdup(*(splitted)++);
 		else
-			ft_sprintf(&tmp2, "%s:%s", tmp, *(splitted)++);
+			tmp2 = strjoinsep(tmp, *(splitted)++, ':');
 		if (tmp2)
 		{
 			free(tmp);
