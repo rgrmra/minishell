@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/21 08:11:38 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/21 09:33:33 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ void	var_expansions(t_env *env, t_list **tokens)
 		while (string && string[0] && string[i] != '\0')
 		{
 			if (string[i] == '$' && (ft_isalpha(string[i + 1])
-						|| string[i + 1] == '_'))
+					|| string[i + 1] == '_'))
 			{
 				string = check_expansion(env, string);
 				free(((t_content *) tmp->content)->string);

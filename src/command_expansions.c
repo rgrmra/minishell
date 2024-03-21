@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 09:57:54 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/21 08:08:10 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/21 09:33:48 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ static char	*check_expansion(t_env *env, char *word)
 	while (paths[i])
 	{
 		path = strjoinsep(paths[i], word, '/');
-		//ft_sprintf(&path, "%s/%s", paths[i], word);
 		if (access(path, F_OK | X_OK) == 0)
 			return (path);
 		free(path);
