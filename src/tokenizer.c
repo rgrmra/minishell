@@ -6,13 +6,14 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/20 08:59:01 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/21 09:34:30 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_linkedlist.h"
 #include "ft_string.h"
 #include "tokens.h"
+#include "strjoinsep.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -80,6 +81,32 @@ void	token_clear(void *content)
 	free(content);
 }
 
+t_list	*append_flags(t_list *tokens)
+{
+	t_list	*tmp;
+	t_list	*del;
+	char	*string;
+
+	tmp = tokens;
+	while (tmp->next)
+	{
+		del = tmp->next;
+		if (((t_content *) tmp->content)->token & COMMAND
+			&& ((t_content *) del->content)->token & FLAG)
+		{
+			string = strjoinsep(((t_content *) tmp->content)->string,
+					((t_content *) del->content)->string, ' ');
+			free(((t_content *) tmp->content)->string);
+			((t_content *) tmp->content)->string = string;
+			tmp->next = del->next;
+			ft_lstdelone(del, &token_clear);
+		}
+		else
+			tmp = tmp->next;
+	}
+	return (tokens);
+}
+
 t_list	*tokenizer(char **splitted)
 {
 	t_list	*tokens;
@@ -94,7 +121,7 @@ t_list	*tokenizer(char **splitted)
 	while (*(splitted + i))
 		parentesis += check_token(&tokens, *(splitted + i++));
 	if (parentesis == 0)
-		return (tokens);
+		return (append_flags(tokens));
 	ft_lstclear(&tokens, &token_clear);
 	if (parentesis > 0)
 		printf("%s %c\n", "unclosed parentesis parser error", '(');
