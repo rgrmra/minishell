@@ -1,31 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansions.h                                       :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/12 08:57:37 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/20 19:22:40 by rde-mour         ###   ########.org.br   */
+/*   Created: 2024/03/20 21:47:08 by rde-mour          #+#    #+#             */
+/*   Updated: 2024/03/20 21:48:17 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPANSIONS_H
-# define EXPANSIONS_H
 
-# include "arraylist.h"
-# include "ft_linkedlist.h"
+#ifndef UTILS_H
+# define UTILS_H
 
-typedef struct s_env	t_env;
+#include <stdlib.h>
+#include "ft_string.h"
 
-struct s_env
-{
-	t_arraylist	*envp;
-	t_arraylist	*exports;
-	t_arraylist *heredoc;
-};
-
-void	command_expansions(t_env *env, t_list **tokens);
-void	var_expansions(t_env *env, t_list **tokens);
+char	*strjoinsep(char *s1, char *s2, unsigned int sep);
 
 #endif
