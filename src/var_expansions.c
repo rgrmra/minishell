@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/21 09:33:33 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/21 19:04:55 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include "get_env.h"
 #include "tokens.h"
 #include "strjoinsep.h"
-#include "ft_printf_bonus.h"
 #include <stdlib.h>
 
 static void	remove_quotes(char *word, size_t size)
@@ -129,6 +128,7 @@ void	var_expansions(t_env *env, t_list **tokens)
 	size_t		i;
 	char		*string;
 	t_list		*tmp;
+	char		sign;
 
 	if (!env || !tokens)
 		return ;
@@ -136,16 +136,22 @@ void	var_expansions(t_env *env, t_list **tokens)
 	while (tmp)
 	{
 		i = 0;
+		sign = '\0';
 		string = ((t_content *) tmp->content)->string;
-		while (string && string[0] && string[i] != '\0')
+		while (string && string[i] != '\0')
 		{
-			if (string[i] == '$' && (ft_isalpha(string[i + 1])
+			if (sign && sign == '\'')
+				sign = '\0';
+			else if (!sign && string[i] == '\'')
+				sign = string[i];
+			if (!sign && string[i] == '$' && (ft_isalpha(string[i + 1])
 					|| string[i + 1] == '_'))
 			{
 				string = check_expansion(env, string);
 				free(((t_content *) tmp->content)->string);
 				((t_content *) tmp->content)->string = string;
 				i = 0;
+				sign = '\0';
 			}
 			else
 				i++;
