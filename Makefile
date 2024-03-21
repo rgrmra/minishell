@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/02 19:57:40 by rde-mour          #+#    #+#              #
-#    Updated: 2024/03/21 08:08:48 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/03/21 11:05:16 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,6 +52,7 @@ SRCS		:=	\
 	src/get_env_utils.c \
 	src/strfmt.c \
 	src/tokenizer.c \
+	src/append_flags.c \
 	src/parser.c \
 	src/var_expansions.c \
 	src/command_expansions.c \
