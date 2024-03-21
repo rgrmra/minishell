@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.h                                            :+:      :+:    :+:   */
+/*   strjoinsep.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 21:47:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/20 21:48:17 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/21 08:06:43 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-#ifndef UTILS_H
-# define UTILS_H
+#ifndef STRJOINSEP_H
+# define STRJOINSEP_H
 
 #include <stdlib.h>
 #include "ft_string.h"
