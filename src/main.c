@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/20 09:22:58 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/20 19:21:49 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int	main(int argc, char **argv, char **envp)
 		return (EXIT_FAILURE);
 	env.envp = arrnew();
 	env.exports = arrnew();
+	env.heredoc = arrnew();
 	envadd(&env.envp, "VAR", "o oi");
 	envnew(&env.envp, envp);
 	prompt(&env);
