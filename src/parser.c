@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 07:41:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/20 09:18:23 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/21 11:38:36 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,9 @@ void	parser(t_list **tokens)
 		if (error(errors, tokens, ((t_content *) tmp->content)->string))
 			return ;
 		errors += check_operators((t_content *) tmp->content, tmp->next);
-		if (tmp->next && error(errors, tokens,
-				((t_content *) tmp->next->content)->string))
+		if ((tmp->next && error(errors, tokens,
+			((t_content *) tmp->next->content)->string))
+			|| error(errors, tokens, ((t_content *) tmp->content)->string))
 			return ;
 		tmp = tmp->next;
 	}
