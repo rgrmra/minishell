@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/20 08:57:54 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/21 20:40:55 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 
 static char	check_quote(char sign, char *input, int i)
 {
-	if (sign && (*(input + i) == sign))
+	if (sign && (input[i] == sign))
 		return ('\0');
-	else if (!sign && ft_strchr("\'\"", *(input + i)))
-		return (*(input + i));
+	else if (!sign && ft_strchr("\'\"", input[i]))
+		return (input[i]);
 	return (sign);
 }
 
@@ -31,13 +31,13 @@ static char	*find_quote(char *tmp)
 
 	i = 0;
 	sign = '\0';
-	while (tmp && *(tmp + i))
+	while (tmp && tmp[i])
 	{
 		sign = check_quote(sign, tmp, i);
-		if (!sign && ft_isspace(*(tmp + i)))
-			*(tmp + i) = ' ';
-		else if (sign && *(tmp + i) == ' ')
-			*(tmp + i) = 0x1A;
+		if (!sign && ft_isspace(tmp[i]))
+			tmp[i] = ' ';
+		else if (sign && tmp[i] == ' ')
+			tmp[i] = 0x1A;
 		i++;
 	}
 	if (!sign)
@@ -68,10 +68,10 @@ static char	*expand_input(char *tmp, char *input)
 				tmp[j++] = ' ';
 		}
 		else
-			*(tmp + j++) = *(input + i);
+			tmp[j++] = input[i];
 		i++;
 	}
-	*(tmp + j) = '\0';
+	tmp[j] = '\0';
 	free(input);
 	return (tmp);
 }
@@ -83,10 +83,10 @@ static void	strrplc(char *str, char old, char new)
 	if (!str)
 		return ;
 	i = 0;
-	while (*(str + i))
+	while (str[i])
 	{
-		if (*(str + i) == old)
-			*(str + i) = new;
+		if (str[i] == old)
+			str[i] = new;
 		i++;
 	}
 }
@@ -112,7 +112,7 @@ char	**format_input(char *input)
 	splitted = ft_split(tmp, ' ');
 	free(tmp);
 	i = 0;
-	while (*(splitted + i))
-		strrplc(*(splitted + i++), 0x1A, ' ');
+	while (splitted[i])
+		strrplc(splitted[i++], 0x1A, ' ');
 	return (splitted);
 }
