@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/02 19:57:40 by rde-mour          #+#    #+#              #
-#    Updated: 2024/03/21 20:29:19 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/03/22 11:54:10 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,12 +51,13 @@ SRCS		:=	\
 	src/getenv/get_env.c \
 	src/getenv/get_env_utils.c \
 	src/prompt/prompt.c \
-	src/prompt/strfmt.c \
+	src/prompt/format_input.c \
 	src/tokenizer/tokenizer.c \
-	src/tokenizer/append_flags.c \
+	src/tokenizer/append_commands.c \
 	src/parser/parser.c \
 	src/expansions/var_expansions.c \
 	src/expansions/command_expansions.c \
+	src/expansions/remove_quotes.c \
 	src/ast/ast.c \
 	util/arraylist.c \
 	util/strjoinsep.c \

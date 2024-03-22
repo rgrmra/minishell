@@ -6,14 +6,14 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:43:01 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/18 10:12:05 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/22 10:27:35 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef AST_H
 # define AST_H
 
-# include "tokens.h"
+# include "tokenizer.h"
 
 typedef struct s_ast	t_ast;
 struct s_ast

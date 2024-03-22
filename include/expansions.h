@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 08:57:37 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/20 19:22:40 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/22 13:26:08 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,17 @@
 # define EXPANSIONS_H
 
 # include "arraylist.h"
-# include "ft_linkedlist.h"
+# include "tokenizer.h"
 
 typedef struct s_env	t_env;
 
 struct s_env
 {
-	t_arraylist	*envp;
-	t_arraylist	*exports;
-	t_arraylist *heredoc;
+	t_arraylist	*vars;
 };
 
-void	command_expansions(t_env *env, t_list **tokens);
-void	var_expansions(t_env *env, t_list **tokens);
+void	var_expansions(t_env *env, t_content *content);
+void	command_expansions(t_env *env, t_content *content);
+void	remove_quotes(char *word);
 
 #endif
