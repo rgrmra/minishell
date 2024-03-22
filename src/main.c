@@ -6,55 +6,13 @@
 /*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/21 08:17:31 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/21 20:07:19 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 #include "prompt.h"
-#include "types.h"
-#include "tokens.h"
-#include "ft_linkedlist.h"
 #include "expansions.h"
 #include "get_env.h"
-#include "ast.h"
-#include "parser.h"
-
-static void	tokens(t_env *env, char **splitted)
-{
-	t_list	*tokens;
-	t_ast	*ast;
-
-	tokens = tokenizer(splitted);
-	parser(&tokens);
-	var_expansions(env, &tokens);
-	command_expansions(env, &tokens);
-	ast = ast_new(&tokens);
-	ast_print(&ast);
-}
-
-static void	prompt(t_env *env)
-{
-	char	*input;
-	char	**splitted;
-
-	while (true)
-	{
-		input = readline("$ ");
-		if (!input)
-			break ;
-		else if (*input)
-			add_history(input);
-		splitted = format_input(input);
-		tokens(env, splitted);
-		if (splitted)
-			free(splitted);
-		free(input);
-	}
-	rl_clear_history();
-}
 
 int	main(int argc, char **argv, char **envp)
 {

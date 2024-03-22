@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/02 19:57:40 by rde-mour          #+#    #+#              #
-#    Updated: 2024/03/21 11:05:16 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/03/21 20:29:19 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,15 +48,16 @@ SRC_DIR		:=	./
 
 SRCS		:=	\
 	src/main.c \
-	src/get_env.c \
-	src/get_env_utils.c \
-	src/strfmt.c \
-	src/tokenizer.c \
-	src/append_flags.c \
-	src/parser.c \
-	src/var_expansions.c \
-	src/command_expansions.c \
-	src/ast.c \
+	src/getenv/get_env.c \
+	src/getenv/get_env_utils.c \
+	src/prompt/prompt.c \
+	src/prompt/strfmt.c \
+	src/tokenizer/tokenizer.c \
+	src/tokenizer/append_flags.c \
+	src/parser/parser.c \
+	src/expansions/var_expansions.c \
+	src/expansions/command_expansions.c \
+	src/ast/ast.c \
 	util/arraylist.c \
 	util/strjoinsep.c \
 	util/ft_printf/ft_build_bonus.c \
