@@ -6,12 +6,12 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/19 11:48:23 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/22 10:27:14 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
-#include "tokens.h"
+#include "tokenizer.h"
 #include "ast.h"
 
 static t_ast	*ast_node(t_list *tokens)

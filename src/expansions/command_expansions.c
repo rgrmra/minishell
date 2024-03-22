@@ -6,17 +6,17 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 09:57:54 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/21 09:33:48 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/22 13:16:13 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include <stdlib.h>
 #include "expansions.h"
 #include "ft_string.h"
-#include "tokens.h"
+#include "tokenizer.h"
 #include "get_env.h"
 #include "strjoinsep.h"
-#include "ft_printf_bonus.h"
 
 static char	*check_bultins(char *word)
 {
@@ -47,9 +47,7 @@ static char	*check_expansion(t_env *env, char *word)
 	path = check_bultins(word);
 	if (path)
 		return (NULL);
-	paths = envget(&env->envp, "PATH")->values;
-	if (!paths)
-		paths = envget(&env->exports, "PATH")->values;
+	paths = envget(&env->vars, "PATH")->values;
 	if (!paths)
 		return (ft_strdup(""));
 	i = 0;
@@ -64,26 +62,18 @@ static char	*check_expansion(t_env *env, char *word)
 	return (ft_strdup(word));
 }
 
-void	command_expansions(t_env *env, t_list **tokens)
+void	command_expansions(t_env *env, t_content *content)
 {
-	char		*string;
-	t_list		*tmp;
-	t_content	*content;
+	char		*str;
 
-	if (!env || !tokens)
+	if (!env || !content)
 		return ;
-	tmp = *tokens;
-	while (tmp)
+	str = NULL;
+	if (!ft_strchr("./", *(content->string)) && content->token & COMMAND)
+		str = check_expansion(env, content->string);
+	if (str)
 	{
-		string = NULL;
-		content = (t_content *) tmp->content;
-		if (!ft_strchr("./", *(content->string)) && content->token & COMMAND)
-			string = check_expansion(env, content->string);
-		if (string)
-		{
-			free(content->string);
-			content->string = string;
-		}
-		tmp = tmp->next;
+		free(content->string);
+		content->string = str;
 	}
 }

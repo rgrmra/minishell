@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   append_flags.c                                     :+:      :+:    :+:   */
+/*   append_commands.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 10:55:34 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/21 11:25:01 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/22 10:48:39 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "append_flags.h"
-#include "tokens.h"
+#include "tokenizer.h"
 #include "strjoinsep.h"
 
-static void	append(t_list *tmp, t_list *del)
+static void	append(t_list *tmp, t_list *next)
 {
 	char	*string;
 
 	string = strjoinsep(((t_content *) tmp->content)->string,
-			((t_content *) del->content)->string, ' ');
+			((t_content *) next->content)->string, ' ');
 	free(((t_content *) tmp->content)->string);
 	((t_content *) tmp->content)->string = string;
-	tmp->next = del->next;
-	ft_lstdelone(del, &token_clear);
+	tmp->next = next->next;
+	ft_lstdelone(next, &token_clear);
 }
 
 static void	swap_flags(t_list *command, t_list *redirect, t_list *flag)
@@ -31,28 +30,26 @@ static void	swap_flags(t_list *command, t_list *redirect, t_list *flag)
 	command->next = flag;
 	redirect->next->next = flag->next;
 	flag->next = redirect;
-	append(command, flag);
 }
 
-t_list	*append_flags(t_list *tokens)
+t_list	*append_commands(t_list *tokens)
 {
 	t_list	*tmp;
-	t_list	*del;
+	t_list	*next;
 
 	tmp = tokens;
 	while (tmp->next)
 	{
-		del = tmp->next;
+		next = tmp->next;
 		if (((t_content *) tmp->content)->token & COMMAND
-			&& ((t_content *) del->content)->token & FLAG)
-			append(tmp, del);
+			&& ((t_content *) next->content)->token & COMMAND)
+			append(tmp, next);
 		else if (((t_content *) tmp->content)->token & COMMAND
-			&& ((t_content *) del->content)->token & (HEREDOC | LEFT_REDIRECT
-				| APPEND | RIGHT_REDIRECT) && del->next && del->next->next
-			&& ((t_content *) del->next->content)->token & (PUT_FILE | LIMITER)
-			&& ((t_content *) del->next->next->content)->token & (COMMAND
-				| FLAG))
-			swap_flags(tmp, del, del->next->next);
+			&& ((t_content *) next->content)->token & (HEREDOC | LEFT_REDIRECT
+				| APPEND | RIGHT_REDIRECT) && next->next && next->next->next
+			&& ((t_content *) next->next->content)->token & (PUT_FILE | LIMITER)
+			&& ((t_content *) next->next->next->content)->token & COMMAND)
+			swap_flags(tmp, next, next->next->next);
 		else
 			tmp = tmp->next;
 	}

@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokens.h                                           :+:      :+:    :+:   */
+/*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:22:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/20 19:27:10 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/22 10:40:04 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TOKENS_H
-# define TOKENS_H
+#ifndef TOKENIZER_H
+# define TOKENIZER_H
 
 # include "ft_linkedlist.h"
 
@@ -23,26 +23,25 @@ struct s_content
 	int		token;
 };
 
-enum	e_token
+enum	e_tokens
 {
 	INVALID = 1 << 0,
 	COMMAND = 1 << 1,
-	FLAG = 1 << 2,
-	PIPE = 1 << 3,
-	LEFT_REDIRECT = 1 << 4,
-	HEREDOC = 1 << 5,
-	RIGHT_REDIRECT = 1 << 6,
-	APPEND = 1 << 7,
-	PUT_FILE = 1 << 8,
-	HEREDOC_FILE = 1 << 9,
-	LIMITER = 1 << 10,
-	AND_IF = 1 << 11,
-	OR_IF = 1 << 12,
-	SUB_IN = 1 << 13,
-	SUB_OUT = 1 << 14
+	PIPE = 1 << 2,
+	LEFT_REDIRECT = 1 << 3,
+	HEREDOC = 1 << 4,
+	RIGHT_REDIRECT = 1 << 5,
+	APPEND = 1 << 6,
+	PUT_FILE = 1 << 7,
+	LIMITER = 1 << 8,
+	AND_IF = 1 << 9,
+	OR_IF = 1 << 10,
+	SUB_IN = 1 << 11,
+	SUB_OUT = 1 << 12
 };
 
 void	token_clear(void *content);
 t_list	*tokenizer(char **splitted);
+t_list	*append_commands(t_list *tokens);
 
 #endif

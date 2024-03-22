@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/21 19:04:55 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/22 13:08:01 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,37 +15,9 @@
 #include "ft_string.h"
 #include "expansions.h"
 #include "get_env.h"
-#include "tokens.h"
+#include "tokenizer.h"
 #include "strjoinsep.h"
 #include <stdlib.h>
-
-static void	remove_quotes(char *word, size_t size)
-{
-	int		i;
-	int		quote;
-	char	sign;
-
-	i = 0;
-	quote = 0;
-	sign = '\0';
-	while (word && word[i])
-	{
-		if (sign != '\0' && quote == 2)
-		{
-			quote = 0;
-			sign = '\0';
-		}
-		if (sign == '\0' && quote == 0 && ft_strchr("\'\"", word[i]))
-			sign = word[i];
-		if (sign != '\0' && quote < 2 && word[i] == sign)
-		{
-			quote++;
-			ft_strlcpy(&word[i], &word[i + 1], size--);
-			i--;
-		}
-		i++;
-	}
-}
 
 static char	*expand(char *begin, char *var, char *end)
 {
@@ -110,12 +82,7 @@ static char	*check_expansion(t_env *env, char *word)
 	while (ft_isalnum(*(word + end)) || *(word + end) == '_')
 		end++;
 	tmp = ft_substr(word, start, end - start);
-	value = var_to_string(envget(&(env->envp), tmp));
-	if (!value || !(*value))
-	{
-		free(value);
-		value = var_to_string(envget(&(env->exports), tmp));
-	}
+	value = var_to_string(envget(&(env->vars), tmp));
 	free(tmp);
 	tmp = expand(ft_substr(word, 0, start - 1), value,
 			ft_substr(word, end, ft_strlen(&(*(word + end)))));
@@ -123,40 +90,49 @@ static char	*check_expansion(t_env *env, char *word)
 	return (tmp);
 }
 
-void	var_expansions(t_env *env, t_list **tokens)
+static void	resolve_quote(char *string)
+{
+	int		i;
+	char	quote;
+
+	if (!string)
+		return ;
+	i = 0;
+	quote = '\0';
+	while (*(string + i))
+	{
+		if (quote && string[i] == quote)
+			quote = '\0';
+		else if (!quote && ft_strchr("\'\"", string[i]))
+			quote = string[i];
+		else if (quote == '\'' && string[i] == '$')
+			string[i] = 0x1A;
+		else if (quote == '\'' && string[i] == 0x1A)
+			string[i] = '$';
+		i++;
+	}
+}
+
+void	var_expansions(t_env *env, t_content *content)
 {
 	size_t		i;
-	char		*string;
-	t_list		*tmp;
-	char		sign;
+	char		*str;
 
-	if (!env || !tokens)
+	if (!env || !content)
 		return ;
-	tmp = *tokens;
-	while (tmp)
+	i = 0;
+	str = content->string;
+	resolve_quote(str);
+	while (str && str[i] != '\0')
 	{
-		i = 0;
-		sign = '\0';
-		string = ((t_content *) tmp->content)->string;
-		while (string && string[i] != '\0')
+		if (str[i] == '$' && (ft_isalpha(str[i + 1]) || str[i + 1] == '_'))
 		{
-			if (sign && sign == '\'')
-				sign = '\0';
-			else if (!sign && string[i] == '\'')
-				sign = string[i];
-			if (!sign && string[i] == '$' && (ft_isalpha(string[i + 1])
-					|| string[i + 1] == '_'))
-			{
-				string = check_expansion(env, string);
-				free(((t_content *) tmp->content)->string);
-				((t_content *) tmp->content)->string = string;
-				i = 0;
-				sign = '\0';
-			}
-			else
-				i++;
+			str = check_expansion(env, str);
+			free(content->string);
+			content->string = str;
 		}
-		remove_quotes(string, ft_strlen(string));
-		tmp = tmp->next;
+		else
+			i++;
 	}
+	resolve_quote(str);
 }
