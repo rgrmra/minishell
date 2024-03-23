@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 07:41:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/22 13:46:22 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/22 21:00:40 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ static int	check_controllers(t_content *content, t_list *next_content)
 	if (content->token & (AND_IF | OR_IF | PIPE | LEFT_REDIRECT | HEREDOC
 			| RIGHT_REDIRECT | APPEND | SUB_IN) && next->token & (AND_IF
 			| OR_IF))
+		return (true);
+	if (content->token & (SUB_OUT) && next->token & (SUB_IN))
 		return (true);
 	if (content->token & (SUB_OUT) && next->token & (COMMAND))
 		return (true);

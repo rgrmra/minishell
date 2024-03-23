@@ -6,12 +6,11 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/22 13:08:01 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/22 19:34:09 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ctype.h"
-#include "ft_linkedlist.h"
 #include "ft_string.h"
 #include "expansions.h"
 #include "get_env.h"
@@ -115,8 +114,8 @@ static void	resolve_quote(char *string)
 
 void	var_expansions(t_env *env, t_content *content)
 {
-	size_t		i;
-	char		*str;
+	size_t	i;
+	char	*str;
 
 	if (!env || !content)
 		return ;
