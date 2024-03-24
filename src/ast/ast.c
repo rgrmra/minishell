@@ -6,13 +6,15 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/22 10:27:14 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/24 17:29:38 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "tokenizer.h"
 #include "ast.h"
+
+static void	ast_build(t_list **tokens, t_ast **ast);
 
 static t_ast	*ast_node(t_list *tokens)
 {
@@ -36,8 +38,16 @@ static t_ast	*ast_build_command(t_list **tokens, t_ast *prev)
 
 	if (!tokens || !(*tokens))
 		return (prev);
+	ast = NULL;
 	if (prev && prev->content && prev->content->token & (AND_IF | OR_IF))
+	{
+		if (((t_content *)(*tokens)->content)->token & SUB_IN)
+		{
+			ast_build(tokens, &ast);
+			prev->right = ast;
+		}
 		return (prev);
+	}
 	tmp = *tokens;
 	ast = ast_node(*tokens);
 	*tokens = (*tokens)->next;
@@ -93,23 +103,10 @@ void	ast_print(t_ast **ast)
 
 t_ast	*ast_new(t_list	**tokens)
 {
-	t_list	*tmp;
 	t_ast	*ast;
 
 	if (!tokens)
 		return (NULL);
-	tmp = *tokens;
-	while (tmp)
-	{
-		if (!((t_content *) tmp->content)->token)
-		{
-			printf("syntax error near unexpected token %s\n",
-				((t_content *) tmp->content)->string);
-			ft_lstclear(tokens, &token_clear);
-			return (NULL);
-		}
-		tmp = tmp->next;
-	}
 	ast = NULL;
 	ast_build(tokens, &ast);
 	return (ast);
