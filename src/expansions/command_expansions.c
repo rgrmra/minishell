@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 09:57:54 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/22 19:35:06 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/28 09:45:18 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,18 +62,18 @@ static char	*check_expansion(t_env *env, char *word)
 	return (ft_strdup(word));
 }
 
-void	command_expansions(t_env *env, t_content *content)
+void	command_expansions(t_env *env, t_token *content)
 {
 	char	*str;
 
 	if (!env || !content)
 		return ;
 	str = NULL;
-	if (!ft_strchr("./", *(content->string)) && content->token & COMMAND)
-		str = check_expansion(env, content->string);
+	if (!ft_strchr("./", *(content->literal)) && content->type & COMMAND)
+		str = check_expansion(env, content->literal);
 	if (str)
 	{
-		free(content->string);
-		content->string = str;
+		free(content->literal);
+		content->literal = str;
 	}
 }

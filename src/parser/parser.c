@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 07:41:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/22 21:00:40 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/28 09:47:00 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,49 +15,49 @@
 #include "tokenizer.h"
 #include "types.h"
 
-static int	check_invalid(t_content *content)
+static int	check_invalid(t_token *content)
 {
-	if (content->token & (INVALID))
+	if (content->type & (ILLEGAL))
 		return (true);
 	return (false);
 }
 
-static int	check_controllers(t_content *content, t_list *next_content)
+static int	check_controllers(t_token *content, t_list *next_content)
 {
-	t_content	*next;
+	t_token	*next;
 
-	if (!next_content && content->token & (AND_IF | OR_IF))
+	if (!next_content && content->type & (AND | OR))
 		return (true);
 	if (!next_content)
 		return (false);
 	next = next_content->content;
-	if (content->token & (AND_IF | OR_IF) && next->token & (AND_IF | OR_IF
-			| PIPE | SUB_OUT))
+	if (content->type & (AND | OR) && next->type & (AND | OR
+			| VBAR | RPAREN))
 		return (true);
-	if (content->token & (AND_IF | OR_IF | PIPE | LEFT_REDIRECT | HEREDOC
-			| RIGHT_REDIRECT | APPEND | SUB_IN) && next->token & (AND_IF
-			| OR_IF))
+	if (content->type & (AND | OR | VBAR | LESS | DLESS
+			| GREATER | DGREATER | LPAREN) && next->type & (AND
+			| OR))
 		return (true);
-	if (content->token & (SUB_OUT) && next->token & (SUB_IN))
+	if (content->type & (RPAREN) && next->type & (LPAREN))
 		return (true);
-	if (content->token & (SUB_OUT) && next->token & (COMMAND))
+	if (content->type & (RPAREN) && next->type & (COMMAND))
 		return (true);
 	return (false);
 }
 
-static int	check_operators(t_content *content, t_list *next_content)
+static int	check_operators(t_token *content, t_list *next_content)
 {
-	t_content	*next;
+	t_token	*next;
 
-	if (!next_content && content->token & (PIPE | LEFT_REDIRECT | HEREDOC
-			| RIGHT_REDIRECT | APPEND | SUB_IN))
+	if (!next_content && content->type & (VBAR | LESS | DLESS
+			| GREATER | DGREATER | LPAREN))
 		return (true);
 	if (!next_content)
 		return (false);
 	next = next_content->content;
-	if (content->token & (PIPE | LEFT_REDIRECT | HEREDOC | RIGHT_REDIRECT
-			| APPEND) && next->token & (PIPE | LEFT_REDIRECT | HEREDOC
-			| RIGHT_REDIRECT | APPEND | SUB_OUT))
+	if (content->type & (VBAR | LESS | DLESS | GREATER
+			| DGREATER) && next->type & (VBAR | LESS | DLESS
+			| GREATER | DGREATER | RPAREN))
 		return (true);
 	return (false);
 }
@@ -66,7 +66,7 @@ int	error(int errors, t_list **tokens, char *message)
 {
 	if (errors)
 	{
-		printf("minishell: syntax error near token '%s'\n", message);
+		printf("minishell: syntax error near type '%s'\n", message);
 		ft_lstclear(tokens, &token_clear);
 		return (true);
 	}
@@ -82,21 +82,21 @@ void	parser(t_list **tokens)
 		return ;
 	errors = 0;
 	tmp = *tokens;
-	if (((t_content *) tmp->content)->token & (PIPE | AND_IF | OR_IF | SUB_OUT)
-		&& error(true, tokens, ((t_content *) tmp->content)->string))
+	if (((t_token *) tmp->content)->type & (VBAR | AND | OR | RPAREN)
+		&& error(true, tokens, ((t_token *) tmp->content)->literal))
 		return ;
 	while (tmp)
 	{
-		errors += check_invalid((t_content *) tmp->content);
-		if (error(errors, tokens, ((t_content *) tmp->content)->string))
+		errors += check_invalid((t_token *) tmp->content);
+		if (error(errors, tokens, ((t_token *) tmp->content)->literal))
 			return ;
-		errors += check_controllers((t_content *) tmp->content, tmp->next);
-		if (error(errors, tokens, ((t_content *) tmp->content)->string))
+		errors += check_controllers((t_token *) tmp->content, tmp->next);
+		if (error(errors, tokens, ((t_token *) tmp->content)->literal))
 			return ;
-		errors += check_operators((t_content *) tmp->content, tmp->next);
+		errors += check_operators((t_token *) tmp->content, tmp->next);
 		if ((tmp->next && error(errors, tokens,
-					((t_content *) tmp->next->content)->string))
-			|| error(errors, tokens, ((t_content *) tmp->content)->string))
+					((t_token *) tmp->next->content)->literal))
+			|| error(errors, tokens, ((t_token *) tmp->content)->literal))
 			return ;
 		tmp = tmp->next;
 	}

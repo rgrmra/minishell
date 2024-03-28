@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 10:55:34 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/22 10:48:39 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/28 09:37:56 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 
 static void	append(t_list *tmp, t_list *next)
 {
-	char	*string;
+	char	*literal;
 
-	string = strjoinsep(((t_content *) tmp->content)->string,
-			((t_content *) next->content)->string, ' ');
-	free(((t_content *) tmp->content)->string);
-	((t_content *) tmp->content)->string = string;
+	literal = strjoinsep(((t_token *) tmp->content)->literal,
+			((t_token *) next->content)->literal, ' ');
+	free(((t_token *) tmp->content)->literal);
+	((t_token *) tmp->content)->literal = literal;
 	tmp->next = next->next;
 	ft_lstdelone(next, &token_clear);
 }
@@ -41,14 +41,14 @@ t_list	*append_commands(t_list *tokens)
 	while (tmp->next)
 	{
 		next = tmp->next;
-		if (((t_content *) tmp->content)->token & COMMAND
-			&& ((t_content *) next->content)->token & COMMAND)
+		if (((t_token *) tmp->content)->type & COMMAND
+			&& ((t_token *) next->content)->type & COMMAND)
 			append(tmp, next);
-		else if (((t_content *) tmp->content)->token & COMMAND
-			&& ((t_content *) next->content)->token & (HEREDOC | LEFT_REDIRECT
-				| APPEND | RIGHT_REDIRECT) && next->next && next->next->next
-			&& ((t_content *) next->next->content)->token & (PUT_FILE | LIMITER)
-			&& ((t_content *) next->next->next->content)->token & COMMAND)
+		else if (((t_token *) tmp->content)->type & COMMAND
+			&& ((t_token *) next->content)->type & (DLESS | LESS | DGREATER
+				| GREATER) && next->next && next->next->next
+			&& ((t_token *) next->next->content)->type & (FILENAME | END)
+			&& ((t_token *) next->next->next->content)->type & COMMAND)
 			swap_flags(tmp, next, next->next->next);
 		else
 			tmp = tmp->next;

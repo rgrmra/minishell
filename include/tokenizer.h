@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:22:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/22 10:40:04 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/28 09:30:21 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,28 @@
 
 # include "ft_linkedlist.h"
 
-typedef struct s_content	t_content;
-
-struct s_content
+enum	e_token_type
 {
-	char	*string;
-	int		token;
+	ILLEGAL = 1 << 0,
+	LESS = 1 << 1,
+	GREATER = 1 << 2,
+	DLESS = 1 << 3,
+	DGREATER = 1 << 4,
+	VBAR = 1 << 5,
+	AND = 1 << 6,
+	OR = 1 << 7,
+	LPAREN = 1 << 8,
+	RPAREN = 1 << 9,
+	FILENAME = 1 << 10,
+	COMMAND = 1 << 11,
+	END = 1 << 12,
 };
 
-enum	e_tokens
+typedef struct s_token
 {
-	INVALID = 1 << 0,
-	COMMAND = 1 << 1,
-	PIPE = 1 << 2,
-	LEFT_REDIRECT = 1 << 3,
-	HEREDOC = 1 << 4,
-	RIGHT_REDIRECT = 1 << 5,
-	APPEND = 1 << 6,
-	PUT_FILE = 1 << 7,
-	LIMITER = 1 << 8,
-	AND_IF = 1 << 9,
-	OR_IF = 1 << 10,
-	SUB_IN = 1 << 11,
-	SUB_OUT = 1 << 12
-};
+	enum e_token_type	type;
+	char				*literal;
+}	t_token;
 
 void	token_clear(void *content);
 t_list	*tokenizer(char **splitted);
