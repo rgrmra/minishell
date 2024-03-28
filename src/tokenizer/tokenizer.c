@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/22 11:27:20 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/28 09:40:36 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,61 +16,61 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static int	get_token(char *string, int last_token)
+static int	get_token(char *literal, int last_token)
 {
-	if (!ft_strncmp(string, "|", 2))
-		return (PIPE);
-	else if (!ft_strncmp(string, "||", 3))
-		return (OR_IF);
-	else if (!ft_strncmp(string, "&&", 3))
-		return (AND_IF);
-	else if (!ft_strncmp(string, "<<", 3))
-		return (HEREDOC);
-	else if (!ft_strncmp(string, "<", 2))
-		return (LEFT_REDIRECT);
-	else if (!ft_strncmp(string, ">>", 3))
-		return (APPEND);
-	else if (!ft_strncmp(string, ">", 2))
-		return (RIGHT_REDIRECT);
-	else if (!ft_strncmp(string, "(", 2))
-		return (SUB_IN);
-	else if (!ft_strncmp(string, ")", 2))
-		return (SUB_OUT);
-	else if (ft_strchr("()|<>&", *string))
-		return (INVALID);
-	else if (last_token & HEREDOC)
-		return (LIMITER);
-	else if (last_token & (HEREDOC | LEFT_REDIRECT | APPEND | RIGHT_REDIRECT))
-		return (PUT_FILE);
+	if (!ft_strncmp(literal, "|", 2))
+		return (VBAR);
+	else if (!ft_strncmp(literal, "||", 3))
+		return (OR);
+	else if (!ft_strncmp(literal, "&&", 3))
+		return (AND);
+	else if (!ft_strncmp(literal, "<<", 3))
+		return (DLESS);
+	else if (!ft_strncmp(literal, "<", 2))
+		return (LESS);
+	else if (!ft_strncmp(literal, ">>", 3))
+		return (DGREATER);
+	else if (!ft_strncmp(literal, ">", 2))
+		return (GREATER);
+	else if (!ft_strncmp(literal, "(", 2))
+		return (LPAREN);
+	else if (!ft_strncmp(literal, ")", 2))
+		return (RPAREN);
+	else if (ft_strchr("()|<>&", *literal))
+		return (ILLEGAL);
+	else if (last_token & DLESS)
+		return (END);
+	else if (last_token & (DLESS | LESS | DGREATER | GREATER))
+		return (FILENAME);
 	return (COMMAND);
 }
 
-static int	check_token(t_list **tokens, char *string)
+static int	check_token(t_list **tokens, char *literal)
 {
-	t_content	*content;
+	t_token	*content;
 	int			last_token;
 
-	if (!string)
+	if (!literal)
 		return (0);
-	content = (t_content *) malloc(1 * sizeof(t_content));
+	content = (t_token *) malloc(1 * sizeof(t_token));
 	if (!content)
 		return (0);
-	content->string = string;
+	content->literal = literal;
 	last_token = 0;
 	if (*tokens)
-		last_token = ((t_content *) ft_lstlast(*tokens)->content)->token;
-	content->token = get_token(string, last_token);
+		last_token = ((t_token *) ft_lstlast(*tokens)->content)->type;
+	content->type = get_token(literal, last_token);
 	ft_lstaddcontent_back(tokens, (void *) content);
-	if (content->token & SUB_IN)
+	if (content->type & LPAREN)
 		return (1);
-	else if (content->token & SUB_OUT)
+	else if (content->type & RPAREN)
 		return (-1);
 	return (0);
 }
 
 void	token_clear(void *content)
 {
-	free(((t_content *) content)->string);
+	free(((t_token *) content)->literal);
 	free(content);
 }
 

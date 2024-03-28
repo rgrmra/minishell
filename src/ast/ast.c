@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/24 19:33:47 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/28 09:46:21 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ static t_ast	*ast_build_command(t_list **tokens, t_ast *prev)
 	if (!tokens || !(*tokens))
 		return (prev);
 	ast = NULL;
-	if (prev && prev->content && prev->content->token & (AND_IF | OR_IF))
+	if (prev && prev->content && prev->content->type & (AND | OR))
 	{
-		if (((t_content *)(*tokens)->content)->token & SUB_IN
-			&& prev->left->content->token &~ SUB_OUT)
+		if (((t_token *)(*tokens)->content)->type & LPAREN
+			&& prev->left->content->type &~ RPAREN)
 		{
 			ast_build(tokens, &ast);
 			prev->right = ast;
@@ -68,8 +68,8 @@ static void	ast_build(t_list **tokens, t_ast **ast)
 	tmp = ast_build_command(tokens, NULL);
 	if (!tmp)
 		return ;
-	if (*ast && (*ast)->content && (*ast)->content->token & (AND_IF | OR_IF)
-		&& tmp->content->token & (AND_IF | OR_IF))
+	if (*ast && (*ast)->content && (*ast)->content->type & (AND | OR)
+		&& tmp->content->type & (AND | OR))
 	{
 		if (!(*ast)->right)
 		{
@@ -96,8 +96,8 @@ void	ast_print(t_ast **ast)
 		ast_print(&(*ast)->left);
 	if ((*ast)->right)
 		ast_print(&(*ast)->right);
-	printf("%d %s\n", tmp->content->token, tmp->content->string);
-	free(tmp->content->string);
+	printf("%d %s\n", tmp->content->type, tmp->content->literal);
+	free(tmp->content->literal);
 	free(tmp->content);
 	free(tmp);
 }

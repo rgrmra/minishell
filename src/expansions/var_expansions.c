@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/22 19:34:09 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/03/28 09:44:32 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,21 +21,21 @@
 static char	*expand(char *begin, char *var, char *end)
 {
 	char	*tmp;
-	char	*string;
+	char	*literal;
 
-	string = NULL;
+	literal = NULL;
 	if (begin && var)
-		string = ft_strjoin(begin, var);
+		literal = ft_strjoin(begin, var);
 	if (begin)
 		free(begin);
-	tmp = string;
+	tmp = literal;
 	if (tmp && end)
-		string = ft_strjoin(tmp, end);
+		literal = ft_strjoin(tmp, end);
 	if (end)
 		free(end);
 	if (tmp)
 		free(tmp);
-	return (string);
+	return (literal);
 }
 
 static char	*var_to_string(t_var *var)
@@ -89,30 +89,30 @@ static char	*check_expansion(t_env *env, char *word)
 	return (tmp);
 }
 
-static void	resolve_quote(char *string)
+static void	resolve_quote(char *literal)
 {
 	int		i;
 	char	quote;
 
-	if (!string)
+	if (!literal)
 		return ;
 	i = 0;
 	quote = '\0';
-	while (*(string + i))
+	while (*(literal + i))
 	{
-		if (quote && string[i] == quote)
+		if (quote && literal[i] == quote)
 			quote = '\0';
-		else if (!quote && ft_strchr("\'\"", string[i]))
-			quote = string[i];
-		else if (quote == '\'' && string[i] == '$')
-			string[i] = 0x1A;
-		else if (quote == '\'' && string[i] == 0x1A)
-			string[i] = '$';
+		else if (!quote && ft_strchr("\'\"", literal[i]))
+			quote = literal[i];
+		else if (quote == '\'' && literal[i] == '$')
+			literal[i] = 0x1A;
+		else if (quote == '\'' && literal[i] == 0x1A)
+			literal[i] = '$';
 		i++;
 	}
 }
 
-void	var_expansions(t_env *env, t_content *content)
+void	var_expansions(t_env *env, t_token *content)
 {
 	size_t	i;
 	char	*str;
@@ -120,15 +120,15 @@ void	var_expansions(t_env *env, t_content *content)
 	if (!env || !content)
 		return ;
 	i = 0;
-	str = content->string;
+	str = content->literal;
 	resolve_quote(str);
 	while (str && str[i] != '\0')
 	{
 		if (str[i] == '$' && (ft_isalpha(str[i + 1]) || str[i + 1] == '_'))
 		{
 			str = check_expansion(env, str);
-			free(content->string);
-			content->string = str;
+			free(content->literal);
+			content->literal = str;
 		}
 		else
 			i++;
