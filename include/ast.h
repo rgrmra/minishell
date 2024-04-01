@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:43:01 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/28 09:33:26 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/01 19:27:25 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ struct s_ast
 {
 	t_ast	*left;
 	t_ast	*right;
-	t_token *content;
+	t_token	*content;
 };
 
 void	ast_print(t_ast **ast);

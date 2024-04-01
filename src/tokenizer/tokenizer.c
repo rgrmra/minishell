@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/28 09:40:36 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/01 19:14:26 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	get_token(char *literal, int last_token)
 static int	check_token(t_list **tokens, char *literal)
 {
 	t_token	*content;
-	int			last_token;
+	int		last_token;
 
 	if (!literal)
 		return (0);
