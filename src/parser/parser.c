@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 07:41:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/28 09:47:00 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/01 19:25:16 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,11 @@ static int	check_operators(t_token *content, t_list *next_content)
 	if (!next_content)
 		return (false);
 	next = next_content->content;
-	if (content->type & (VBAR | LESS | DLESS | GREATER
-			| DGREATER) && next->type & (VBAR | LESS | DLESS
+	if (content->type & (LESS | DLESS | GREATER
+			| DGREATER) && next->type & (LESS | DLESS
 			| GREATER | DGREATER | RPAREN))
+		return (true);
+	if (content->type & VBAR && next->type & (VBAR | RPAREN))
 		return (true);
 	return (false);
 }

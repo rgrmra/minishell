@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/28 09:46:21 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/01 19:40:19 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 
 static void	ast_build(t_list **tokens, t_ast **ast);
 
-static t_ast	*ast_node(t_list *tokens)
+static t_ast	*ast_node(t_list **tokens)
 {
+	t_list	*tmp;
 	t_ast	*ast;
 
 	if (!tokens)
@@ -27,13 +28,15 @@ static t_ast	*ast_node(t_list *tokens)
 		return (NULL);
 	ast->left = NULL;
 	ast->right = NULL;
-	ast->content = tokens->content;
+	ast->content = (*tokens)->content;
+	tmp = *tokens;
+	*tokens = (*tokens)->next;
+	free(tmp);
 	return (ast);
 }
 
 static t_ast	*ast_build_command(t_list **tokens, t_ast *prev)
 {
-	t_list	*tmp;
 	t_ast	*ast;
 
 	if (!tokens || !(*tokens))
@@ -42,17 +45,14 @@ static t_ast	*ast_build_command(t_list **tokens, t_ast *prev)
 	if (prev && prev->content && prev->content->type & (AND | OR))
 	{
 		if (((t_token *)(*tokens)->content)->type & LPAREN
-			&& prev->left->content->type &~ RPAREN)
+			&& prev->left->content->type & ~RPAREN)
 		{
 			ast_build(tokens, &ast);
 			prev->right = ast;
 		}
 		return (prev);
 	}
-	tmp = *tokens;
-	ast = ast_node(*tokens);
-	*tokens = (*tokens)->next;
-	free(tmp);
+	ast = ast_node(tokens);
 	if (!ast)
 		return (prev);
 	ast->left = prev;

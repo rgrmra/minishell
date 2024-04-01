@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 10:55:34 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/28 09:37:56 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/01 19:13:15 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,27 @@ static void	swap_flags(t_list *command, t_list *redirect, t_list *flag)
 	flag->next = redirect;
 }
 
+static void	invert_commands(t_list *tokens)
+{
+	t_list	*tmp;
+	t_token	*pos;
+
+	tmp = tokens;
+	while (tmp->next)
+	{
+		if (((t_token *) tmp->content)->type & COMMAND
+			&& ((t_token *) tmp->next->content)->type & (DLESS | LESS | DGREATER
+				| GREATER | FILENAME))
+		{
+			pos = tmp->content;
+			tmp->content = tmp->next->content;
+			tmp->next->content = tmp->next->next->content;
+			tmp->next->next->content = pos;
+		}
+		tmp = tmp->next;
+	}
+}
+
 t_list	*append_commands(t_list *tokens)
 {
 	t_list	*tmp;
@@ -53,5 +74,6 @@ t_list	*append_commands(t_list *tokens)
 		else
 			tmp = tmp->next;
 	}
+	invert_commands(tokens);
 	return (tokens);
 }
