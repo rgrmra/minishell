@@ -6,12 +6,12 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 19:40:39 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/05 11:02:29 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/02 19:44:32 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "ft_stdlib.h"
+#include <unistd.h>
 #include "ft_string.h"
 #include "arraylist.h"
 #include "get_env.h"
