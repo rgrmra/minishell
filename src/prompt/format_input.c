@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/22 10:19:48 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/02 18:41:14 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ static char	*find_quote(char *tmp)
 	int		i;
 	char	quote;
 
+	if (!tmp || !(*tmp))
+		return (tmp);
 	i = 0;
 	quote = '\0';
 	while (tmp && tmp[i])
@@ -94,9 +96,9 @@ char	**format_input(char *input)
 	char	*tmp;
 	int		i;
 
+	input = find_quote(input);
 	if (!input || !(*input))
 		return (NULL);
-	input = find_quote(input);
 	tmp = (char *) malloc(ft_strlen(input) * 3 * sizeof(char));
 	if (!tmp)
 		return (NULL);
