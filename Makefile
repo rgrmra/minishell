@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/02 19:57:40 by rde-mour          #+#    #+#              #
-#    Updated: 2024/03/22 11:54:10 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/04/02 20:51:40 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,17 +61,6 @@ SRCS		:=	\
 	src/ast/ast.c \
 	util/arraylist.c \
 	util/strjoinsep.c \
-	util/ft_printf/ft_build_bonus.c \
-	util/ft_printf/ft_build_character_bonus.c \
-	util/ft_printf/ft_build_config_bonus.c \
-	util/ft_printf/ft_build_hexadecimal_bonus.c \
-	util/ft_printf/ft_build_number_bonus.c \
-	util/ft_printf/ft_build_pointer_bonus.c \
-	util/ft_printf/ft_build_string_bonus.c \
-	util/ft_printf/ft_build_unsigned_bonus.c \
-	util/ft_printf/ft_find_characters_bonus.c \
-	util/ft_printf/ft_printf_bonus.c \
-	util/ft_printf/ft_printf_utils_bonus.c \
 
 SRCS		:=	$(addprefix $(SRC_DIR)/,$(SRCS))
 
