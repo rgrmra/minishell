@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 07:41:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/01 19:25:16 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/02 21:59:47 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,10 @@ static int	check_controllers(t_token *content, t_list *next_content)
 	if (!next_content)
 		return (false);
 	next = next_content->content;
-	if (content->type & (AND | OR) && next->type & (AND | OR
-			| VBAR | RPAREN))
+	if (content->type & (AND | OR) && next->type & (AND | OR | VBAR | RPAREN))
 		return (true);
-	if (content->type & (AND | OR | VBAR | LESS | DLESS
-			| GREATER | DGREATER | LPAREN) && next->type & (AND
-			| OR))
+	if (content->type & (AND | OR | VBAR | LESS | DLESS | GREATER | DGREATER
+			| LPAREN) && next->type & (AND | OR))
 		return (true);
 	if (content->type & (RPAREN) && next->type & (LPAREN))
 		return (true);
@@ -49,15 +47,14 @@ static int	check_operators(t_token *content, t_list *next_content)
 {
 	t_token	*next;
 
-	if (!next_content && content->type & (VBAR | LESS | DLESS
-			| GREATER | DGREATER | LPAREN))
+	if (!next_content && content->type & (VBAR | LESS | DLESS | GREATER
+			| DGREATER | LPAREN))
 		return (true);
 	if (!next_content)
 		return (false);
 	next = next_content->content;
-	if (content->type & (LESS | DLESS | GREATER
-			| DGREATER) && next->type & (LESS | DLESS
-			| GREATER | DGREATER | RPAREN))
+	if (content->type & (LESS | DLESS | GREATER | DGREATER)
+		&& next->type & (LESS | DLESS | GREATER | DGREATER | RPAREN))
 		return (true);
 	if (content->type & VBAR && next->type & (VBAR | RPAREN))
 		return (true);
