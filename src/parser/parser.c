@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 07:41:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/02 21:59:47 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/08 17:11:27 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,15 @@ static int	check_controllers(t_token *content, t_list *next_content)
 	if (!next_content)
 		return (false);
 	next = next_content->content;
-	if (content->type & (AND | OR) && next->type & (AND | OR | VBAR | RPAREN))
+	if (content->type & (AND | OR) && next->type & (AND | OR | VBAR))
 		return (true);
-	if (content->type & (AND | OR | VBAR | LESS | DLESS | GREATER | DGREATER
-			| LPAREN) && next->type & (AND | OR))
+	if (content->type & (AND | OR | VBAR | LESS | DLESS | GREATER | DGREATER)
+		&& next->type & (AND | OR))
 		return (true);
-	if (content->type & (RPAREN) && next->type & (LPAREN))
+	if (content->type & PAREN && next->type & PAREN)
 		return (true);
-	if (content->type & (RPAREN) && next->type & (COMMAND))
+	if ((content->type & (PAREN) && next->type & (COMMAND))
+		|| (content->type & (COMMAND) && next->type & (PAREN)))
 		return (true);
 	return (false);
 }
@@ -48,15 +49,17 @@ static int	check_operators(t_token *content, t_list *next_content)
 	t_token	*next;
 
 	if (!next_content && content->type & (VBAR | LESS | DLESS | GREATER
-			| DGREATER | LPAREN))
+			| DGREATER))
 		return (true);
 	if (!next_content)
 		return (false);
 	next = next_content->content;
 	if (content->type & (LESS | DLESS | GREATER | DGREATER)
-		&& next->type & (LESS | DLESS | GREATER | DGREATER | RPAREN))
+		&& next->type & (LESS | DLESS | GREATER | DGREATER | PAREN))
 		return (true);
-	if (content->type & VBAR && next->type & (VBAR | RPAREN))
+	if (content->type & VBAR && next->type & VBAR)
+		return (true);
+	if (content->type & FILENAME && next->type & PAREN)
 		return (true);
 	return (false);
 }
@@ -81,7 +84,7 @@ void	parser(t_list **tokens)
 		return ;
 	errors = 0;
 	tmp = *tokens;
-	if (((t_token *) tmp->content)->type & (VBAR | AND | OR | RPAREN)
+	if (((t_token *) tmp->content)->type & (VBAR | AND | OR)
 		&& error(true, tokens, ((t_token *) tmp->content)->literal))
 		return ;
 	while (tmp)
@@ -99,4 +102,5 @@ void	parser(t_list **tokens)
 			return ;
 		tmp = tmp->next;
 	}
+	invert_commands(*tokens);
 }

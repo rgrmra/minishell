@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/28 09:44:32 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/08 11:00:24 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "expansions.h"
 #include "get_env.h"
 #include "tokenizer.h"
-#include "strjoinsep.h"
+#include "utils.h"
 #include <stdlib.h>
 
 static char	*expand(char *begin, char *var, char *end)

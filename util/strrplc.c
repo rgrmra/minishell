@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ast.h                                              :+:      :+:    :+:   */
+/*   strrplc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/18 08:43:01 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/08 19:32:28 by rde-mour         ###   ########.org.br   */
+/*   Created: 2024/04/08 10:56:34 by rde-mour          #+#    #+#             */
+/*   Updated: 2024/04/08 10:56:56 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef AST_H
-# define AST_H
+#include <stdlib.h>
 
-# include "tokenizer.h"
-
-typedef struct s_ast	t_ast;
-struct s_ast
+void	strrplc(char *str, char old, char new)
 {
-	t_ast	*left;
-	t_ast	*right;
-	t_token	*content;
-};
+	size_t	i;
 
-void	ast_print(t_ast **ast);
-t_ast	*ast_new(t_list	**tokens);
-
-#endif
+	if (!str)
+		return ;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == old)
+			str[i] = new;
+		i++;
+	}
+}

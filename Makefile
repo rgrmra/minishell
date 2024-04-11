@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/02 19:57:40 by rde-mour          #+#    #+#              #
-#    Updated: 2024/04/02 20:51:40 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/04/08 19:33:26 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,6 +61,7 @@ SRCS		:=	\
 	src/ast/ast.c \
 	util/arraylist.c \
 	util/strjoinsep.c \
+	util/strrplc.c \
 
 SRCS		:=	$(addprefix $(SRC_DIR)/,$(SRCS))
 

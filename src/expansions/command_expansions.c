@@ -6,18 +6,17 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 09:57:54 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/02 22:45:03 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/08 11:00:45 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
-#include "arraylist.h"
 #include "expansions.h"
 #include "ft_string.h"
 #include "tokenizer.h"
 #include "get_env.h"
-#include "strjoinsep.h"
+#include "utils.h"
 
 static char	*check_bultins(char *word)
 {

@@ -6,19 +6,36 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/02 18:41:14 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/08 16:34:25 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "ft_string.h"
+#include "utils.h"
 
 static char	check_quote(char quote, char *input, int i)
 {
-	if (quote && (input[i] == quote))
+	static int	sub;
+
+	if (i == 0)
+		sub = 0;
+	if (!quote || ft_strchr("()", quote))
+	{
+		if (input[i] == ')')
+			sub--;
+		else if (input[i] == '(')
+			sub++;
+		if (sub > 0)
+			return ('(');
+		else if (sub < 0)
+			return (')');
+		quote = '\0';
+	}
+	if (sub == 0 && quote && (input[i] == quote))
 		return ('\0');
-	else if (!quote && ft_strchr("\'\"", input[i]))
+	else if (sub == 0 && !quote && ft_strchr("\'\"", input[i]))
 		return (input[i]);
 	return (quote);
 }
@@ -58,13 +75,15 @@ static char	*expand_input(char *tmp, char *input)
 	quote = '\0';
 	while (input[i])
 	{
+		if (ft_strchr("\"\'\0", quote) && input[i] == '(')
+			tmp[j++] = ' ';
 		quote = check_quote(quote, input, i);
-		if (!quote && ft_strchr("()|<>&", input[i]) && input[i] != ' ')
+		if (!quote && ft_strchr("|<>&", input[i]))
 		{
-			if (i && (ft_strchr("()", input[i]) || input[i - 1] != input[i]))
+			if (i && input[i - 1] != input[i])
 				tmp[j++] = ' ';
 			tmp[j++] = input[i];
-			if (ft_strchr("()", input[i]) || input[i + 1] != input[i])
+			if (input[i + 1] != input[i])
 				tmp[j++] = ' ';
 		}
 		else
@@ -73,21 +92,6 @@ static char	*expand_input(char *tmp, char *input)
 	}
 	tmp[j] = '\0';
 	return (tmp);
-}
-
-static void	strrplc(char *str, char old, char new)
-{
-	size_t	i;
-
-	if (!str)
-		return ;
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == old)
-			str[i] = new;
-		i++;
-	}
 }
 
 char	**format_input(char *input)
