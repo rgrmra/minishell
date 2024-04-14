@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:43:01 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/13 22:12:00 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/14 09:45:04 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ struct s_ast
 
 void	ast_print(t_ast **ast);
 t_ast	*ast_build(t_list **tokens, t_ast **prev);
-t_ast	*ast_new(t_list	**tokens);
+t_ast	*ast_new(t_list **tokens);
+t_ast	*ast_clear(t_ast **ast);
 
 #endif

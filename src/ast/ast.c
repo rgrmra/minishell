@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/13 22:21:04 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/14 08:55:39 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,22 @@
 #include "parser.h"
 #include "ft_string.h"
 
-//static t_ast	*ast_clear(t_ast	**ast)
-//{
-//	t_ast	*tmp;
-//
-//	if (!ast || !(*ast))
-//		return (NULL);
-//	tmp = *ast;
-//	if ((*ast)->left)
-//		ast_clear(&(*ast)->left);
-//	if ((*ast)->right)
-//		ast_clear(&(*ast)->right);
-//	free(tmp->content->literal);
-//	free(tmp->content);
-//	free(tmp);
-//	return (NULL);
-//}
+t_ast	*ast_clear(t_ast **ast)
+{
+	t_ast	*tmp;
+
+	if (!ast || !(*ast))
+		return (NULL);
+	tmp = *ast;
+	if ((*ast)->left)
+		ast_clear(&(*ast)->left);
+	if ((*ast)->right)
+		ast_clear(&(*ast)->right);
+	free(tmp->content->literal);
+	free(tmp->content);
+	free(tmp);
+	return (NULL);
+}
 
 void	ast_print(t_ast **ast)
 {
@@ -49,9 +49,6 @@ void	ast_print(t_ast **ast)
 	if ((*ast)->right)
 		ast_print(&(*ast)->right);
 	printf("%d %s\n", tmp->content->type, tmp->content->literal);
-	free(tmp->content->literal);
-	free(tmp->content);
-	free(tmp);
 }
 
 static t_ast	*ast_get(t_ast **paren)

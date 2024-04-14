@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 19:40:39 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/02 19:44:32 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/14 08:26:41 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,15 @@
 #include "ft_string.h"
 #include "arraylist.h"
 #include "get_env.h"
+#include "types.h"
 
 static int	compare(t_var *src, char *str)
 {
 	if (!src || !src->name || !str || !(*str))
-		return (FAILURE);
+		return (false);
 	if (!ft_strncmp(src->name, str, ft_strlen(src->name) + 1))
-		return (SUCCESS);
-	return (FAILURE);
+		return (true);
+	return (false);
 }
 
 static void	delete(t_var *list)
