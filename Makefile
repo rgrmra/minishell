@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/02 19:57:40 by rde-mour          #+#    #+#              #
-#    Updated: 2024/04/08 19:33:26 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/04/14 15:36:30 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,6 +59,7 @@ SRCS		:=	\
 	src/expansions/command_expansions.c \
 	src/expansions/remove_quotes.c \
 	src/ast/ast.c \
+	src/ast/ast_utils.c \
 	util/arraylist.c \
 	util/strjoinsep.c \
 	util/strrplc.c \

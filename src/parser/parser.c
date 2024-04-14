@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 07:41:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/08 17:11:27 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/14 16:31:00 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,12 @@
 #include "tokenizer.h"
 #include "types.h"
 
-static int	check_invalid(t_token *content)
-{
-	if (content->type & (ILLEGAL))
-		return (true);
-	return (false);
-}
-
 static int	check_controllers(t_token *content, t_list *next_content)
 {
 	t_token	*next;
 
+	if (content->type & (ILLEGAL))
+		return (true);
 	if (!next_content && content->type & (AND | OR))
 		return (true);
 	if (!next_content)
@@ -89,9 +84,6 @@ void	parser(t_list **tokens)
 		return ;
 	while (tmp)
 	{
-		errors += check_invalid((t_token *) tmp->content);
-		if (error(errors, tokens, ((t_token *) tmp->content)->literal))
-			return ;
 		errors += check_controllers((t_token *) tmp->content, tmp->next);
 		if (error(errors, tokens, ((t_token *) tmp->content)->literal))
 			return ;
