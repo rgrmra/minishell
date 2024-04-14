@@ -6,13 +6,14 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 10:55:34 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/08 15:20:45 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/13 17:59:07 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "tokenizer.h"
 #include "utils.h"
+#include "types.h"
 
 static void	append(t_list *tmp, t_list *next)
 {
@@ -26,13 +27,6 @@ static void	append(t_list *tmp, t_list *next)
 	ft_lstdelone(next, &token_clear);
 }
 
-//static void	swap_flags(t_list *command, t_list *redirect, t_list *flag)
-//{
-//	command->next = flag;
-//	redirect->next->next = flag->next;
-//	flag->next = redirect;
-//}
-
 void	invert_commands(t_list *tokens)
 {
 	t_list	*tmp;
@@ -43,10 +37,10 @@ void	invert_commands(t_list *tokens)
 	tmp = tokens;
 	while (tmp->next)
 	{
-		if (((t_token *) tmp->content)->type & (COMMAND | PAREN) && tmp->next->next
-			&& ((t_token *) tmp->next->content)->type & (DLESS | LESS
-				| DGREATER | GREATER | FILENAME | END) && (!prev
-				|| ((t_token *) prev->content)->type & ~(DLESS | LESS
+		if (((t_token *) tmp->content)->type & (COMMAND | PAREN)
+			&& tmp->next->next && ((t_token *) tmp->next->content)->type
+			& (DLESS | LESS | DGREATER | GREATER | FILENAME | END)
+			&& (!prev || ((t_token *) prev->content)->type & ~(DLESS | LESS
 					| DGREATER | GREATER | FILENAME | END)))
 		{
 			pos = tmp->content;
@@ -59,9 +53,23 @@ void	invert_commands(t_list *tokens)
 	}
 }
 
+static int	check_pull_commands(t_list	*tokens, t_list *tmp, t_list *prev)
+{
+	tmp = tokens;
+	while (tmp->next)
+	{
+		prev = tmp;
+		tmp = tmp->next;
+		if (((t_token *) prev->content)->type
+			& (LESS | DLESS | GREATER | DGREATER | FILENAME | END)
+			&& ((t_token *) tmp->content)->type & (COMMAND))
+			return (true);
+	}
+	return (false);
+}
+
 static	void	pull_commands(t_list *tokens)
 {
-	short	status;
 	t_list	*tmp;
 	t_list	*prev;
 	t_token	*pos;
@@ -80,20 +88,8 @@ static	void	pull_commands(t_list *tokens)
 			prev->content = pos;
 		}
 	}
-	status = 0;
-	tmp = tokens;
-	while (tmp->next)
-	{
-		prev = tmp;
-		tmp = tmp->next;
-		if (((t_token *) prev->content)->type & (LESS | DLESS | GREATER
-				| DGREATER | FILENAME | END) && ((t_token *) tmp->content)->type
-			& (COMMAND))
-		status = 1;
-	}
-	if (!status)
-		return ;
-	pull_commands(tokens);
+	if (check_pull_commands(tokens, tmp, prev))
+		pull_commands(tokens);
 }
 
 t_list	*append_commands(t_list *tokens)
@@ -109,12 +105,6 @@ t_list	*append_commands(t_list *tokens)
 		if (((t_token *) tmp->content)->type & COMMAND
 			&& ((t_token *) next->content)->type & COMMAND)
 			append(tmp, next);
-		//else if (((t_token *) tmp->content)->type & COMMAND
-		//	&& ((t_token *) next->content)->type & (DLESS | LESS | DGREATER
-		//		| GREATER) && next->next && next->next->next
-		//	&& ((t_token *) next->next->content)->type & (FILENAME | END)
-		//	&& ((t_token *) next->next->next->content)->type & COMMAND)
-		//	swap_flags(tmp, next, next->next->next);
 		else
 			tmp = tmp->next;
 	}
