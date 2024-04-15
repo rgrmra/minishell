@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 22:22:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/14 22:45:37 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/15 11:35:46 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,33 @@
 
 static char	*get_filename(void)
 {
-	static int	count;
+	static int	count = 100;
 	char		*filename;
 	char		*tmp;
 
 	tmp = ft_itoa(count++);
-	filename = ft_strjoin("/var/tmp/minishell-private-tmp_", tmp);
+	filename = ft_strjoin("/var/tmp/minishell-private-tmp-", tmp);
 	free(tmp);
 	return (filename);
+}
+
+static int	get_fd(char	**filename)
+{
+	int	fd;
+
+	fd = -1;
+	while (fd == -1)
+	{
+		*filename = get_filename();
+		fd = open(*filename, O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR);
+		if (fd == -1)
+		{
+			unlink(*filename);
+			free(*filename);
+		}
+	}
+	close(fd);
+	return (fd);
 }
 
 char	*heredoc(char *limiter)
@@ -37,14 +56,8 @@ char	*heredoc(char *limiter)
 	char	*input;
 	int		fd;
 
-	fd = -1;
-	while (fd == -1)
-	{
-		filename = get_filename();
-		fd = open(filename, O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR);
-		if (fd == -1)
-			free(filename);
-	}
+	filename = NULL;
+	fd = get_fd(&filename);
 	while (1)
 	{
 		input = readline("> ");
@@ -54,7 +67,6 @@ char	*heredoc(char *limiter)
 		write(fd, "\n", 1);
 		free(input);
 	}
-	close(fd);
 	if (input)
 		free(input);
 	return (filename);
