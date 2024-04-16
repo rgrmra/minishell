@@ -6,12 +6,13 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:30:01 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/14 16:07:05 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/15 21:12:47 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "ast.h"
+#include "tokenizer.h"
 
 static t_ast	*ast_build_pipeline(t_list **tokens, t_ast **root, t_ast **prev)
 {
@@ -30,12 +31,10 @@ static t_ast	*ast_build_pipeline(t_list **tokens, t_ast **root, t_ast **prev)
 t_ast	*ast_build_command(t_list **tokens, t_ast **prev)
 {
 	t_ast	*ast;
-	t_ast	*tmp;
 
 	if (!tokens || !(*tokens)
 		|| (*tokens && ((t_token *)(*tokens)->content)->type & (AND | OR)))
 		return (*prev);
-	tmp = NULL;
 	ast = ast_node(tokens);
 	if (ast && ast->content->type & VBAR)
 		ast_build_pipeline(tokens, prev, &ast);
@@ -50,10 +49,16 @@ static t_ast	*ast_build_redirect(t_list **tokens, t_ast **root, t_ast **prev)
 	{
 		(*prev)->left = *root;
 		(*prev)->right = ast_node(tokens);
+		if ((*prev)->right->content->type & END)
+			heredoc(&((*prev)->right->content->literal));
 		return (*prev);
 	}
 	if (*tokens && ((t_token *)(*tokens)->content)->type & (FILENAME | END))
+	{
 		(*prev)->left = ast_node(tokens);
+		if ((*prev)->left->content->type & END)
+			heredoc(&((*prev)->left->content->literal));
+	}
 	if (*tokens && ((t_token *)(*tokens)->content)->type & (COMMAND | PAREN))
 		(*prev)->right = ast_node(tokens);
 	if (*root)

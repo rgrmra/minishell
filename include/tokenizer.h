@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:22:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/08 13:09:06 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/15 21:12:00 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,6 @@ void	token_clear(void *content);
 t_list	*tokenizer(char **splitted);
 t_list	*append_commands(t_list *tokens);
 void	invert_commands(t_list *tokens);
+void	heredoc(char **limiter);
 
 #endif
