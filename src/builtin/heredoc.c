@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 22:22:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/15 21:14:39 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/16 15:44:17 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ void	heredoc(char **limiter)
 	char	*input;
 	int		fd;
 
-	filename = NULL;
 	fd = get_fd(&filename);
 	while (1)
 	{
