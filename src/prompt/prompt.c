@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 20:00:16 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/14 22:39:47 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/15 20:53:48 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	prompt(t_env *env)
 			add_history(input);
 		tokens(env, format_input(input));
 		free(input);
-		free(heredoc("EOF"));
 	}
 	rl_clear_history();
 }

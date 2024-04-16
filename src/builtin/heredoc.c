@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 22:22:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/15 11:35:46 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/15 21:14:39 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	get_fd(char	**filename)
 	return (fd);
 }
 
-char	*heredoc(char *limiter)
+void	heredoc(char **limiter)
 {
 	char	*filename;
 	char	*input;
@@ -61,7 +61,7 @@ char	*heredoc(char *limiter)
 	while (1)
 	{
 		input = readline("> ");
-		if (!input || ft_strncmp(limiter, input, ft_strlen(limiter) + 1) == 0)
+		if (!input || ft_strncmp(*limiter, input, ft_strlen(*limiter) + 1) == 0)
 			break ;
 		write(fd, input, ft_strlen(input));
 		write(fd, "\n", 1);
@@ -69,5 +69,6 @@ char	*heredoc(char *limiter)
 	}
 	if (input)
 		free(input);
-	return (filename);
+	free(*limiter);
+	*limiter = filename;
 }
