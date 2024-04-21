@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 20:00:16 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/20 21:09:14 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/21 13:33:55 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,27 @@
 
 #include "ft_string.h"
 #include <fcntl.h>
+
+int	forked(int status)
+{
+	static int isforked;
+
+	if (status == true)
+		isforked = true;
+	if (isforked)
+		rl_clear_history();
+	return (isforked);
+}
+
+void	rmast(t_ast **ast)
+{
+	if (!ast || !(*ast))
+		return ;
+	free((*ast)->content->literal);
+	free((*ast)->content);
+	free(*ast);
+	*ast = NULL;
+}
 
 int *alloc_fds()
 {
@@ -72,6 +93,7 @@ static void	closeall(int *fds)
 			close(fds[2]);
 		if (fds[3] > -1)
 			close(fds[3]);
+		free(fds);
 	}
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
@@ -91,10 +113,11 @@ static void	execute_command(t_env *env, t_ast **ast, int *fds)
 	cmd = ft_split(tmp->content->literal, ' ');
 	command_expansions(env, cmd);
 	remove_quotes(cmd);
+	rmast(ast);
 	pid = fork();
 	if (pid == 0)
 	{
-		rl_clear_history();
+		forked(true);
 		open_stdout(fds);
 		if (*cmd && (ft_strchr("./", **cmd) || access(*cmd, F_OK | X_OK) == 0)
 				&& execve(*cmd, cmd, env->environ) < 0)
@@ -102,7 +125,6 @@ static void	execute_command(t_env *env, t_ast **ast, int *fds)
 		printf("command not found!\n");
 		ft_memclear((void **) cmd, &free);
 		envclear(&(env->vars));
-		ast_clear(ast);
 		closeall(fds);
 		exit(EXIT_SUCCESS);
 	}
@@ -114,16 +136,23 @@ static void	execute_command(t_env *env, t_ast **ast, int *fds)
 		close(fds[2]);
 	if (fds && fds[3] > -1)
 		close(fds[3]);
-	waitpid(pid, NULL, WUNTRACED);
+	if (fds && forked(false))
+		closeall(fds);
 	ft_memclear((void **) cmd, &free);
+	waitpid(pid, NULL, WUNTRACED);
 }
 
 static void	execute_pipe(t_env *env, t_ast **ast)
 {
 	pid_t	pid;
 	int		*fds = alloc_fds();
+	t_ast	*left;
+	t_ast	*right;
 
 	pipe(fds);
+	left = (*ast)->left;
+	right = (*ast)->right;
+	rmast(ast);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -133,8 +162,9 @@ static void	execute_pipe(t_env *env, t_ast **ast)
 		close(fds[1]);
 		execute(env, &((*ast)->left), fds);
 		envclear(&(env->vars));
-		ast_clear(ast);
-		closeall(fds);
+		ast_clear(&left);
+		ast_clear(&right);
+		//closeall(fds);
 		free(fds);
 		exit(EXIT_SUCCESS);
 	}
@@ -147,14 +177,17 @@ static void	execute_pipe(t_env *env, t_ast **ast)
 		close(fds[1]);
 		execute(env, &((*ast)->right), fds);
 		envclear(&(env->vars));
-		ast_clear(ast);
-		closeall(fds);
+		ast_clear(&right);
+		ast_clear(&left);
+		//closeall(fds);
 		free(fds);
 		exit(EXIT_SUCCESS);
 	}
 	close(fds[0]);
 	close(fds[1]);
 	free(fds);
+	ast_clear(&left);
+	ast_clear(&right);
 	waitpid(pid, NULL, WUNTRACED);
 }
 
@@ -225,28 +258,22 @@ static void	execute_redirection(t_env *env, t_ast **ast)
 static void	execute_subshell(t_env *env, t_ast **ast)
 {
 	pid_t	pid;
-	int		*fds = alloc_fds();
+	t_ast	*tmp;
 
 	if (!ast || !(*ast))
 		return ;
-	pipe(fds);
+	tmp = (*ast)->left;
+	rmast(ast);
 	pid = fork();
 	if (pid == 0)
 	{
-		rl_clear_history();
-		close(fds[0]);
-		close(fds[1]);
-		execute(env, &((*ast)->left), fds);
+		forked(true);
+		execute(env, &tmp, NULL);
 		envclear(&(env->vars));
-		ast_clear(ast);
-		closeall(fds);
-		free(fds);
 		exit(EXIT_SUCCESS);
 	}
-	close(fds[0]);
-	close(fds[1]);
-	free(fds);
 	waitpid(pid, NULL, WUNTRACED);
+	ast_clear(&tmp);
 }
 
 static void	execute(t_env *env, t_ast **ast, int *fds)
@@ -276,10 +303,8 @@ static void	tokens(t_env *env, char **splitted)
 	if (splitted)
 		free(splitted);
 	parser(&tokens);
-	(void)env;
 	ast = ast_new(&tokens);
 	execute(env, &ast, NULL);
-	ast_clear(&ast);
 }
 
 void	prompt(t_env *env)
