@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 20:00:16 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/18 21:47:09 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/20 21:09:14 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,29 @@
 #include "ft_string.h"
 #include <fcntl.h>
 
+int *alloc_fds()
+{
+	int	*fds;
+
+	fds = (int *) ft_calloc(4, sizeof(int));
+	fds[2] = -2;
+	fds[3] = -2;
+	return (fds);
+}
+
 static void	execute(t_env *env, t_ast **ast, int *fds);
 
-static void	open_stdout(int **fds)
+static void	open_stdout(int *fds)
 {
-	dup2(*fds[1], STDOUT_FILENO);
-	close(*fds[0]);
+	if (!fds)
+		return ;
+	if (fds[2] > -1)
+	{
+		dup2(fds[2], STDOUT_FILENO);
+		close(fds[0]);
+		close(fds[1]);
+		return ;
+	}
 }
 
 //static void	open_stdin(int **fds)
@@ -43,8 +60,19 @@ static void	open_stdout(int **fds)
 //	close(*fds[1]);
 //}
 
-static void	closeall()
+static void	closeall(int *fds)
 {
+	if (fds)
+	{
+		if (fds[0] > -1)
+			close(fds[0]);
+		if (fds[1] > -1)
+			close(fds[1]);
+		if (fds[2] > -1)
+			close(fds[2]);
+		if (fds[3] > -1)
+			close(fds[3]);
+	}
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
 	close(STDERR_FILENO);
@@ -67,26 +95,33 @@ static void	execute_command(t_env *env, t_ast **ast, int *fds)
 	if (pid == 0)
 	{
 		rl_clear_history();
-		if (fds)
-			open_stdout(&fds);
+		open_stdout(fds);
 		if (*cmd && (ft_strchr("./", **cmd) || access(*cmd, F_OK | X_OK) == 0)
 				&& execve(*cmd, cmd, env->environ) < 0)
 			(printf("failed\n"), exit(EXIT_FAILURE));
 		printf("command not found!\n");
 		ft_memclear((void **) cmd, &free);
-		closeall();
 		envclear(&(env->vars));
 		ast_clear(ast);
+		closeall(fds);
 		exit(EXIT_SUCCESS);
 	}
-	ft_memclear((void **) cmd, &free);
+	if (fds && fds[0] > -1)
+		close(fds[0]);
+	if (fds && fds[1] > -1)
+		close(fds[1]);
+	if (fds && fds[2] > -1)
+		close(fds[2]);
+	if (fds && fds[3] > -1)
+		close(fds[3]);
 	waitpid(pid, NULL, WUNTRACED);
+	ft_memclear((void **) cmd, &free);
 }
 
 static void	execute_pipe(t_env *env, t_ast **ast)
 {
 	pid_t	pid;
-	int		fds[2];
+	int		*fds = alloc_fds();
 
 	pipe(fds);
 	pid = fork();
@@ -97,9 +132,10 @@ static void	execute_pipe(t_env *env, t_ast **ast)
 		close(fds[0]);
 		close(fds[1]);
 		execute(env, &((*ast)->left), fds);
-		closeall();
 		envclear(&(env->vars));
 		ast_clear(ast);
+		closeall(fds);
+		free(fds);
 		exit(EXIT_SUCCESS);
 	}
 	pid = fork();
@@ -110,32 +146,86 @@ static void	execute_pipe(t_env *env, t_ast **ast)
 		close(fds[0]);
 		close(fds[1]);
 		execute(env, &((*ast)->right), fds);
-		closeall();
 		envclear(&(env->vars));
 		ast_clear(ast);
+		closeall(fds);
+		free(fds);
 		exit(EXIT_SUCCESS);
 	}
 	close(fds[0]);
 	close(fds[1]);
-	waitpid(pid, NULL, WCONTINUED);
+	free(fds);
+	waitpid(pid, NULL, WUNTRACED);
 }
 
-static void	execute_infile(t_env *env, t_ast **ast)
+static t_ast	*redirection(t_env *env, t_ast **ast, int *fdin, int *fdout)
 {
-	(void)env;
-	(void)ast;
+	t_ast	*tmp;
+
+	if (!ast || !(*ast))
+		return (NULL);
+	tmp = NULL;
+	if ((*ast)->left && (*ast)->left->content->type & COMMAND)
+		tmp = ((*ast)->left);
+	else if ((*ast)->left && (*ast)->left->content->type & (LESS | DLESS | GREATER | DGREATER))
+		tmp = redirection(env, &((*ast)->left), fdin, fdout);
+	if ((*ast)->content->type & (LESS | DLESS))
+	{
+		if (*fdout > -1)
+			close(*fdout);
+		*fdout = open((*ast)->right->content->literal, O_RDONLY, 0644);
+	}
+	if ((*ast)->content->type & GREATER)
+	{
+		if (*fdin > -1)
+			close(*fdin);
+		*fdin = open((*ast)->right->content->literal, O_CREAT | O_TRUNC | O_WRONLY, 0644);
+	}
+	else if ((*ast)->content->type & DGREATER)
+	{
+		if (*fdin > -1)
+			close(*fdin);
+		*fdin = open((*ast)->right->content->literal, O_CREAT | O_APPEND | O_WRONLY, 0644);
+	}
+	if (*fdout == -1 || *fdin == -1)
+		exit(EXIT_FAILURE);
+	if (*fdout > -1)
+		dup2(*fdout, STDIN_FILENO);
+	return (tmp);
 }
 
-static void	execute_outfile(t_env *env, t_ast **ast)
+static void	execute_redirection(t_env *env, t_ast **ast)
 {
-	(void)env;
-	(void)ast;
+	pid_t	pid;
+	int		*fds;
+	t_ast	*tmp;
+
+	if (!ast || !(*ast))
+		return ;
+	fds = alloc_fds();
+	pipe(fds);
+	pid = fork();
+	if (pid == 0)
+	{
+		rl_clear_history();
+		tmp = redirection(env, ast, &fds[2], &fds[3]);
+		execute(env, &tmp, fds);
+		ast_clear(ast);
+		envclear(&(env->vars));
+		closeall(fds);
+		free(fds);
+		exit(EXIT_SUCCESS);
+	}
+	close(fds[0]);
+	close(fds[1]);
+	free(fds);
+	waitpid(pid, NULL, WUNTRACED);
 }
 
 static void	execute_subshell(t_env *env, t_ast **ast)
 {
 	pid_t	pid;
-	int		fds[2];
+	int		*fds = alloc_fds();
 
 	if (!ast || !(*ast))
 		return ;
@@ -147,13 +237,15 @@ static void	execute_subshell(t_env *env, t_ast **ast)
 		close(fds[0]);
 		close(fds[1]);
 		execute(env, &((*ast)->left), fds);
-		closeall();
 		envclear(&(env->vars));
 		ast_clear(ast);
+		closeall(fds);
+		free(fds);
 		exit(EXIT_SUCCESS);
 	}
 	close(fds[0]);
 	close(fds[1]);
+	free(fds);
 	waitpid(pid, NULL, WUNTRACED);
 }
 
@@ -163,12 +255,8 @@ static void	execute(t_env *env, t_ast **ast, int *fds)
 		return ;
 	if ((*ast)->content->type & COMMAND)
 		execute_command(env, ast, fds);
-	else if ((*ast)->content->type & (LESS | DLESS))
-		execute_infile(env, ast);
-	else if ((*ast)->content->type & (GREATER | DGREATER))
-		execute_outfile(env, ast);
-	else if ((*ast)->content->type & (FILENAME | END))
-		printf("Open file %s\n", (*ast)->content->literal);
+	else if ((*ast)->content->type & (LESS | DLESS | GREATER | DGREATER))
+		execute_redirection(env, ast);
 	else if ((*ast)->content->type & VBAR)
 		execute_pipe(env, ast);
 	else if ((*ast)->content->type & AND)
@@ -191,7 +279,6 @@ static void	tokens(t_env *env, char **splitted)
 	(void)env;
 	ast = ast_new(&tokens);
 	execute(env, &ast, NULL);
-	ast_print(&ast);
 	ast_clear(&ast);
 }
 
