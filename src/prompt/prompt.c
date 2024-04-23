@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 20:00:16 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/21 13:33:55 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/23 18:18:56 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,13 @@ static void	closeall(int *fds)
 			close(fds[3]);
 		free(fds);
 	}
-	close(STDIN_FILENO);
-	close(STDOUT_FILENO);
-	close(STDERR_FILENO);
+	if (forked(false))
+	{
+		rl_clear_history();
+		close(STDIN_FILENO);
+		close(STDOUT_FILENO);
+		close(STDERR_FILENO);
+	}
 }
 
 static void	execute_command(t_env *env, t_ast **ast, int *fds)
@@ -122,71 +126,56 @@ static void	execute_command(t_env *env, t_ast **ast, int *fds)
 		if (*cmd && (ft_strchr("./", **cmd) || access(*cmd, F_OK | X_OK) == 0)
 				&& execve(*cmd, cmd, env->environ) < 0)
 			(printf("failed\n"), exit(EXIT_FAILURE));
-		printf("command not found!\n");
 		ft_memclear((void **) cmd, &free);
 		envclear(&(env->vars));
+		printf("command not found!\n");
 		closeall(fds);
-		exit(EXIT_SUCCESS);
+		exit(127);
 	}
-	if (fds && fds[0] > -1)
-		close(fds[0]);
-	if (fds && fds[1] > -1)
-		close(fds[1]);
-	if (fds && fds[2] > -1)
-		close(fds[2]);
-	if (fds && fds[3] > -1)
-		close(fds[3]);
-	if (fds && forked(false))
-		closeall(fds);
-	ft_memclear((void **) cmd, &free);
+	closeall(fds);
 	waitpid(pid, NULL, WUNTRACED);
+	ft_memclear((void **) cmd, &free);
 }
 
-static void	execute_pipe(t_env *env, t_ast **ast)
+static void	execute_pipe(t_env *env, t_ast **ast, int *lfds)
 {
 	pid_t	pid;
 	int		*fds = alloc_fds();
 	t_ast	*left;
 	t_ast	*right;
 
-	pipe(fds);
+	free(lfds);
 	left = (*ast)->left;
 	right = (*ast)->right;
 	rmast(ast);
+	pipe(fds);
 	pid = fork();
 	if (pid == 0)
 	{
-		rl_clear_history();
+		forked(true);
+		ast_clear(&right);
 		dup2(fds[1], STDOUT_FILENO);
 		close(fds[0]);
 		close(fds[1]);
-		execute(env, &((*ast)->left), fds);
+		execute(env, &left, fds);
 		envclear(&(env->vars));
-		ast_clear(&left);
-		ast_clear(&right);
-		//closeall(fds);
-		free(fds);
 		exit(EXIT_SUCCESS);
 	}
+	ast_clear(&left);
 	pid = fork();
 	if (pid == 0)
 	{
-		rl_clear_history();
+		forked(true);
 		dup2(fds[0], STDIN_FILENO);
 		close(fds[0]);
 		close(fds[1]);
-		execute(env, &((*ast)->right), fds);
+		execute(env, &right, fds);
 		envclear(&(env->vars));
-		ast_clear(&right);
-		ast_clear(&left);
-		//closeall(fds);
-		free(fds);
 		exit(EXIT_SUCCESS);
 	}
 	close(fds[0]);
 	close(fds[1]);
-	free(fds);
-	ast_clear(&left);
+	closeall(fds);
 	ast_clear(&right);
 	waitpid(pid, NULL, WUNTRACED);
 }
@@ -207,19 +196,23 @@ static t_ast	*redirection(t_env *env, t_ast **ast, int *fdin, int *fdout)
 		if (*fdout > -1)
 			close(*fdout);
 		*fdout = open((*ast)->right->content->literal, O_RDONLY, 0644);
+		rmast(&((*ast)->right));
 	}
 	if ((*ast)->content->type & GREATER)
 	{
 		if (*fdin > -1)
 			close(*fdin);
 		*fdin = open((*ast)->right->content->literal, O_CREAT | O_TRUNC | O_WRONLY, 0644);
+		rmast(&((*ast)->right));
 	}
 	else if ((*ast)->content->type & DGREATER)
 	{
 		if (*fdin > -1)
 			close(*fdin);
 		*fdin = open((*ast)->right->content->literal, O_CREAT | O_APPEND | O_WRONLY, 0644);
+		rmast(&((*ast)->right));
 	}
+	rmast(ast);
 	if (*fdout == -1 || *fdin == -1)
 		exit(EXIT_FAILURE);
 	if (*fdout > -1)
@@ -227,7 +220,7 @@ static t_ast	*redirection(t_env *env, t_ast **ast, int *fdin, int *fdout)
 	return (tmp);
 }
 
-static void	execute_redirection(t_env *env, t_ast **ast)
+static void	execute_redirection(t_env *env, t_ast **ast, int *lfds)
 {
 	pid_t	pid;
 	int		*fds;
@@ -240,22 +233,22 @@ static void	execute_redirection(t_env *env, t_ast **ast)
 	pid = fork();
 	if (pid == 0)
 	{
-		rl_clear_history();
+		forked(true);
 		tmp = redirection(env, ast, &fds[2], &fds[3]);
+		if (!tmp)
+			closeall(fds);
 		execute(env, &tmp, fds);
-		ast_clear(ast);
+		closeall(lfds);
 		envclear(&(env->vars));
-		closeall(fds);
-		free(fds);
 		exit(EXIT_SUCCESS);
 	}
-	close(fds[0]);
-	close(fds[1]);
-	free(fds);
+	closeall(fds);
+	closeall(lfds);
 	waitpid(pid, NULL, WUNTRACED);
+	ast_clear(ast);
 }
 
-static void	execute_subshell(t_env *env, t_ast **ast)
+static void	execute_subshell(t_env *env, t_ast **ast, int *lfds)
 {
 	pid_t	pid;
 	t_ast	*tmp;
@@ -268,10 +261,11 @@ static void	execute_subshell(t_env *env, t_ast **ast)
 	if (pid == 0)
 	{
 		forked(true);
-		execute(env, &tmp, NULL);
+		execute(env, &tmp, lfds);
 		envclear(&(env->vars));
 		exit(EXIT_SUCCESS);
 	}
+	closeall(lfds);
 	waitpid(pid, NULL, WUNTRACED);
 	ast_clear(&tmp);
 }
@@ -283,15 +277,15 @@ static void	execute(t_env *env, t_ast **ast, int *fds)
 	if ((*ast)->content->type & COMMAND)
 		execute_command(env, ast, fds);
 	else if ((*ast)->content->type & (LESS | DLESS | GREATER | DGREATER))
-		execute_redirection(env, ast);
+		execute_redirection(env, ast, fds);
 	else if ((*ast)->content->type & VBAR)
-		execute_pipe(env, ast);
+		execute_pipe(env, ast, fds);
 	else if ((*ast)->content->type & AND)
 		printf("Check AND operator %s\n", (*ast)->content->literal);
 	else if ((*ast)->content->type & OR)
 		printf("check OR operator %s\n", (*ast)->content->literal);
 	else if ((*ast)->content->type & PAREN)
-		execute_subshell(env, ast);
+		execute_subshell(env, ast, fds);
 }
 
 static void	tokens(t_env *env, char **splitted)
@@ -316,9 +310,9 @@ void	prompt(t_env *env)
 		input = readline("$ ");
 		if (!input)
 			break ;
-		else if (*input != '\0')
-			add_history(input);
 		tokens(env, format_input(input));
+		if (*input != '\0')
+			add_history(input);
 		free(input);
 	}
 	rl_clear_history();
