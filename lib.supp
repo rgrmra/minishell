@@ -6,13 +6,6 @@
 }
 
 {
-	ignore_libread
-	Memcheck:Leak
-	...
-	obj:*/readline/*
-}
-
-{
 	igonere_binaries
 	Memcheck:Leak
 	...
