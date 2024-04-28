@@ -56,9 +56,9 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 		open_stdout(fds);
 		if (*cmd && (ft_strchr("./", **cmd) || access(*cmd, F_OK | X_OK) == 0)
 				&& execve(*cmd, cmd, env->environ) < 0)
-			(printf("failed!\n"), ft_memclear((void **) cmd, &free),
+			(printf("failed!\n"), ft_freesplit(cmd),
 			 envclear(&(env->vars)), closeall(fds), exit(126));
-		ft_memclear((void **) cmd, &free);
+		ft_freesplit(cmd);
 		envclear(&(env->vars));
 		printf("command not found!\n");
 		closeall(fds);
@@ -85,5 +85,5 @@ void	execute_command(t_env *env, t_ast **ast, int *fds)
 	if (execute_builtin(env, ast, cmd, fds))
 		return ;
 	exec_subtree(env, cmd, fds);
-	ft_memclear((void **) cmd, &free);
+	ft_freesplit(cmd);
 }

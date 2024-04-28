@@ -30,7 +30,7 @@ int	builtin_exit(t_env *env, t_ast **ast, char **cmd, int *fds)
 	ast_clear(ast);
 	envclear(&(env->vars));
 	closeall(fds);
-	ft_memclear((void **) cmd, &free);
+	ft_freesplit(cmd);
 	exit(EXIT_SUCCESS);
 	return (true);
 }

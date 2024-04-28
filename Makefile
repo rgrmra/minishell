@@ -83,7 +83,7 @@ OBJS		:=	$(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 DEPS		:=	$(OBJS:.o=.d)
 
 CC			:=	cc
-CFLAGS		:=	-Wall -Wextra -Werror -g3
+# CFLAGS		:=	-Wall -Wextra -Werror -g3
 CPPFLAGS	:=	$(addprefix -I,$(INCS)) -MMD -MP
 LDFLAGS		:=	$(addprefix -L,$(dir $(LIBS)))
 LDLIBS		:=	-lft -lreadline
