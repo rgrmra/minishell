@@ -3,20 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   types.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:14:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/02/29 19:14:51 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/04/28 19:16:18 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TYPES_H
 # define TYPES_H
 
-typedef enum e_bool
+enum			e_bool
 {
 	false,
 	true
-}	t_bool;
+};
+
+typedef void	(*exec_func)(char **args);
 
 #endif

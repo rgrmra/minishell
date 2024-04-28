@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/27 09:50:13 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 19:17:12 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <signal.h>
-#include <unistd.h>
-#include "prompt.h"
 #include "expansions.h"
 #include "get_env.h"
+#include "prompt.h"
+#include <signal.h>
+#include <unistd.h>
 
 volatile sig_atomic_t	g_status = 0;
 

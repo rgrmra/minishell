@@ -6,13 +6,13 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/08 11:00:24 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 19:16:57 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "expansions.h"
 #include "ft_ctype.h"
 #include "ft_string.h"
-#include "expansions.h"
 #include "get_env.h"
 #include "tokenizer.h"
 #include "utils.h"
@@ -83,8 +83,8 @@ static char	*check_expansion(t_env *env, char *word)
 	tmp = ft_substr(word, start, end - start);
 	value = var_to_string(envget(&(env->vars), tmp));
 	free(tmp);
-	tmp = expand(ft_substr(word, 0, start - 1), value,
-			ft_substr(word, end, ft_strlen(&(*(word + end)))));
+	tmp = expand(ft_substr(word, 0, start - 1), value, ft_substr(word, end,
+				ft_strlen(&(*(word + end)))));
 	free(value);
 	return (tmp);
 }

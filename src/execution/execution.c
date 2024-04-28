@@ -6,23 +6,24 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 19:06:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/27 14:27:04 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 19:16:51 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include "ast.h"
 #include "execution.h"
+#include "ft_stdlib.h"
 #include "types.h"
+#include <readline/history.h>
+#include <readline/readline.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 int	*alloc_fds(void)
 {
 	int	*fds;
 
-	fds = (int *) ft_calloc(4, sizeof(int));
+	fds = (int *)ft_calloc(4, sizeof(int));
 	fds[2] = -2;
 	fds[3] = -2;
 	return (fds);

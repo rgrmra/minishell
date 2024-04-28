@@ -6,23 +6,23 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 10:55:34 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/13 17:59:07 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 19:17:09 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "tokenizer.h"
-#include "utils.h"
 #include "types.h"
+#include "utils.h"
+#include <stdlib.h>
 
 static void	append(t_list *tmp, t_list *next)
 {
 	char	*literal;
 
-	literal = strjoinsep(((t_token *) tmp->content)->literal,
-			((t_token *) next->content)->literal, ' ');
-	free(((t_token *) tmp->content)->literal);
-	((t_token *) tmp->content)->literal = literal;
+	literal = strjoinsep(((t_token *)tmp->content)->literal,
+			((t_token *)next->content)->literal, ' ');
+	free(((t_token *)tmp->content)->literal);
+	((t_token *)tmp->content)->literal = literal;
 	tmp->next = next->next;
 	ft_lstdelone(next, &token_clear);
 }
@@ -37,11 +37,11 @@ void	invert_commands(t_list *tokens)
 	tmp = tokens;
 	while (tmp->next)
 	{
-		if (((t_token *) tmp->content)->type & (COMMAND | PAREN)
-			&& tmp->next->next && ((t_token *) tmp->next->content)->type
-			& (DLESS | LESS | DGREATER | GREATER | FILENAME | END)
-			&& (!prev || ((t_token *) prev->content)->type & ~(DLESS | LESS
-					| DGREATER | GREATER | FILENAME | END)))
+		if (((t_token *)tmp->content)->type & (COMMAND | PAREN)
+			&& tmp->next->next
+			&& ((t_token *)tmp->next->content)->type & (DLESS | LESS | DGREATER | GREATER | FILENAME | END)
+			&& (!prev
+				|| ((t_token *)prev->content)->type & ~(DLESS | LESS | DGREATER | GREATER | FILENAME | END)))
 		{
 			pos = tmp->content;
 			tmp->content = tmp->next->content;
@@ -53,22 +53,21 @@ void	invert_commands(t_list *tokens)
 	}
 }
 
-static int	check_pull_commands(t_list	*tokens, t_list *tmp, t_list *prev)
+static int	check_pull_commands(t_list *tokens, t_list *tmp, t_list *prev)
 {
 	tmp = tokens;
 	while (tmp->next)
 	{
 		prev = tmp;
 		tmp = tmp->next;
-		if (((t_token *) prev->content)->type
-			& (LESS | DLESS | GREATER | DGREATER | FILENAME | END)
-			&& ((t_token *) tmp->content)->type & (COMMAND))
+		if (((t_token *)prev->content)->type & (LESS | DLESS | GREATER | DGREATER | FILENAME | END)
+			&& ((t_token *)tmp->content)->type & (COMMAND))
 			return (true);
 	}
 	return (false);
 }
 
-static	void	pull_commands(t_list *tokens)
+static void	pull_commands(t_list *tokens)
 {
 	t_list	*tmp;
 	t_list	*prev;
@@ -79,9 +78,8 @@ static	void	pull_commands(t_list *tokens)
 	{
 		prev = tmp;
 		tmp = tmp->next;
-		if (((t_token *) prev->content)->type & (LESS | DLESS | GREATER
-				| DGREATER | FILENAME | END) && ((t_token *) tmp->content)->type
-			& (COMMAND))
+		if (((t_token *)prev->content)->type & (LESS | DLESS | GREATER | DGREATER | FILENAME | END)
+			&& ((t_token *)tmp->content)->type & (COMMAND))
 		{
 			pos = tmp->content;
 			tmp->content = prev->content;
@@ -102,8 +100,8 @@ t_list	*append_commands(t_list *tokens)
 	while (tmp->next)
 	{
 		next = tmp->next;
-		if (((t_token *) tmp->content)->type & COMMAND
-			&& ((t_token *) next->content)->type & COMMAND)
+		if (((t_token *)tmp->content)->type & COMMAND
+			&& ((t_token *)next->content)->type & COMMAND)
 			append(tmp, next);
 		else
 			tmp = tmp->next;

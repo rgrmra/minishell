@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:43:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/13 09:16:08 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 19:17:17 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@ void	*arradd(t_arraylist **array, void *node)
 	arr = *array;
 	if (arr->index == arr->size - 1)
 	{
-		arr->list = (void *) ft_mexpand(arr->list,
-				sizeof(void *) * arr->size * 2,
-				sizeof(void *) * arr->index);
+		arr->list = (void *)ft_mexpand(arr->list, sizeof(void *) * arr->size
+				* 2, sizeof(void *) * arr->index);
 		if (!arr->list)
 			return (NULL);
 		arr->size *= 2;
@@ -52,7 +51,7 @@ void	arrdel(t_arraylist **array, void *node, int (*compare)(void *, void *),
 		if (compare(arr->list[i], node))
 		{
 			if (delete)
-				delete(arr->list[i]);
+				delete (arr->list[i]);
 			if (arr->index > 1)
 			{
 				j = --i;
@@ -75,7 +74,7 @@ void	arrclear(t_arraylist **array, void (*delete)(void *))
 	while (arr->index--)
 	{
 		if (delete)
-			delete(arr->list[arr->index]);
+			delete (arr->list[arr->index]);
 	}
 	free(arr->list);
 	free(arr);
@@ -103,10 +102,10 @@ t_arraylist	*arrnew(void)
 {
 	t_arraylist	*arr;
 
-	arr = (t_arraylist *) ft_calloc(1, sizeof(t_arraylist));
+	arr = (t_arraylist *)ft_calloc(1, sizeof(t_arraylist));
 	if (!arr)
 		return (arr);
-	arr->list = (void *) ft_calloc(ARRAY_SIZE, sizeof(void *));
+	arr->list = (void *)ft_calloc(ARRAY_SIZE, sizeof(void *));
 	if (!arr->list)
 		return (arr);
 	arr->size = ARRAY_SIZE;

@@ -6,14 +6,14 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 07:41:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/14 16:31:00 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 19:17:02 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "ft_linkedlist.h"
 #include "tokenizer.h"
 #include "types.h"
+#include <stdio.h>
 
 static int	check_controllers(t_token *content, t_list *next_content)
 {
@@ -43,8 +43,8 @@ static int	check_operators(t_token *content, t_list *next_content)
 {
 	t_token	*next;
 
-	if (!next_content && content->type & (VBAR | LESS | DLESS | GREATER
-			| DGREATER))
+	if (!next_content
+		&& content->type & (VBAR | LESS | DLESS | GREATER | DGREATER))
 		return (true);
 	if (!next_content)
 		return (false);
@@ -79,18 +79,18 @@ void	parser(t_list **tokens)
 		return ;
 	errors = 0;
 	tmp = *tokens;
-	if (((t_token *) tmp->content)->type & (VBAR | AND | OR)
-		&& error(true, tokens, ((t_token *) tmp->content)->literal))
+	if (((t_token *)tmp->content)->type & (VBAR | AND | OR) && error(true,
+			tokens, ((t_token *)tmp->content)->literal))
 		return ;
 	while (tmp)
 	{
-		errors += check_controllers((t_token *) tmp->content, tmp->next);
-		if (error(errors, tokens, ((t_token *) tmp->content)->literal))
+		errors += check_controllers((t_token *)tmp->content, tmp->next);
+		if (error(errors, tokens, ((t_token *)tmp->content)->literal))
 			return ;
-		errors += check_operators((t_token *) tmp->content, tmp->next);
+		errors += check_operators((t_token *)tmp->content, tmp->next);
 		if ((tmp->next && error(errors, tokens,
-					((t_token *) tmp->next->content)->literal))
-			|| error(errors, tokens, ((t_token *) tmp->content)->literal))
+					((t_token *)tmp->next->content)->literal)) || error(errors,
+				tokens, ((t_token *)tmp->content)->literal))
 			return ;
 		tmp = tmp->next;
 	}

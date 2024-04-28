@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/03/02 19:57:40 by rde-mour          #+#    #+#              #
-#    Updated: 2024/04/27 14:11:21 by rde-mour         ###   ########.org.br    #
+#    Created: 2023/12/19 10:09:46 by yuuko             #+#    #+#              #
+#    Updated: 2024/04/28 18:55:16 by rde-mour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,12 +15,20 @@ NAME		:=	minishell
 # **************************************************************************** #
 #    Misc                                                                      #
 # **************************************************************************** #
+
 RED			:=	$(shell tput setaf 1)
 GREEN		:=	$(shell tput setaf 2)
 YELLOW		:=	$(shell tput setaf 3)
 BLUE		:=	$(shell tput setaf 4)
 MAGENTA		:=	$(shell tput setaf 5)
+CYAN		:=	$(shell tput setaf 6)
+WHITE		:=	$(shell tput setaf 7)
+ERROR		:=	$(shell tput setab 1)$(WHITE)
+SUCCESS		:=	$(shell tput setab 2)$(WHITE)
+WARNING		:=	$(shell tput setab 3)$(WHITE)
+INFO		:=	$(shell tput setab 4)$(WHITE)
 RESET		:=	$(shell tput sgr0)
+CLEAR		:=	$(shell tput cuu1; tput el)
 TITLE		:=	$(YELLOW)$(basename $(NAME))$(RESET)
 
 # 1: action, 2: target, 3: color
@@ -29,11 +37,12 @@ define message
 endef
 
 RM			:=	rm -f
-MAKEFLAGS	+=	--silent --no-print-directory
+MAKEFLAGS	+=	--no-print-directory
 
 # **************************************************************************** #
 #    Dependencies                                                              #
 # **************************************************************************** #
+
 LIBS		:=	\
 	lib/libft/libft.a \
 
@@ -44,6 +53,7 @@ INCS		:=	\
 # **************************************************************************** #
 #    Sources                                                                   #
 # **************************************************************************** #
+
 SRC_DIR		:=	./
 
 SRCS		:=	\
@@ -72,25 +82,26 @@ SRCS		:=	\
 	util/strjoinsep.c \
 	util/strrplc.c \
 
-SRCS		:=	$(addprefix $(SRC_DIR)/,$(SRCS))
+SRCS		:=	$(addprefix $(SRC_DIR)/, $(SRCS))
 
 # **************************************************************************** #
 #    Build                                                                     #
 # **************************************************************************** #
+
 BUILD_DIR	:=	build
 
 OBJS		:=	$(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 DEPS		:=	$(OBJS:.o=.d)
 
 CC			:=	cc
-# CFLAGS		:=	-Wall -Wextra -Werror -g3
+CFLAGS		:=	-Wall -Wextra -Werror
 CPPFLAGS	:=	$(addprefix -I,$(INCS)) -MMD -MP
 LDFLAGS		:=	$(addprefix -L,$(dir $(LIBS)))
 LDLIBS		:=	-lft -lreadline
 
 ifdef WITH_DEBUG
 	TITLE += $(MAGENTA)debug$(RESET)
-	CFLAGS += -g
+	CFLAGS += -g3
 endif
 
 ifdef WITH_SANITIZER

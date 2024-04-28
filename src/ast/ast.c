@@ -6,20 +6,19 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/27 16:16:01 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 19:16:31 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <linux/limits.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include "ft_linkedlist.h"
-#include "tokenizer.h"
 #include "ast.h"
-#include "prompt.h"
-#include "parser.h"
+#include "ft_linkedlist.h"
 #include "ft_string.h"
-
+#include "parser.h"
+#include "prompt.h"
+#include "tokenizer.h"
+#include <linux/limits.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 void	ast_print(t_ast **ast)
 {
@@ -34,7 +33,6 @@ void	ast_print(t_ast **ast)
 		ast_print(&(*ast)->right);
 	printf("%d %s\n", tmp->content->type, tmp->content->literal);
 }
-
 
 void	ast_remove(t_ast **ast)
 {
@@ -93,7 +91,7 @@ t_ast	*ast_node(t_list **tokens)
 
 	if (!tokens || !(*tokens))
 		return (NULL);
-	ast = (t_ast *) malloc(1 * sizeof(t_ast));
+	ast = (t_ast *)malloc(1 * sizeof(t_ast));
 	if (!ast)
 		return (NULL);
 	ast->left = NULL;
@@ -107,7 +105,7 @@ t_ast	*ast_node(t_list **tokens)
 	return (ast_get(&ast));
 }
 
-t_ast	*ast_new(t_list	**tokens)
+t_ast	*ast_new(t_list **tokens)
 {
 	t_ast	*ast;
 	t_ast	*root;

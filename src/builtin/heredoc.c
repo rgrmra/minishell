@@ -6,18 +6,17 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 22:22:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/21 19:33:47 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 19:16:34 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <unistd.h>
-#include <fcntl.h>
 #include "ft_stdlib.h"
 #include "ft_string.h"
+#include <fcntl.h>
+#include <readline/history.h>
+#include <readline/readline.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 static char	*get_filename(void)
 {
@@ -31,7 +30,7 @@ static char	*get_filename(void)
 	return (filename);
 }
 
-static int	get_fd(char	**filename)
+static int	get_fd(char **filename)
 {
 	int	fd;
 
