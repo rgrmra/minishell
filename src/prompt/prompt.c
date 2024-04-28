@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 20:00:16 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 18:38:13 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/04/28 19:17:07 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,6 @@ static void	tokens(t_env *env, char **splitted)
 	parser(&tokens);
 	ast = ast_new(&tokens);
 	execute(env, &ast, NULL);
-	//(void)env;
-	// ast_print(&ast);
-	// ast_clear(&ast);
 }
 
 void	prompt(t_env *env)
@@ -54,9 +51,9 @@ void	prompt(t_env *env)
 		input = readline("$ ");
 		if (!input)
 			break ;
-		tokens(env, format_input(input));
-		if (*input != '\0')
+		else if (*input != '\0')
 			add_history(input);
+		tokens(env, format_input(input));
 		free(input);
 		printf("%d\n", g_status);
 	}

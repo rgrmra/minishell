@@ -6,12 +6,12 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 20:54:57 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/21 08:10:10 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 19:17:57 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "ft_string.h"
+#include <stdlib.h>
 
 char	*strjoinsep(char *s1, char *s2, unsigned int sep)
 {
@@ -21,7 +21,7 @@ char	*strjoinsep(char *s1, char *s2, unsigned int sep)
 
 	size1 = ft_strlen(s1);
 	size2 = ft_strlen(s2);
-	new = (char *) malloc((size1 + size2 + 2) * sizeof(char));
+	new = (char *)malloc((size1 + size2 + 2) * sizeof(char));
 	if (!new)
 		return (0);
 	ft_strlcpy(new, s1, size1 + 1);
