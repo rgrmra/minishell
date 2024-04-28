@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 21:09:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/03/22 09:40:15 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 17:34:07 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <readline/history.h>
 # include "expansions.h"
 
+char	*find_quote(char *tmp);
 char	**format_input(char *input);
 void	prompt(t_env *env);
 

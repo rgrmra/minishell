@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/27 21:30:53 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 17:45:09 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 #include "execution.h"
 #include "ft_string.h"
 #include "get_env.h"
+#include "prompt.h"
 #include "types.h"
+#include "utils.h"
 #include <signal.h>
 #include <stdlib.h>
 #include <sys/wait.h>
@@ -72,16 +74,19 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 void	execute_command(t_env *env, t_ast **ast, int *fds)
 {
 	char	**cmd;
-	t_ast	*tmp;
+	int		i;
 
 	if (!ast || !(*ast))
 		return ;
-	tmp = *ast;
-	var_expansions(env, tmp->content);
-	cmd = ft_split(tmp->content->literal, ' ');
+	find_quote((*ast)->content->literal);
+	var_expansions(env, (*ast)->content);
+	cmd = ft_split((*ast)->content->literal, ' ');
 	command_expansions(env, cmd);
 	remove_quotes(cmd);
 	ast_remove(ast);
+	i = 0;
+	while (cmd[i])
+		strrplc(cmd[i++], 0x1A, ' ');
 	if (execute_builtin(env, ast, cmd, fds))
 		return ;
 	exec_subtree(env, cmd, fds);

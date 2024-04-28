@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/13 19:46:05 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 17:33:52 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static char	check_quote(char quote, char *input, int i)
 	return (quote);
 }
 
-static char	*find_quote(char *tmp)
+char	*find_quote(char *tmp)
 {
 	int		i;
 	char	quote;
