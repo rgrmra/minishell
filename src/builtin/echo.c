@@ -1,22 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/24 18:49:21 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 20:11:46 by rde-mour         ###   ########.org.br   */
+/*   Created: 2024/04/28 20:14:49 by rde-mour          #+#    #+#             */
+/*   Updated: 2024/04/28 20:19:05 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtin.h"
+#include "ft_stdio.h"
 #include "ft_string.h"
-#include <stdlib.h>
+#include <unistd.h>
 
-void	builtin_exit(char **args)
+void	builtin_echo(char **cmd)
 {
-	if (args)
-		ft_freesplit(args);
-	exit(EXIT_SUCCESS);
+	int i;
+
+	i = 1;
+	while (cmd[i])
+		ft_putstr_fd(cmd[i++], STDIN_FILENO);
+	ft_freesplit(cmd);
 }

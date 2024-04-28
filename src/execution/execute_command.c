@@ -6,12 +6,13 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:16:39 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/04/28 20:21:50 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "execution.h"
+#include "ft_hashmap.h"
 #include "ft_string.h"
 #include "get_env.h"
 #include "prompt.h"
@@ -28,9 +29,22 @@ extern volatile sig_atomic_t	g_status;
 
 static int	execute_builtin(t_env *env, t_ast **ast, char **cmd, int *fds)
 {
-	if (builtin_exit(env, ast, cmd, fds))
-		return (true);
-	return (false);
+	t_exec_func builtin;
+
+	builtin = ft_hshget(env->builtins, *cmd);
+	if (!builtin)
+		return (false);
+	ast_clear(ast);
+	if (ft_strncmp(*cmd, "exit", 5) == 0)
+	{
+		envclear(&(env->vars));
+		ft_hshfree(env->builtins);
+		closeall(fds);
+		builtin_exit(cmd);
+	}
+	builtin(cmd);
+	closeall(fds);
+	return (true);
 }
 
 static void	open_stdout(int *fds)
