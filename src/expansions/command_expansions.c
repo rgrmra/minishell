@@ -3,25 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   command_expansions.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 09:57:54 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/16 16:26:53 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 18:37:54 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdlib.h>
 #include "expansions.h"
 #include "ft_string.h"
-#include "tokenizer.h"
 #include "get_env.h"
 #include "utils.h"
+#include <stdlib.h>
+#include <unistd.h>
 
 static char	*check_bultins(char *word)
 {
-	const char	*bultins[8] = {"echo", "cd", "pwd", "export", "unset",
-		"env", "exit", NULL};
+	const char	*bultins[8] = {"echo", "cd", "pwd", "export", "unset", "env",
+			"exit", NULL};
 	size_t		i;
 
 	if (!word)
@@ -30,7 +29,7 @@ static char	*check_bultins(char *word)
 	while (*(bultins + i))
 	{
 		if (!ft_strncmp(word, *(bultins + i), ft_strlen(*(bultins + i)) + 1))
-			return ((char *) *(bultins + i));
+			return ((char *)*(bultins + i));
 		i++;
 	}
 	return (NULL);

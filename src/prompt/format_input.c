@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   format_input.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 17:33:52 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 18:38:11 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include "ft_string.h"
 #include "utils.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 static char	check_sub(char *input, int i, int *sub)
 {
@@ -113,7 +113,7 @@ char	**format_input(char *input)
 	input = find_quote(input);
 	if (!input || !(*input))
 		return (NULL);
-	tmp = (char *) malloc(ft_strlen(input) * 3 * sizeof(char));
+	tmp = (char *)malloc(ft_strlen(input) * 3 * sizeof(char));
 	if (!tmp)
 		return (NULL);
 	tmp = expand_input(tmp, input);

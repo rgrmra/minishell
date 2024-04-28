@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 17:36:57 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/02 19:43:22 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 18:38:03 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <unistd.h>
+#include "arraylist.h"
+#include "ft_stdio.h"
 #include "ft_stdlib.h"
 #include "ft_string.h"
-#include "arraylist.h"
 #include "get_env.h"
-#include "ft_stdio.h"
+#include <stdlib.h>
+#include <unistd.h>
 
 void	envnew(t_arraylist **var, char **env)
 {
@@ -30,7 +30,7 @@ void	envnew(t_arraylist **var, char **env)
 	{
 		tmp = ft_strchr(*env, '=');
 		size = ++tmp - (*env) - 1;
-		content = (t_var *) ft_calloc(1, sizeof(t_var));
+		content = (t_var *)ft_calloc(1, sizeof(t_var));
 		if (!content)
 			return ;
 		content->name = ft_substr(*env, 0, size);
@@ -44,7 +44,7 @@ void	envadd(t_arraylist **var, char *name, char *values)
 {
 	t_var	*content;
 
-	content = (t_var *) ft_calloc(1, sizeof(t_var));
+	content = (t_var *)ft_calloc(1, sizeof(t_var));
 	if (!content)
 		return ;
 	content->name = ft_strdup(name);

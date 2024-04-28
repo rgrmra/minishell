@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   get_env_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 19:40:39 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/14 08:26:41 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 18:38:01 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <unistd.h>
-#include "ft_string.h"
 #include "arraylist.h"
+#include "ft_string.h"
 #include "get_env.h"
 #include "types.h"
+#include <stdlib.h>
+#include <unistd.h>
 
 static int	compare(t_var *src, char *str)
 {
@@ -26,7 +26,7 @@ static int	compare(t_var *src, char *str)
 	return (false);
 }
 
-static void	delete(t_var *list)
+static void delete (t_var *list)
 {
 	size_t	i;
 
@@ -63,5 +63,5 @@ t_var	*envget(t_arraylist **var, char *name)
 {
 	if (!var || !(*var) || !name)
 		return (NULL);
-	return ((t_var *) arrget(var, name, &compare));
+	return ((t_var *)arrget(var, name, &compare));
 }

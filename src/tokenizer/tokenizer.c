@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/08 12:53:32 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 18:38:20 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_linkedlist.h"
 #include "ft_string.h"
 #include "tokenizer.h"
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 static int	get_token(char *literal, int last_token)
 {
@@ -50,20 +50,20 @@ static void	check_token(t_list **tokens, char *literal)
 
 	if (!literal)
 		return ;
-	content = (t_token *) malloc(1 * sizeof(t_token));
+	content = (t_token *)malloc(1 * sizeof(t_token));
 	if (!content)
 		return ;
 	content->literal = literal;
 	last_token = 0;
 	if (*tokens)
-		last_token = ((t_token *) ft_lstlast(*tokens)->content)->type;
+		last_token = ((t_token *)ft_lstlast(*tokens)->content)->type;
 	content->type = get_token(literal, last_token);
-	ft_lstaddcontent_back(tokens, (void *) content);
+	ft_lstaddcontent_back(tokens, (void *)content);
 }
 
 void	token_clear(void *content)
 {
-	free(((t_token *) content)->literal);
+	free(((t_token *)content)->literal);
 	free(content);
 }
 

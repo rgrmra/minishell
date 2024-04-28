@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_redirection.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:54:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/27 14:17:12 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 18:37:43 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ t_ast	*redirection(t_env *env, t_ast **ast, int *fdin, int *fdout)
 	tmp = NULL;
 	if ((*ast)->left && (*ast)->left->content->type & COMMAND)
 		tmp = ((*ast)->left);
-	else if ((*ast)->left && (*ast)->left->content->type & (LESS | DLESS | GREATER | DGREATER))
+	else if ((*ast)->left
+		&& (*ast)->left->content->type & (LESS | DLESS | GREATER | DGREATER))
 		tmp = redirection(env, &((*ast)->left), fdin, fdout);
 	if ((*ast)->content->type & (LESS | DLESS))
 	{
@@ -42,14 +43,16 @@ t_ast	*redirection(t_env *env, t_ast **ast, int *fdin, int *fdout)
 	{
 		if (*fdin > -1)
 			close(*fdin);
-		*fdin = open((*ast)->right->content->literal, O_CREAT | O_TRUNC | O_WRONLY, 0644);
+		*fdin = open((*ast)->right->content->literal,
+				O_CREAT | O_TRUNC | O_WRONLY, 0644);
 		ast_remove(&((*ast)->right));
 	}
 	else if ((*ast)->content->type & DGREATER)
 	{
 		if (*fdin > -1)
 			close(*fdin);
-		*fdin = open((*ast)->right->content->literal, O_CREAT | O_APPEND | O_WRONLY, 0644);
+		*fdin = open((*ast)->right->content->literal,
+				O_CREAT | O_APPEND | O_WRONLY, 0644);
 		ast_remove(&((*ast)->right));
 	}
 	ast_remove(ast);
