@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/19 10:09:46 by yuuko             #+#    #+#              #
-#    Updated: 2024/04/28 20:22:55 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/04/28 21:01:25 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -95,7 +95,7 @@ OBJS		:=	$(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 DEPS		:=	$(OBJS:.o=.d)
 
 CC			:=	cc
-CFLAGS		:=	-Wall -Wextra -Werror
+CFLAGS		:=	-Wall -Wextra -Werror -g3
 CPPFLAGS	:=	$(addprefix -I,$(INCS)) -MMD -MP
 LDFLAGS		:=	$(addprefix -L,$(dir $(LIBS)))
 LDLIBS		:=	-lft -lreadline

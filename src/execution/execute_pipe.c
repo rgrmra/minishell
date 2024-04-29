@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:57:29 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:16:45 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/04/28 20:54:15 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static void	exec_lsubtree(t_env *env, t_ast **ast, t_ast **clear, int *lfds)
 		close(lfds[1]);
 		execute(env, ast, lfds);
 		envclear(&(env->vars));
+		ft_hshfree(env->builtins);
 		exit(g_status);
 	}
 }
@@ -57,6 +58,7 @@ static void	exec_rsubtree(t_env *env, t_ast **ast, t_ast **clear, int *lfds)
 		close(lfds[1]);
 		execute(env, ast, lfds);
 		envclear(&(env->vars));
+		ft_hshfree(env->builtins);
 		exit(g_status);
 	}
 	closeall(lfds);

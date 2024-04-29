@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:43:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:16:43 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/04/28 20:53:55 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static void	exec_subtree(t_env *env, t_ast **ast, t_ast **clear)
 		ast_clear(clear);
 		execute(env, ast, NULL);
 		envclear(&(env->vars));
+		ft_hshfree(env->builtins);
 		exit(g_status);
 	}
 	waitpid(pid, &status, WUNTRACED);

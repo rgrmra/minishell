@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 20:21:50 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/28 20:57:28 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,26 +27,6 @@ extern volatile sig_atomic_t	g_status;
 
 #include <stdio.h>
 
-static int	execute_builtin(t_env *env, t_ast **ast, char **cmd, int *fds)
-{
-	t_exec_func builtin;
-
-	builtin = ft_hshget(env->builtins, *cmd);
-	if (!builtin)
-		return (false);
-	ast_clear(ast);
-	if (ft_strncmp(*cmd, "exit", 5) == 0)
-	{
-		envclear(&(env->vars));
-		ft_hshfree(env->builtins);
-		closeall(fds);
-		builtin_exit(cmd);
-	}
-	builtin(cmd);
-	closeall(fds);
-	return (true);
-}
-
 static void	open_stdout(int *fds)
 {
 	if (fds && fds[2] > -1)
@@ -56,6 +36,28 @@ static void	open_stdout(int *fds)
 		close(fds[1]);
 		return ;
 	}
+}
+
+static int	execute_builtin(t_env *env, t_ast **ast, char **cmd, int *fds)
+{
+	t_exec_func builtin;
+
+	if (ft_strncmp(*cmd, "exit", 5) == 0)
+	{
+		ast_clear(ast);
+		envclear(&(env->vars));
+		ft_hshfree(env->builtins);
+		closeall(fds);
+		builtin_exit(cmd);
+	}
+	builtin = ft_hshget(env->builtins, *cmd);
+	if (!builtin)
+		return (false);
+	ast_clear(ast);
+	open_stdout(fds);
+	builtin(cmd, fds);
+	closeall(fds);
+	return (true);
 }
 
 static void	exec_subtree(t_env *env, char **cmd, int *fds)
@@ -75,6 +77,7 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 				closeall(fds), exit(126));
 		ft_freesplit(cmd);
 		envclear(&(env->vars));
+		ft_hshfree(env->builtins);
 		printf("command not found!\n");
 		closeall(fds);
 		exit(127);

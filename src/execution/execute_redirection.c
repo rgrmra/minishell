@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:54:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:16:47 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/04/28 20:56:12 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ void	execute_redirection(t_env *env, t_ast **ast, int *lfds)
 		execute(env, &tmp, fds);
 		closeall(lfds);
 		envclear(&(env->vars));
+		ft_hshfree(env->builtins);
 		exit(g_status);
 	}
 	closeall(fds);
