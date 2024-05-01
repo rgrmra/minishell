@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 20:57:28 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/01 10:55:37 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,17 @@ static void	open_stdout(int *fds)
 	}
 }
 
-static int	execute_builtin(t_env *env, t_ast **ast, char **cmd, int *fds)
+static int	execute_builtin(t_env *env, t_ast **ast, char **cmd, int *fds, int *std)
 {
-	t_exec_func builtin;
+	t_exec_func	builtin;
 
 	if (ft_strncmp(*cmd, "exit", 5) == 0)
 	{
 		ast_clear(ast);
 		envclear(&(env->vars));
 		ft_hshfree(env->builtins);
-		closeall(fds);
+		forked(true);
+		closeall(fds, std);
 		builtin_exit(cmd);
 	}
 	builtin = ft_hshget(env->builtins, *cmd);
@@ -56,11 +57,11 @@ static int	execute_builtin(t_env *env, t_ast **ast, char **cmd, int *fds)
 	ast_clear(ast);
 	open_stdout(fds);
 	builtin(cmd, fds);
-	closeall(fds);
+	closeall(fds, std);
 	return (true);
 }
 
-static void	exec_subtree(t_env *env, char **cmd, int *fds)
+static void	exec_subtree(t_env *env, char **cmd, int *fds, int *std)
 {
 	pid_t	pid;
 	int		status;
@@ -74,20 +75,21 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 		if (*cmd && (ft_strchr("./", **cmd) || access(*cmd, F_OK | X_OK) == 0)
 			&& execve(*cmd, cmd, env->environ) < 0)
 			(printf("failed!\n"), ft_freesplit(cmd), envclear(&(env->vars)),
-				closeall(fds), exit(126));
+				closeall(fds, std), exit(126));
 		ft_freesplit(cmd);
 		envclear(&(env->vars));
 		ft_hshfree(env->builtins);
 		printf("command not found!\n");
-		closeall(fds);
+		closeall(fds, std);
 		exit(127);
 	}
-	closeall(fds);
+	if (forked(false))
+		closeall(fds, std);
 	waitpid(pid, &status, WUNTRACED);
 	g_status = WEXITSTATUS(status);
 }
 
-void	execute_command(t_env *env, t_ast **ast, int *fds)
+void	execute_command(t_env *env, t_ast **ast, int *fds, int *std)
 {
 	char	**cmd;
 	int		i;
@@ -103,8 +105,8 @@ void	execute_command(t_env *env, t_ast **ast, int *fds)
 	i = 0;
 	while (cmd[i])
 		strrplc(cmd[i++], 0x1A, ' ');
-	if (execute_builtin(env, ast, cmd, fds))
+	if (execute_builtin(env, ast, cmd, fds, std))
 		return ;
-	exec_subtree(env, cmd, fds);
+	exec_subtree(env, cmd, fds, std);
 	ft_freesplit(cmd);
 }

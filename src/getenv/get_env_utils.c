@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 19:40:39 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:16:59 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/04/29 20:40:28 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	compare(t_var *src, char *str)
 	return (false);
 }
 
-static void delete (t_var *list)
+static void	clear(t_var *list)
 {
 	size_t	i;
 
@@ -49,14 +49,14 @@ void	envdel(t_arraylist **var, char *name)
 {
 	if (!var || !(*var) || !name)
 		return ;
-	arrdel(var, name, &compare, &delete);
+	arrdel(var, name, &compare, &clear);
 }
 
 void	envclear(t_arraylist **var)
 {
 	if (!var || !(*var))
 		return ;
-	arrclear(var, &delete);
+	arrclear(var, &clear);
 }
 
 t_var	*envget(t_arraylist **var, char *name)

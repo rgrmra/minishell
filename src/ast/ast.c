@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:16:31 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/05/01 14:46:23 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,11 @@
 #include "prompt.h"
 #include "tokenizer.h"
 #include <linux/limits.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+extern volatile	sig_atomic_t	g_status;
 
 void	ast_print(t_ast **ast)
 {
@@ -55,10 +58,10 @@ t_ast	*ast_clear(t_ast **ast)
 		ast_clear(&(*ast)->left);
 	if ((*ast)->right)
 		ast_clear(&(*ast)->right);
-	free(tmp->content->literal);
-	free(tmp->content);
-	free(tmp);
-	ast = NULL;
+	free((*ast)->content->literal);
+	free((*ast)->content);
+	free(*ast);
+	*ast = NULL;
 	return (NULL);
 }
 
@@ -71,15 +74,16 @@ static t_ast	*ast_get(t_ast **paren)
 
 	literal = ft_substr((*paren)->content->literal, 1,
 			ft_strlen((*paren)->content->literal) - 2);
-	splitted = format_input(literal);
+	splitted = format_input(&literal);
 	tokens = tokenizer(splitted);
 	if (splitted)
 		free(splitted);
 	parser(&tokens);
 	tmp = ast_new(&tokens);
-	free((*paren)->content->literal);
-	free(literal);
-	(*paren)->content->literal = ft_strdup("SUBSHELL");
+	if (!tmp)
+		g_status = 2;
+	//free((*paren)->content->literal);
+	//(*paren)->content->literal = ft_strdup("SUBSHELL");
 	(*paren)->left = tmp;
 	return (*paren);
 }
@@ -119,5 +123,7 @@ t_ast	*ast_new(t_list **tokens)
 		ast = ast_build(tokens, &ast);
 		root = ast_build_operators(tokens, &root, &ast);
 	}
+	if (root && g_status == 2)
+		root = ast_clear(&root);
 	return (root);
 }

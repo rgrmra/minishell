@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:17:06 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/04/30 19:03:09 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,12 +104,14 @@ static char	*expand_input(char *tmp, char *input)
 	return (tmp);
 }
 
-char	**format_input(char *input)
+char	**format_input(char **str)
 {
 	char	**splitted;
 	char	*tmp;
+	char	*input;
 	int		i;
 
+	input = *str;
 	input = find_quote(input);
 	if (!input || !(*input))
 		return (NULL);
@@ -119,6 +121,7 @@ char	**format_input(char *input)
 	tmp = expand_input(tmp, input);
 	splitted = ft_split(tmp, ' ');
 	free(tmp);
+	free(input);
 	i = 0;
 	while (splitted[i])
 		strrplc(splitted[i++], 0x1A, ' ');

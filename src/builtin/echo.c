@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 20:14:49 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 21:07:03 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/04/29 20:37:30 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 void	builtin_echo(char **cmd, int *fds)
 {
-	int i;
+	int	i;
 	int	end;
 	int	fd;
 
