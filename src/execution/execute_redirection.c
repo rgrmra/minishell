@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:54:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/01 12:27:51 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/01 15:10:33 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,10 @@ static t_ast *invalid_fd(t_ast **ast, t_ast **tmp)
 	return (NULL);
 }
 
-static void	open_file(t_ast **ast, int *to_open, int *to_check, mode_t mode)
+static void	open_file(t_ast **ast, int *to_open, int *to_check, mode_t flags)
 {
+	static const mode_t	mode = S_IRUSR | S_IWUSR;
+
 	if (*to_open > -1)
 	{
 		close(*to_open);
@@ -41,7 +43,7 @@ static void	open_file(t_ast **ast, int *to_open, int *to_check, mode_t mode)
 	}
 	if (*to_open != -1 && *to_check != -1)
 	{
-		*to_open= open((*ast)->right->content->literal, mode, 0644);
+		*to_open = open((*ast)->right->content->literal, flags, mode);
 		if (*to_open == -1)
 			printf("%s: %s\n", (*ast)->right->content->literal, "Permission denied");
 		if ((*ast)->content->type & DLESS)
