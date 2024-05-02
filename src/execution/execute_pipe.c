@@ -6,14 +6,13 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:57:29 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/01 22:12:42 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/02 00:23:18 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 #include "execution.h"
 #include "get_env.h"
-#include "types.h"
 #include <readline/readline.h>
 #include <signal.h>
 #include <stdlib.h>
@@ -25,9 +24,7 @@ extern volatile sig_atomic_t	g_status;
 static void	exec_lsubtree(t_env *env, t_ast **ast, t_ast **clear, int *lfds)
 {
 	pid_t	pid;
-	int		status;
 
-	status = 0;
 	pid = fork();
 	if (pid == 0)
 	{

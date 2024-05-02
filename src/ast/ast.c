@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/01 14:46:23 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/02 00:22:49 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,8 @@ void	ast_remove(t_ast **ast)
 
 t_ast	*ast_clear(t_ast **ast)
 {
-	t_ast	*tmp;
-
 	if (!ast || !(*ast))
 		return (NULL);
-	tmp = *ast;
 	if ((*ast)->left)
 		ast_clear(&(*ast)->left);
 	if ((*ast)->right)
