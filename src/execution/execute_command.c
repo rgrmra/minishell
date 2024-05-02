@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/01 10:55:37 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/01 22:12:50 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,18 @@
 #include "prompt.h"
 #include "types.h"
 #include "utils.h"
+#include <readline/readline.h>
+#include <readline/history.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <stdio.h>
+#include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
 extern volatile sig_atomic_t	g_status;
 
-#include <stdio.h>
 
 static void	open_stdout(int *fds)
 {
@@ -38,7 +42,7 @@ static void	open_stdout(int *fds)
 	}
 }
 
-static int	execute_builtin(t_env *env, t_ast **ast, char **cmd, int *fds, int *std)
+static int	execute_builtin(t_env *env, t_ast **ast, char **cmd, int *fds)
 {
 	t_exec_func	builtin;
 
@@ -47,8 +51,7 @@ static int	execute_builtin(t_env *env, t_ast **ast, char **cmd, int *fds, int *s
 		ast_clear(ast);
 		envclear(&(env->vars));
 		ft_hshfree(env->builtins);
-		forked(true);
-		closeall(fds, std);
+		closeall(fds);
 		builtin_exit(cmd);
 	}
 	builtin = ft_hshget(env->builtins, *cmd);
@@ -57,11 +60,11 @@ static int	execute_builtin(t_env *env, t_ast **ast, char **cmd, int *fds, int *s
 	ast_clear(ast);
 	open_stdout(fds);
 	builtin(cmd, fds);
-	closeall(fds, std);
+	closeall(fds);
 	return (true);
 }
 
-static void	exec_subtree(t_env *env, char **cmd, int *fds, int *std)
+static void	exec_subtree(t_env *env, char **cmd, int *fds)
 {
 	pid_t	pid;
 	int		status;
@@ -70,26 +73,30 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds, int *std)
 	pid = fork();
 	if (pid == 0 && cmd)
 	{
-		forked(true);
+		rl_clear_history();
 		open_stdout(fds);
+		closeall(fds);
 		if (*cmd && (ft_strchr("./", **cmd) || access(*cmd, F_OK | X_OK) == 0)
 			&& execve(*cmd, cmd, env->environ) < 0)
-			(printf("failed!\n"), ft_freesplit(cmd), envclear(&(env->vars)),
-				closeall(fds, std), exit(126));
+			(printf("minishell: %s: %s\n", *cmd, strerror(errno)),
+				ft_freesplit(cmd), envclear(&(env->vars)),
+				close(STDIN_FILENO), close(STDOUT_FILENO), close(STDERR_FILENO),
+				closeall(fds),ft_hshfree(env->builtins), exit(126));
+		printf("minishell: %s: command not found!\n", *cmd);
 		ft_freesplit(cmd);
 		envclear(&(env->vars));
 		ft_hshfree(env->builtins);
-		printf("command not found!\n");
-		closeall(fds, std);
+		close(STDIN_FILENO);
+		close(STDOUT_FILENO);
+		close(STDERR_FILENO);
 		exit(127);
 	}
-	if (forked(false))
-		closeall(fds, std);
+	closeall(fds);
 	waitpid(pid, &status, WUNTRACED);
 	g_status = WEXITSTATUS(status);
 }
 
-void	execute_command(t_env *env, t_ast **ast, int *fds, int *std)
+void	execute_command(t_env *env, t_ast **ast, int *fds)
 {
 	char	**cmd;
 	int		i;
@@ -105,8 +112,8 @@ void	execute_command(t_env *env, t_ast **ast, int *fds, int *std)
 	i = 0;
 	while (cmd[i])
 		strrplc(cmd[i++], 0x1A, ' ');
-	if (execute_builtin(env, ast, cmd, fds, std))
+	if (execute_builtin(env, ast, cmd, fds))
 		return ;
-	exec_subtree(env, cmd, fds, std);
+	exec_subtree(env, cmd, fds);
 	ft_freesplit(cmd);
 }

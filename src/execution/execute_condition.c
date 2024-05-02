@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:43:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/30 18:50:18 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/01 22:06:50 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 extern volatile sig_atomic_t	g_status;
 
-void	execute_condition(t_env *env, t_ast **ast, int *fds, int *std)
+void	execute_condition(t_env *env, t_ast **ast, int *fds)
 {
 	int		token;
 	t_ast	*left;
@@ -30,9 +30,9 @@ void	execute_condition(t_env *env, t_ast **ast, int *fds, int *std)
 	left = (*ast)->left;
 	right = (*ast)->right;
 	ast_remove(ast);
-	execute(env, &left, NULL, std);
+	execute(env, &left, NULL);
 	if ((g_status == 0 && token & AND) || (g_status > 0 && token & OR))
-		execute(env, &right, NULL, std);
+		execute(env, &right, NULL);
 	ast_clear(&left);
 	ast_clear(&right);
 }

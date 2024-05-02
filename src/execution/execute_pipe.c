@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:57:29 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/30 18:49:49 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/01 22:12:42 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "execution.h"
 #include "get_env.h"
 #include "types.h"
+#include <readline/readline.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <sys/wait.h>
@@ -21,7 +22,7 @@
 
 extern volatile sig_atomic_t	g_status;
 
-static void	exec_lsubtree(t_env *env, t_ast **ast, t_ast **clear, int *lfds, int *std)
+static void	exec_lsubtree(t_env *env, t_ast **ast, t_ast **clear, int *lfds)
 {
 	pid_t	pid;
 	int		status;
@@ -30,19 +31,22 @@ static void	exec_lsubtree(t_env *env, t_ast **ast, t_ast **clear, int *lfds, int
 	pid = fork();
 	if (pid == 0)
 	{
-		forked(true);
+		rl_clear_history();
 		ast_clear(clear);
 		dup2(lfds[1], STDOUT_FILENO);
 		close(lfds[0]);
 		close(lfds[1]);
-		execute(env, ast, lfds, std);
+		execute(env, ast, lfds);
 		envclear(&(env->vars));
 		ft_hshfree(env->builtins);
+		close(STDIN_FILENO);
+		close(STDOUT_FILENO);
+		close(STDERR_FILENO);
 		exit(g_status);
 	}
 }
 
-static void	exec_rsubtree(t_env *env, t_ast **ast, t_ast **clear, int *lfds, int *std)
+static void	exec_rsubtree(t_env *env, t_ast **ast, t_ast **clear, int *lfds)
 {
 	pid_t	pid;
 	int		status;
@@ -51,22 +55,25 @@ static void	exec_rsubtree(t_env *env, t_ast **ast, t_ast **clear, int *lfds, int
 	pid = fork();
 	if (pid == 0)
 	{
-		forked(true);
+		rl_clear_history();
 		ast_clear(clear);
 		dup2(lfds[0], STDIN_FILENO);
 		close(lfds[0]);
 		close(lfds[1]);
-		execute(env, ast, lfds, std);
+		execute(env, ast, lfds);
 		envclear(&(env->vars));
 		ft_hshfree(env->builtins);
+		close(STDIN_FILENO);
+		close(STDOUT_FILENO);
+		close(STDERR_FILENO);
 		exit(g_status);
 	}
-	closeall(lfds, std);
+	closeall(lfds);
 	waitpid(pid, &status, WUNTRACED);
 	g_status = WEXITSTATUS(status);
 }
 
-void	execute_pipe(t_env *env, t_ast **ast, int *lfds, int *std)
+void	execute_pipe(t_env *env, t_ast **ast, int *lfds)
 {
 	int		*fds;
 	t_ast	*left;
@@ -78,8 +85,8 @@ void	execute_pipe(t_env *env, t_ast **ast, int *lfds, int *std)
 	right = (*ast)->right;
 	ast_remove(ast);
 	pipe(fds);
-	exec_lsubtree(env, &left, &right, fds, std);
-	exec_rsubtree(env, &right, &left, fds, std);
+	exec_lsubtree(env, &left, &right, fds);
+	exec_rsubtree(env, &right, &left, fds);
 	ast_clear(&left);
 	ast_clear(&right);
 }
