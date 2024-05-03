@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 08:57:37 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:33:32 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/02 19:18:17 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ struct					s_env
 	t_arraylist			*vars;
 	char				**environ;
 	t_hashmap			*builtins;
+	int					stds[2];
 };
 
 void					var_expansions(t_env *env, t_token *content);

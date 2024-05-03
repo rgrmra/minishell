@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/02 00:22:49 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/02 22:06:30 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,28 +37,28 @@ void	ast_print(t_ast **ast)
 	printf("%d %s\n", tmp->content->type, tmp->content->literal);
 }
 
-void	ast_remove(t_ast **ast)
+void	ast_remove(t_ast *ast)
 {
-	if (!ast || !(*ast))
+	if (!ast)
 		return ;
-	free((*ast)->content->literal);
-	free((*ast)->content);
-	free(*ast);
-	*ast = NULL;
+	free(ast->content->literal);
+	free(ast->content);
+	free(ast);
+	ast = NULL;
 }
 
-t_ast	*ast_clear(t_ast **ast)
+t_ast	*ast_clear(t_ast *ast)
 {
-	if (!ast || !(*ast))
+	if (!ast)
 		return (NULL);
-	if ((*ast)->left)
-		ast_clear(&(*ast)->left);
-	if ((*ast)->right)
-		ast_clear(&(*ast)->right);
-	free((*ast)->content->literal);
-	free((*ast)->content);
-	free(*ast);
-	*ast = NULL;
+	if (ast->left)
+		ast_clear(ast->left);
+	if (ast->right)
+		ast_clear(ast->right);
+	free(ast->content->literal);
+	free(ast->content);
+	free(ast);
+	ast = NULL;
 	return (NULL);
 }
 
@@ -121,6 +121,6 @@ t_ast	*ast_new(t_list **tokens)
 		root = ast_build_operators(tokens, &root, &ast);
 	}
 	if (root && g_status == 2)
-		root = ast_clear(&root);
+		root = ast_clear(root);
 	return (root);
 }

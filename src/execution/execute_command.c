@@ -6,10 +6,11 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/01 22:12:50 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/02 22:06:55 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ast.h"
 #include "builtin.h"
 #include "execution.h"
 #include "ft_hashmap.h"
@@ -30,7 +31,6 @@
 
 extern volatile sig_atomic_t	g_status;
 
-
 static void	open_stdout(int *fds)
 {
 	if (fds && fds[2] > -1)
@@ -42,7 +42,7 @@ static void	open_stdout(int *fds)
 	}
 }
 
-static int	execute_builtin(t_env *env, t_ast **ast, char **cmd, int *fds)
+static int	execute_builtin(t_env *env, t_ast *ast, char **cmd, int *fds)
 {
 	t_exec_func	builtin;
 
@@ -96,24 +96,24 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 	g_status = WEXITSTATUS(status);
 }
 
-void	execute_command(t_env *env, t_ast **ast, int *fds)
+void	execute_command(t_env *env, t_ast *ast, int *fds)
 {
 	char	**cmd;
 	int		i;
 
-	if (!ast || !(*ast))
+	if (!ast)
 		return ;
-	find_quote((*ast)->content->literal);
-	var_expansions(env, (*ast)->content);
-	cmd = ft_split((*ast)->content->literal, ' ');
+	find_quote(ast->content->literal);
+	var_expansions(env, ast->content);
+	cmd = ft_split(ast->content->literal, ' ');
 	command_expansions(env, cmd);
 	remove_quotes(cmd);
-	ast_remove(ast);
 	i = 0;
 	while (cmd[i])
 		strrplc(cmd[i++], 0x1A, ' ');
 	if (execute_builtin(env, ast, cmd, fds))
 		return ;
+	ast_remove(ast);
 	exec_subtree(env, cmd, fds);
 	ft_freesplit(cmd);
 }

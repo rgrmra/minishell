@@ -6,14 +6,13 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 19:06:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/01 22:12:02 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/02 21:59:52 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 #include "execution.h"
 #include "ft_stdlib.h"
-#include "types.h"
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <stdlib.h>
@@ -47,18 +46,18 @@ void	closeall(int *fds)
 	fds = NULL;
 }
 
-void	execute(t_env *env, t_ast **ast, int *fds)
+void	execute(t_env *env, t_ast *ast, int *fds)
 {
-	if (!ast || !(*ast))
+	if (!ast)
 		return ;
-	if ((*ast)->content->type & COMMAND)
+	if (ast->content->type & COMMAND)
 		execute_command(env, ast, fds);
-	else if ((*ast)->content->type & (LESS | DLESS | GREATER | DGREATER))
+	else if (ast->content->type & (LESS | DLESS | GREATER | DGREATER))
 		execute_redirection(env, ast, fds);
-	else if ((*ast)->content->type & VBAR)
+	else if (ast->content->type & VBAR)
 		execute_pipe(env, ast, fds);
-	else if ((*ast)->content->type & (AND | OR))
+	else if (ast->content->type & (AND | OR))
 		execute_condition(env, ast, fds);
-	else if ((*ast)->content->type & PAREN)
+	else if (ast->content->type & PAREN)
 		execute_subshell(env, ast, fds);
 }

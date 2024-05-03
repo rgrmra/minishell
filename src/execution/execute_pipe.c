@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:57:29 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/02 00:23:18 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/02 22:10:41 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 extern volatile sig_atomic_t	g_status;
 
-static void	exec_lsubtree(t_env *env, t_ast **ast, t_ast **clear, int *lfds)
+static void	exec_lsubtree(t_env *env, t_ast *ast, t_ast *clear, int *lfds)
 {
 	pid_t	pid;
 
@@ -43,7 +43,7 @@ static void	exec_lsubtree(t_env *env, t_ast **ast, t_ast **clear, int *lfds)
 	}
 }
 
-static void	exec_rsubtree(t_env *env, t_ast **ast, t_ast **clear, int *lfds)
+static void	exec_rsubtree(t_env *env, t_ast *ast, t_ast *clear, int *lfds)
 {
 	pid_t	pid;
 	int		status;
@@ -70,7 +70,7 @@ static void	exec_rsubtree(t_env *env, t_ast **ast, t_ast **clear, int *lfds)
 	g_status = WEXITSTATUS(status);
 }
 
-void	execute_pipe(t_env *env, t_ast **ast, int *lfds)
+void	execute_pipe(t_env *env, t_ast *ast, int *lfds)
 {
 	int		*fds;
 	t_ast	*left;
@@ -78,12 +78,12 @@ void	execute_pipe(t_env *env, t_ast **ast, int *lfds)
 
 	free(lfds);
 	fds = alloc_fds();
-	left = (*ast)->left;
-	right = (*ast)->right;
+	left = ast->left;
+	right = ast->right;
 	ast_remove(ast);
 	pipe(fds);
-	exec_lsubtree(env, &left, &right, fds);
-	exec_rsubtree(env, &right, &left, fds);
-	ast_clear(&left);
-	ast_clear(&right);
+	exec_lsubtree(env, left, right, fds);
+	exec_rsubtree(env, right, left, fds);
+	ast_clear(left);
+	ast_clear(right);
 }
