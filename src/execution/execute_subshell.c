@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:50:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/02 22:10:18 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/03 18:02:19 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ static void	exec_subtree(t_env *env, t_ast *ast, t_ast *clear, int *lfds)
 	{
 		rl_clear_history();
 		ast_clear(clear);
+		ast_clear(env->clear);
 		execute(env, ast, lfds);
 		envclear(&(env->vars));
 		ft_hshfree(env->builtins);

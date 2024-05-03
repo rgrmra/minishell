@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:54:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/02 22:07:29 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/03 17:14:12 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ void	execute_redirection(t_env *env, t_ast *ast, int *lfds)
 		closeall(fds);
 	else if (tmp && fds[2] != -1 && fds[3] != -1)
 		execute(env, tmp, fds);
-	ast_clear(tmp);
 	dup2(env->stds[0], STDIN_FILENO);
 	dup2(env->stds[1], STDOUT_FILENO);
 	close(env->stds[0]);

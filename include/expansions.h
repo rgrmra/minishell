@@ -6,13 +6,14 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 08:57:37 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/02 19:18:17 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/03 17:51:10 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXPANSIONS_H
 # define EXPANSIONS_H
 
+# include "ast.h"
 # include "arraylist.h"
 # include "tokenizer.h"
 # include "ft_hashmap.h"
@@ -24,6 +25,7 @@ struct					s_env
 	t_arraylist			*vars;
 	char				**environ;
 	t_hashmap			*builtins;
+	t_ast				*clear;
 	int					stds[2];
 };
 

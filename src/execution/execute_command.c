@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/02 22:06:55 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/03 17:39:28 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 		rl_clear_history();
 		open_stdout(fds);
 		closeall(fds);
+		close(4);
+		close(3);
 		if (*cmd && (ft_strchr("./", **cmd) || access(*cmd, F_OK | X_OK) == 0)
 			&& execve(*cmd, cmd, env->environ) < 0)
 			(printf("minishell: %s: %s\n", *cmd, strerror(errno)),
