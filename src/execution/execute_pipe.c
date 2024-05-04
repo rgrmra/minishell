@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:57:29 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/02 22:10:41 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/03 20:35:20 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 extern volatile sig_atomic_t	g_status;
 
-static void	exec_lsubtree(t_env *env, t_ast *ast, t_ast *clear, int *lfds)
+void	exec_lsubtree(t_env *env, t_ast *ast, int *lfds)
 {
 	pid_t	pid;
 
@@ -29,11 +29,11 @@ static void	exec_lsubtree(t_env *env, t_ast *ast, t_ast *clear, int *lfds)
 	if (pid == 0)
 	{
 		rl_clear_history();
-		ast_clear(clear);
 		dup2(lfds[1], STDOUT_FILENO);
 		close(lfds[0]);
 		close(lfds[1]);
-		execute(env, ast, lfds);
+		execute(env, ast->left, lfds);
+		ast_clear(env->ast);
 		envclear(&(env->vars));
 		ft_hshfree(env->builtins);
 		close(STDIN_FILENO);
@@ -43,7 +43,7 @@ static void	exec_lsubtree(t_env *env, t_ast *ast, t_ast *clear, int *lfds)
 	}
 }
 
-static void	exec_rsubtree(t_env *env, t_ast *ast, t_ast *clear, int *lfds)
+void	exec_rsubtree(t_env *env, t_ast *ast, int *lfds)
 {
 	pid_t	pid;
 	int		status;
@@ -53,11 +53,11 @@ static void	exec_rsubtree(t_env *env, t_ast *ast, t_ast *clear, int *lfds)
 	if (pid == 0)
 	{
 		rl_clear_history();
-		ast_clear(clear);
 		dup2(lfds[0], STDIN_FILENO);
 		close(lfds[0]);
 		close(lfds[1]);
-		execute(env, ast, lfds);
+		execute(env, ast->right, lfds);
+		ast_clear(env->ast);
 		envclear(&(env->vars));
 		ft_hshfree(env->builtins);
 		close(STDIN_FILENO);
@@ -73,17 +73,10 @@ static void	exec_rsubtree(t_env *env, t_ast *ast, t_ast *clear, int *lfds)
 void	execute_pipe(t_env *env, t_ast *ast, int *lfds)
 {
 	int		*fds;
-	t_ast	*left;
-	t_ast	*right;
 
 	free(lfds);
 	fds = alloc_fds();
-	left = ast->left;
-	right = ast->right;
-	ast_remove(ast);
 	pipe(fds);
-	exec_lsubtree(env, left, right, fds);
-	exec_rsubtree(env, right, left, fds);
-	ast_clear(left);
-	ast_clear(right);
+	exec_lsubtree(env, ast, fds);
+	exec_rsubtree(env, ast, fds);
 }

@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/03 17:39:28 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/03 21:00:47 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,11 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 	if (pid == 0 && cmd)
 	{
 		rl_clear_history();
-		open_stdout(fds);
+		//open_stdout(fds);
 		closeall(fds);
 		close(4);
 		close(3);
+		ast_clear(env->ast);
 		if (*cmd && (ft_strchr("./", **cmd) || access(*cmd, F_OK | X_OK) == 0)
 			&& execve(*cmd, cmd, env->environ) < 0)
 			(printf("minishell: %s: %s\n", *cmd, strerror(errno)),
@@ -115,7 +116,6 @@ void	execute_command(t_env *env, t_ast *ast, int *fds)
 		strrplc(cmd[i++], 0x1A, ' ');
 	if (execute_builtin(env, ast, cmd, fds))
 		return ;
-	ast_remove(ast);
 	exec_subtree(env, cmd, fds);
 	ft_freesplit(cmd);
 }

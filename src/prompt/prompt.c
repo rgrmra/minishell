@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 20:00:16 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/03 17:46:55 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/03 20:34:35 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ static void	tokens(t_env *env, char **splitted)
 		free(splitted);
 	parser(&tokens);
 	ast = ast_new(&tokens);
+	env->ast = ast;
 	execute(env, ast, NULL);
+	ast_clear(ast);
 }
 
 void	prompt(t_env *env)
@@ -56,7 +58,6 @@ void	prompt(t_env *env)
 			add_history(input);
 		tokens(env, format_input(&input));
 		printf("%d\n", g_status);
-		env->clear = NULL;
 		g_status = 0;
 	}
 	rl_clear_history();

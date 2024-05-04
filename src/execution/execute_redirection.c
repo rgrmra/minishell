@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:54:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/03 17:14:12 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/03 21:00:11 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,11 @@
 
 extern volatile sig_atomic_t	g_status;
 
-static t_ast	*invalid_fd(t_ast *ast, t_ast **tmp)
+static t_ast	*invalid_fd(t_ast *ast)
 {
 	if (!ast)
 		return (NULL);
 	g_status = 1;
-	if (ast && ast->content->type & (GREATER | DGREATER))
-		*tmp = ast_clear(*tmp);
-	if (ast)
-		ast_clear(ast);
 	return (NULL);
 }
 
@@ -53,7 +49,6 @@ static void	open_file(t_ast *ast, int *to_open, int *to_check, mode_t flags)
 		if (ast->content->type & DLESS)
 			unlink(ast->content->literal);
 	}
-	ast_remove(ast->right);
 }
 
 t_ast	*redirection(t_env *env, t_ast *ast, int *fdin, int *fdout)
@@ -75,8 +70,9 @@ t_ast	*redirection(t_env *env, t_ast *ast, int *fdin, int *fdout)
 	else if (ast && ast->content->type & DGREATER)
 		open_file(ast, fdin, fdout, O_CREAT | O_APPEND | O_WRONLY);
 	if (*fdout == -1 || *fdin == -1)
-		return (invalid_fd(ast, &tmp));
-	ast_remove(ast);
+		return (invalid_fd(ast));
+	if (*fdin > -1)
+		dup2(*fdin, STDOUT_FILENO);
 	if (*fdout > -1)
 		dup2(*fdout, STDIN_FILENO);
 	return (tmp);
