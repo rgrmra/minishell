@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 10:55:34 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:17:09 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/05/04 12:55:17 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,10 @@ void	invert_commands(t_list *tokens)
 	{
 		if (((t_token *)tmp->content)->type & (COMMAND | PAREN)
 			&& tmp->next->next
-			&& ((t_token *)tmp->next->content)->type & (DLESS | LESS | DGREATER | GREATER | FILENAME | END)
-			&& (!prev
-				|| ((t_token *)prev->content)->type & ~(DLESS | LESS | DGREATER | GREATER | FILENAME | END)))
+			&& ((t_token *)tmp->next->content)->type & (DLESS | LESS | DGREATER
+				| GREATER | FILENAME | END)
+			&& (!prev || ((t_token *)prev->content)->type & ~(DLESS | LESS
+					| DGREATER | GREATER | FILENAME | END)))
 		{
 			pos = tmp->content;
 			tmp->content = tmp->next->content;
@@ -60,7 +61,8 @@ static int	check_pull_commands(t_list *tokens, t_list *tmp, t_list *prev)
 	{
 		prev = tmp;
 		tmp = tmp->next;
-		if (((t_token *)prev->content)->type & (LESS | DLESS | GREATER | DGREATER | FILENAME | END)
+		if (((t_token *)prev->content)->type & (LESS | DLESS | GREATER
+				| DGREATER | FILENAME | END)
 			&& ((t_token *)tmp->content)->type & (COMMAND))
 			return (true);
 	}
@@ -78,7 +80,8 @@ static void	pull_commands(t_list *tokens)
 	{
 		prev = tmp;
 		tmp = tmp->next;
-		if (((t_token *)prev->content)->type & (LESS | DLESS | GREATER | DGREATER | FILENAME | END)
+		if (((t_token *)prev->content)->type & (LESS | DLESS | GREATER
+				| DGREATER | FILENAME | END)
 			&& ((t_token *)tmp->content)->type & (COMMAND))
 		{
 			pos = tmp->content;

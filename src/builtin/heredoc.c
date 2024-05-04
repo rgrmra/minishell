@@ -6,10 +6,11 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 22:22:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:16:34 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/05/04 11:49:19 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "expansions.h"
 #include "ft_stdlib.h"
 #include "ft_string.h"
 #include <fcntl.h>
@@ -55,6 +56,7 @@ void	heredoc(char **limiter)
 	int		fd;
 
 	fd = get_fd(&filename);
+	remove_quotes_aux(*limiter);
 	while (1)
 	{
 		input = readline("> ");

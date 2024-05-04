@@ -6,13 +6,12 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:57:29 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/03 20:35:20 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/04 11:19:36 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 #include "execution.h"
-#include "get_env.h"
 #include <readline/readline.h>
 #include <signal.h>
 #include <stdlib.h>
@@ -21,7 +20,7 @@
 
 extern volatile sig_atomic_t	g_status;
 
-void	exec_lsubtree(t_env *env, t_ast *ast, int *lfds)
+void	exec_left_subtree(t_env *env, t_ast *ast, int *fds)
 {
 	pid_t	pid;
 
@@ -29,21 +28,14 @@ void	exec_lsubtree(t_env *env, t_ast *ast, int *lfds)
 	if (pid == 0)
 	{
 		rl_clear_history();
-		dup2(lfds[1], STDOUT_FILENO);
-		close(lfds[0]);
-		close(lfds[1]);
-		execute(env, ast->left, lfds);
-		ast_clear(env->ast);
-		envclear(&(env->vars));
-		ft_hshfree(env->builtins);
-		close(STDIN_FILENO);
-		close(STDOUT_FILENO);
-		close(STDERR_FILENO);
-		exit(g_status);
+		dup2(fds[1], STDOUT_FILENO);
+		closeall(fds);
+		execute(env, ast->left, fds);
+		clearall(env);
 	}
 }
 
-void	exec_rsubtree(t_env *env, t_ast *ast, int *lfds)
+void	exec_right_subtree(t_env *env, t_ast *ast, int *fds)
 {
 	pid_t	pid;
 	int		status;
@@ -53,30 +45,22 @@ void	exec_rsubtree(t_env *env, t_ast *ast, int *lfds)
 	if (pid == 0)
 	{
 		rl_clear_history();
-		dup2(lfds[0], STDIN_FILENO);
-		close(lfds[0]);
-		close(lfds[1]);
-		execute(env, ast->right, lfds);
-		ast_clear(env->ast);
-		envclear(&(env->vars));
-		ft_hshfree(env->builtins);
-		close(STDIN_FILENO);
-		close(STDOUT_FILENO);
-		close(STDERR_FILENO);
-		exit(g_status);
+		dup2(fds[0], STDIN_FILENO);
+		closeall(fds);
+		execute(env, ast->right, fds);
+		clearall(env);
 	}
-	closeall(lfds);
+	closeall(fds);
 	waitpid(pid, &status, WUNTRACED);
 	g_status = WEXITSTATUS(status);
 }
 
-void	execute_pipe(t_env *env, t_ast *ast, int *lfds)
+void	execute_pipe(t_env *env, t_ast *ast)
 {
-	int		*fds;
+	int	fds[4];
 
-	free(lfds);
-	fds = alloc_fds();
+	set_fds(fds);
 	pipe(fds);
-	exec_lsubtree(env, ast, fds);
-	exec_rsubtree(env, ast, fds);
+	exec_left_subtree(env, ast, fds);
+	exec_right_subtree(env, ast, fds);
 }

@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 09:57:54 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:16:53 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/05/04 12:53:00 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 static char	*check_bultins(char *word)
 {
 	const char	*bultins[8] = {"echo", "cd", "pwd", "export", "unset", "env",
-			"exit", NULL};
+		"exit", NULL};
 	size_t		i;
 
 	if (!word)

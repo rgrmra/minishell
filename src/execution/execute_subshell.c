@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:50:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/03 20:34:02 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/04 11:16:26 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 extern volatile sig_atomic_t	g_status;
 
-static void	exec_subtree(t_env *env, t_ast *ast, int *lfds)
+void	execute_subshell(t_env *env, t_ast *ast)
 {
 	pid_t	pid;
 	int		status;
@@ -30,22 +30,9 @@ static void	exec_subtree(t_env *env, t_ast *ast, int *lfds)
 	if (pid == 0)
 	{
 		rl_clear_history();
-		execute(env, ast->left, lfds);
-		ast_clear(env->ast);
-		envclear(&(env->vars));
-		ft_hshfree(env->builtins);
-		close(STDIN_FILENO);
-		close(STDOUT_FILENO);
-		close(STDERR_FILENO);
-		exit(g_status);
+		execute(env, ast->left, NULL);
+		clearall(env);
 	}
 	waitpid(pid, &status, WUNTRACED);
 	g_status = WEXITSTATUS(status);
-}
-
-void	execute_subshell(t_env *env, t_ast *ast, int *lfds)
-{
-
-	exec_subtree(env, ast, lfds);
-	closeall(lfds);
 }

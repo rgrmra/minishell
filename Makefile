@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/19 10:09:46 by yuuko             #+#    #+#              #
-#    Updated: 2024/04/28 21:01:25 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/05/04 11:02:49 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,7 +74,7 @@ SRCS		:=	\
 	src/builtin/exit.c \
 	src/builtin/echo.c \
 	src/execution/execution.c \
-	src/execution/execute_condition.c \
+	src/execution/execute_conditional.c \
 	src/execution/execute_subshell.c \
 	src/execution/execute_redirection.c \
 	src/execution/execute_pipe.c \

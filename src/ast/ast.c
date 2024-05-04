@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/03 19:51:10 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/04 12:49:46 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern volatile	sig_atomic_t	g_status;
+extern volatile sig_atomic_t	g_status;
 
 void	ast_print(t_ast **ast)
 {
@@ -35,16 +35,6 @@ void	ast_print(t_ast **ast)
 	if ((*ast)->right)
 		ast_print(&(*ast)->right);
 	printf("%d %s\n", tmp->content->type, tmp->content->literal);
-}
-
-void	ast_remove(t_ast *ast)
-{
-	if (!ast)
-		return ;
-	free(ast->content->literal);
-	free(ast->content);
-	free(ast);
-	ast = NULL;
 }
 
 t_ast	*ast_clear(t_ast *ast)
@@ -79,8 +69,6 @@ static t_ast	*ast_get(t_ast **paren)
 	tmp = ast_new(&tokens);
 	if (!tmp)
 		g_status = 2;
-	//free((*paren)->content->literal);
-	//(*paren)->content->literal = ft_strdup("SUBSHELL");
 	(*paren)->left = tmp;
 	return (*paren);
 }

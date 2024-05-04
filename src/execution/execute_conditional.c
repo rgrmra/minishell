@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_condition.c                                :+:      :+:    :+:   */
+/*   execute_conditional.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:43:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/03 20:29:39 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/04 11:01:00 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,13 @@
 
 extern volatile sig_atomic_t	g_status;
 
-void	execute_condition(t_env *env, t_ast *ast, int *fds)
+void	execute_conditional(t_env *env, t_ast *ast)
 {
 	int		token;
-	//t_ast	*left;
-	//t_ast	*right;
 
-	free(fds);
 	token = ast->content->type;
-	//left = ast->left;
-	//right = ast->right;
-
 	execute(env, ast->left, NULL);
-	if ((g_status == 0 && token & AND) || (g_status > 0 && token & OR))
-		execute(env, ast->right, NULL);
+	if ((g_status > 0 && token & AND) || (g_status == 0 && token & OR))
+		return ;
+	execute(env, ast->right, NULL);
 }

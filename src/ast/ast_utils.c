@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:30:01 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/01 14:37:49 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/04 12:51:37 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ static t_ast	*ast_build_pipeline(t_list **tokens, t_ast **root, t_ast **prev)
 	if (*tokens && ((t_token *)(*tokens)->content)->type & (COMMAND | PAREN))
 		(*prev)->right = ast_node(tokens);
 	else if (*tokens
-		&& ((t_token *)(*tokens)->content)->type & (LESS | DLESS | GREATER | DGREATER))
+		&& ((t_token *)(*tokens)->content)->type & (LESS | DLESS | GREATER
+			| DGREATER))
 		(*prev)->right = ast_build(tokens, &ast);
 	return (*prev);
 }
