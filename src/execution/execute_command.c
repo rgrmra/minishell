@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/04 12:39:49 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/04 14:11:43 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "execution.h"
 #include "ft_hashmap.h"
 #include "ft_string.h"
-#include "get_env.h"
 #include "prompt.h"
 #include "types.h"
 #include "utils.h"
