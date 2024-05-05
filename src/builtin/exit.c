@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 18:49:21 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/04 15:01:02 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/05 11:10:13 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,7 @@ void	builtin_exit(t_env *env, char **args)
 		}
 		i++;
 	}
-	if (status < 0)
-		status = -status;
-	g_status = status;
+	g_status = status & 011111111;
 	if (i > 1 && args[1])
 	{
 		printf("minishell: exit: numeric argument required\n");

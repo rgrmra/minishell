@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:54:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/04 12:52:20 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/05 11:05:31 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ static void	open_file(t_ast *ast, int *to_open, int *to_check, mode_t flags)
 				strerror(errno));
 			g_status = 1;
 		}
+		else
+			g_status = 0;
 	}
 	if (ast->content->type & DLESS)
 		unlink(ast->content->literal);

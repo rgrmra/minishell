@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/04 14:11:43 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/05 11:07:27 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,39 @@
 #include "ft_string.h"
 #include "prompt.h"
 #include "types.h"
+#include "ft_stdio.h"
 #include "utils.h"
+#include <asm-generic/errno-base.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <stdio.h>
+#include <sys/stat.h>
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
 extern volatile sig_atomic_t	g_status;
+
+static void	panic(char *cmd, char *message, int error)
+{
+	struct stat	path_stat;
+
+	ft_memset(&path_stat, '\0', sizeof(path_stat));
+	stat((const char *) cmd, &path_stat);
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(cmd, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	if (error != 127 && path_stat.st_mode & S_IFDIR)
+		ft_putendl_fd("Is a directory", STDERR_FILENO);
+	else
+		ft_putendl_fd(message, STDERR_FILENO);
+	if (ft_strchr("./", *cmd))
+		g_status = 127;
+	else
+		g_status = error;
+}
 
 static int	execute_builtin(t_env *env, char **cmd, int *fds)
 {
@@ -59,11 +80,10 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 		close(4);
 		if (*cmd && (ft_strchr("./", **cmd) || access(*cmd, F_OK | X_OK) == 0)
 			&& execve(*cmd, cmd, env->environ) < 0)
-			(printf("minishell: %s: %s\n", *cmd, strerror(errno)),
-				ft_freesplit(cmd), g_status = 126, clearall(env));
-		printf("minishell: %s: command not found!\n", *cmd);
+			panic(*cmd, strerror(errno), 126);
+		else
+			panic(*cmd, "command not found", 127);
 		ft_freesplit(cmd);
-		g_status = 127;
 		clearall(env);
 	}
 	closeall(fds);

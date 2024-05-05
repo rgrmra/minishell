@@ -6,14 +6,17 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/04 12:21:35 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/05 11:07:48 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_string.h"
 #include "utils.h"
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+extern volatile sig_atomic_t	g_status;
 
 static char	check_sub(char *input, int i, int *sub)
 {
@@ -71,7 +74,8 @@ char	*find_quote(char *tmp)
 	}
 	if (!quote)
 		return (tmp);
-	printf("%s %c\n", "unclosed quote parser error", quote);
+	printf("%s %c\n", "unclosed parser error", quote);
+	g_status = 2;
 	return (NULL);
 }
 
