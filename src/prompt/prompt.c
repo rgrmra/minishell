@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 20:00:16 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/05 10:06:15 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/06 21:22:31 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include "ft_linkedlist.h"
 #include "ft_string.h"
 #include "parser.h"
-#include "ft_stdio.h"
 #include "prompt.h"
 #include "tokenizer.h"
 #include "types.h"
@@ -54,10 +53,7 @@ void	prompt(t_env *env)
 	{
 		input = readline("$ ");
 		if (!input)
-		{
 			input = ft_strdup("exit");
-			ft_putendl_fd(input, 2);
-		}
 		else if (*input != '\0')
 			add_history(input);
 		else

@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 19:07:26 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/04 11:15:44 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/05 21:00:50 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include "ast.h"
 # include "expansions.h"
 
-void	set_fds(int *fds);
 void	closeall(int *fds);
 void	clearall(t_env *env);
 void	execute_command(t_env *env, t_ast *ast, int *fds);
@@ -25,5 +24,6 @@ void	execute_redirection(t_env *env, t_ast *ast);
 void	execute_subshell(t_env *env, t_ast *ast);
 void	execute_conditional(t_env *env, t_ast *ast);
 void	execute(t_env *env, t_ast *ast, int *fds);
+void	panic(char *cmd, char *flag, char *message, int error);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/19 10:09:46 by yuuko             #+#    #+#              #
-#    Updated: 2024/05/04 11:02:49 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/05/05 19:18:52 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,8 +71,13 @@ SRCS		:=	\
 	src/ast/ast.c \
 	src/ast/ast_utils.c \
 	src/builtin/heredoc.c \
-	src/builtin/exit.c \
 	src/builtin/echo.c \
+	src/builtin/cd.c \
+	src/builtin/pwd.c \
+	src/builtin/export.c \
+	src/builtin/unset.c \
+	src/builtin/env.c \
+	src/builtin/exit.c \
 	src/execution/execution.c \
 	src/execution/execute_conditional.c \
 	src/execution/execute_subshell.c \

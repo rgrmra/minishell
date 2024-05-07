@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 18:49:21 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/05 11:10:13 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/05 21:11:36 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "types.h"
 #include "ft_stdlib.h"
 #include "ft_ctype.h"
+#include "ft_stdio.h"
 #include "builtin.h"
 #include "ft_string.h"
 #include "expansions.h"
@@ -45,26 +46,29 @@ void	builtin_exit(t_env *env, char **args)
 	int	i;
 	int	status;
 
-	rl_clear_history();
 	i = 0;
 	status = 0;
-	while (args[i])
+	while (args[++i])
 	{
 		if (check_arg(args[i]))
 		{
 			status = ft_atoi(args[i]);
 			break ;
 		}
-		i++;
 	}
-	g_status = status & 011111111;
-	if (i > 1 && args[1])
-	{
-		printf("minishell: exit: numeric argument required\n");
-		g_status = 2;
-	}
+	ft_putendl_fd(*args, 2);
+	if (status < 0)
+		status = -status;
+	if (i > 1 || status > 0)
+		g_status = status;
+	if (i > 1 && args[1] && !check_arg(args[1]))
+		panic(*args, args[i], "numeric argument required", 2);
 	else if (args[1] && args[2])
-		printf("minishell: exit: too many arguments\n");
+	{
+		panic(*args, NULL, "too many arguments", 1);
+		return ;
+	}
+	rl_clear_history();
 	ft_freesplit(args);
 	clearall(env);
 }

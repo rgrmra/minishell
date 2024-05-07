@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:43:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:17:17 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/05/06 21:13:44 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,13 @@ void	arrdel(t_arraylist **array, void *node, int (*compare)(void *, void *),
 		{
 			if (delete)
 				delete (arr->list[i]);
+			arr->index--;
 			if (arr->index > 1)
 			{
 				j = --i;
 				while (j++ < arr->index)
 					arr->list[j] = arr->list[j + 1];
 			}
-			arr->index--;
 		}
 		i++;
 	}

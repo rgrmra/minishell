@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:54:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/05 11:05:31 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/05 21:05:15 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,7 @@ static void	open_file(t_ast *ast, int *to_open, int *to_check, mode_t flags)
 	{
 		*to_open = open(ast->right->content->literal, flags, mode);
 		if (*to_open == -1)
-		{
-			printf("minishell: %s: %s\n", ast->right->content->literal,
-				strerror(errno));
-			g_status = 1;
-		}
+			panic(ast->right->content->literal, NULL, strerror(errno), 1);
 		else
 			g_status = 0;
 	}
@@ -86,8 +82,9 @@ void	execute_redirection(t_env *env, t_ast *ast)
 
 	env->stds[0] = dup(STDIN_FILENO);
 	env->stds[1] = dup(STDOUT_FILENO);
-	set_fds(fds);
 	pipe(fds);
+	fds[2] = -2;
+	fds[3] = -2;
 	tmp = redirection(env, ast, &fds[2], &fds[3]);
 	if (!tmp || fds[2] == -1 || fds[3] == -1)
 		closeall(fds);

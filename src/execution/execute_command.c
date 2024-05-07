@@ -6,12 +6,11 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/05 11:07:27 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/06 21:07:17 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
-#include "builtin.h"
 #include "execution.h"
 #include "ft_hashmap.h"
 #include "ft_string.h"
@@ -32,7 +31,7 @@
 
 extern volatile sig_atomic_t	g_status;
 
-static void	panic(char *cmd, char *message, int error)
+void	panic(char *cmd, char *flag, char *message, int error)
 {
 	struct stat	path_stat;
 
@@ -41,11 +40,18 @@ static void	panic(char *cmd, char *message, int error)
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(cmd, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
+	if (flag)
+	{
+		ft_putstr_fd(flag, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+	}
 	if (error != 127 && path_stat.st_mode & S_IFDIR)
 		ft_putendl_fd("Is a directory", STDERR_FILENO);
 	else
 		ft_putendl_fd(message, STDERR_FILENO);
-	if (ft_strchr("./", *cmd))
+	if (error == EACCES)
+		g_status = 126;
+	else if (error == ENOENT)
 		g_status = 127;
 	else
 		g_status = error;
@@ -55,12 +61,11 @@ static int	execute_builtin(t_env *env, char **cmd, int *fds)
 {
 	t_exec_func	builtin;
 
-	if (ft_strncmp(*cmd, "exit", 5) == 0)
-		builtin_exit(env, cmd);
 	builtin = ft_hshget(env->builtins, *cmd);
 	if (!builtin)
 		return (false);
-	builtin(cmd, fds);
+	builtin(env, cmd);
+	ft_freesplit(cmd);
 	closeall(fds);
 	return (true);
 }
@@ -78,11 +83,10 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 		closeall(fds);
 		close(3);
 		close(4);
-		if (*cmd && (ft_strchr("./", **cmd) || access(*cmd, F_OK | X_OK) == 0)
-			&& execve(*cmd, cmd, env->environ) < 0)
-			panic(*cmd, strerror(errno), 126);
+		if (*cmd && **cmd != '\0' && execve(*cmd, cmd, env->environ) < 0)
+			panic(*cmd, NULL, strerror(errno), errno);
 		else
-			panic(*cmd, "command not found", 127);
+			panic(*cmd, NULL, "command not found", ENOENT);
 		ft_freesplit(cmd);
 		clearall(env);
 	}

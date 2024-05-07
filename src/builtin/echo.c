@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 20:14:49 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/29 20:37:30 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/06 21:09:30 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,12 @@
 #include "types.h"
 #include <unistd.h>
 
-void	builtin_echo(char **cmd, int *fds)
+void	builtin_echo(t_env *env, char **cmd)
 {
 	int	i;
 	int	end;
-	int	fd;
 
-	fd = STDOUT_FILENO;
-	if (fds && fds[2] >= 0)
-		fd = fds[2];
+	(void)env;
 	i = 1;
 	end = false;
 	if (cmd[1] && ft_strncmp(cmd[1], "-n", 3) == 0)
@@ -31,10 +28,9 @@ void	builtin_echo(char **cmd, int *fds)
 	while (cmd[i + end])
 	{
 		if (i > 1)
-			ft_putchar_fd(' ', fd);
-		ft_putstr_fd(cmd[i++ + end], fd);
+			ft_putchar_fd(' ', STDOUT_FILENO);
+		ft_putstr_fd(cmd[i++ + end], STDOUT_FILENO);
 	}
 	if (!end)
-		ft_putchar_fd('\n', fd);
-	ft_freesplit(cmd);
+		ft_putchar_fd('\n', STDOUT_FILENO);
 }

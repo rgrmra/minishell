@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:57:29 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/04 11:19:36 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/05 15:25:23 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,9 @@ void	execute_pipe(t_env *env, t_ast *ast)
 {
 	int	fds[4];
 
-	set_fds(fds);
 	pipe(fds);
+	fds[2] = -2;
+	fds[2] = -2;
 	exec_left_subtree(env, ast, fds);
 	exec_right_subtree(env, ast, fds);
 }

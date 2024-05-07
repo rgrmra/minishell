@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 19:06:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/04 12:48:24 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/05 15:24:58 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,6 @@
 #include <unistd.h>
 
 extern volatile sig_atomic_t	g_status;
-
-void	set_fds(int *fds)
-{
-	fds[2] = -2;
-	fds[3] = -2;
-	fds[4] = -2;
-	fds[5] = -2;
-}
 
 void	closeall(int *fds)
 {
