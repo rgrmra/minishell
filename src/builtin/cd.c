@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 16:03:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/05 22:09:09 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/07 17:24:51 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	check_dir(char *pwd)
 
 	ft_memset(&path_stat, '\0', sizeof(path_stat));
 	stat((const char *) pwd, &path_stat);
-	if (path_stat.st_mode & ~S_IFDIR)
+	if (path_stat.st_mode & S_IFDIR)
 	{
 		panic("cd", pwd, "No such file or directory", 1);
 		g_status = 1;
@@ -64,8 +64,8 @@ void	builtin_cd(t_env *env, char **args)
 		new_pwd = args[1];
 	check_dir(new_pwd);
 	pwd = get_pwd();
-	envadd(&env->vars, "OLD_PWD", pwd);
 	chdir(new_pwd);
+	envadd(&env->vars, "OLD_PWD", pwd);
 	envadd(&env->vars, "PWD", new_pwd);
 	free(pwd);
 }

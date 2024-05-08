@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/05 09:55:44 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/07 17:40:32 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 extern volatile sig_atomic_t	g_status;
 
@@ -45,6 +46,8 @@ t_ast	*ast_clear(t_ast *ast)
 		ast_clear(ast->left);
 	if (ast->right)
 		ast_clear(ast->right);
+	if (ast->content->type & END)
+		unlink(ast->content->literal);
 	free(ast->content->literal);
 	free(ast->content);
 	free(ast);
