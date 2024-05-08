@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/07 17:40:32 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/08 18:20:20 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ static t_ast	*ast_get(t_ast **paren)
 		free(splitted);
 	parser(&tokens);
 	tmp = ast_new(&tokens);
+	//free(tmp->content->literal);
+	//tmp->content->literal = ft_strdup("SUBSHELL");
 	if (!tmp)
 		g_status = 2;
 	(*paren)->left = tmp;

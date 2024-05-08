@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:57:29 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/05 15:25:23 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/08 18:02:12 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ void	exec_right_subtree(t_env *env, t_ast *ast, int *fds)
 		execute(env, ast->right, fds);
 		clearall(env);
 	}
-	closeall(fds);
+	close(fds[0]);
+	close(fds[1]);
 	waitpid(pid, &status, WUNTRACED);
 	g_status = WEXITSTATUS(status);
 }
@@ -61,7 +62,7 @@ void	execute_pipe(t_env *env, t_ast *ast)
 
 	pipe(fds);
 	fds[2] = -2;
-	fds[2] = -2;
+	fds[3] = -2;
 	exec_left_subtree(env, ast, fds);
 	exec_right_subtree(env, ast, fds);
 }

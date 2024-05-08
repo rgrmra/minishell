@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:30:01 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/04 12:51:37 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/08 18:27:13 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,8 @@ t_ast	*ast_build(t_list **tokens, t_ast **prev)
 	if (!tokens || !(*tokens) || (*tokens
 			&& ((t_token *)(*tokens)->content)->type & (AND | OR)))
 		return (*prev);
-	if (*tokens && ((t_token *)(*tokens)->content)->type & PAREN)
-		return (ast_node(tokens));
+	//if (*tokens && ((t_token *)(*tokens)->content)->type & PAREN)
+	//	return (ast_node(tokens));
 	ast = ast_node(tokens);
 	if (!ast)
 		return (*prev);

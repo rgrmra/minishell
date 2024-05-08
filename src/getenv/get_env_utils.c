@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 19:40:39 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/07 20:27:42 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/08 19:02:17 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	clear(t_var *list)
 		while (list->values[i])
 			free(list->values[i++]);
 		free(list->values);
-		free(list->holder);
+		free(list->deflt);
 	}
 	free(list);
 	list = NULL;

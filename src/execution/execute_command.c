@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/07 21:07:12 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/08 19:14:06 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "execution.h"
 #include "ft_hashmap.h"
 #include "ft_string.h"
+#include "get_env.h"
 #include "prompt.h"
 #include "types.h"
 #include "ft_stdio.h"
@@ -72,6 +73,7 @@ static int	execute_builtin(t_env *env, char **cmd, int *fds)
 
 static void	exec_subtree(t_env *env, char **cmd, int *fds)
 {
+	char	**teste;
 	pid_t	pid;
 	int		status;
 
@@ -83,10 +85,10 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 		closeall(fds);
 		close(3);
 		close(4);
-		if (*cmd && **cmd != '\0' && execve(*cmd, cmd, env->environ) < 0)
+		teste = envexport(env->vars);
+		if (*cmd && execve(*cmd, cmd, teste) < 0)
 			panic(*cmd, NULL, strerror(errno), errno);
-		else
-			panic(*cmd, NULL, "command not found", ENOENT);
+		ft_freesplit(teste);
 		ft_freesplit(cmd);
 		clearall(env);
 	}

@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 16:22:22 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/07 21:46:06 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/08 19:00:55 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@
 
 typedef struct s_var	t_var;
 
-struct					s_var
+struct		s_var
 {
 	char	*name;
 	char	**values;
-	char	*holder;
+	char	*deflt;
 };
 
 void	envadd(t_arraylist **var, char *name, char *values);
@@ -30,5 +30,6 @@ void	envdel(t_arraylist **var, char *name);
 t_var	*envget(t_arraylist **var, char *name);
 void	envnew(t_arraylist **var, char **envp);
 void	envprint(t_arraylist **var);
+char	**envexport(t_arraylist *var);
 
 #endif
