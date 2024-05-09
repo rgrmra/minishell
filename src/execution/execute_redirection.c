@@ -6,11 +6,13 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:54:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/07 17:41:01 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/08 21:57:36 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
+#include "ft_hashmap.h"
+#include "ft_stdlib.h"
 #include "execution.h"
 #include "expansions.h"
 #include "tokenizer.h"
@@ -44,7 +46,7 @@ static void	open_file(t_ast *ast, int *to_open, int *to_check, mode_t flags)
 	}
 }
 
-t_ast	*redirection(t_env *env, t_ast *ast, int *fdin, int *fdout)
+t_ast	*redirection(t_env *env, t_ast *ast, int *fdin, int *fdout, int *fds)
 {
 	t_ast	*tmp;
 
@@ -55,7 +57,9 @@ t_ast	*redirection(t_env *env, t_ast *ast, int *fdin, int *fdout)
 		tmp = ast->left;
 	else if (ast->left
 		&& ast->left->content->type & (LESS | DLESS | GREATER | DGREATER))
-		tmp = redirection(env, ast->left, fdin, fdout);
+		tmp = redirection(env, ast->left, fdin, fdout, fds);
+	if (ast->left->content->type & PAREN)
+		execute(env, ast->left, fds);
 	var_expansions(env, ast->right->content);
 	remove_quotes_aux(ast->right->content->literal);
 	if (ast->content->type & (LESS | DLESS))
@@ -83,11 +87,12 @@ void	execute_redirection(t_env *env, t_ast *ast)
 	pipe(fds);
 	fds[2] = -2;
 	fds[3] = -2;
-	tmp = redirection(env, ast, &fds[2], &fds[3]);
+	tmp = redirection(env, ast, &fds[2], &fds[3], fds);
 	if (!tmp || fds[2] == -1 || fds[3] == -1)
 		closeall(fds);
 	else
 		execute(env, tmp, fds);
+	closeall(fds);
 	dup2(env->stds[0], STDIN_FILENO);
 	dup2(env->stds[1], STDOUT_FILENO);
 	close(env->stds[0]);
