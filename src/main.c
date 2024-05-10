@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/08 21:58:43 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/09 21:18:24 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ int	main(void)
 	ft_hshset(env.builtins, "exit", builtin_exit);
 	env.vars = arrnew();
 	envnew(&env.vars, environ);
-	env.environ = environ;
+	env.environ = envexport(env.vars);
+	if (!envget(&env.vars, "PATH"))
+		envadd(&env.vars, "PATH", STDPATH);
 	prompt(&env);
 	envclear(&env.vars);
 	ft_hshfree(env.builtins);

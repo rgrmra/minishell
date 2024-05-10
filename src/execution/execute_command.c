@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/08 21:58:22 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/09 18:29:56 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,10 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 		close(3);
 		close(4);
 		teste = envexport(env->vars);
-		if (*cmd && execve(*cmd, cmd, teste) < 0)
+		if (*cmd && access(*cmd, F_OK) == 0 && execve(*cmd, cmd, teste) < 0)
 			panic(*cmd, NULL, strerror(errno), errno);
+		else
+			panic(*cmd, NULL, "command not found", errno);
 		ft_freesplit(teste);
 		ft_freesplit(cmd);
 		clearall(env);

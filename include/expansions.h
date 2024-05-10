@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 08:57:37 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/08 21:59:11 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/09 19:05:00 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,10 @@ struct					s_env
 	int					stds[2];
 };
 
-void					var_expansions(t_env *env, t_token *content);
-void					command_expansions(t_env *env, char **content);
-void					remove_quotes(char **word);
-void					remove_quotes_aux(char *word);
+void	var_expansions(t_env *env, t_token *content);
+char	*check_expansion(t_env *env, char *word);
+void	command_expansions(t_env *env, char **content);
+void	remove_quotes(char **word);
+void	remove_quotes_aux(char *word);
 
 #endif

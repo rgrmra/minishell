@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 19:22:28 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/05 21:23:07 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/09 18:57:03 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,6 @@ void	builtin_export(t_env *env, char **args);
 void	builtin_unset(t_env *env, char **args);
 void	builtin_env(t_env *env, char **args);
 void	builtin_exit(t_env *env, char **args);
+void	heredoc(char **limiter);
 
 #endif

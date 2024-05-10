@@ -6,10 +6,11 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 16:03:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/07 17:24:51 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/09 20:24:22 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_stdio.h"
 #include "ft_string.h"
 #include "execution.h"
 #include "expansions.h"
@@ -21,24 +22,24 @@
 
 extern volatile sig_atomic_t	g_status;
 
-void	check_dir(char *pwd)
+static char	*get_newpwd(t_env *env, char **args)
 {
-	struct stat	path_stat;
+	t_var	*var_pwd;
 
-	ft_memset(&path_stat, '\0', sizeof(path_stat));
-	stat((const char *) pwd, &path_stat);
-	if (path_stat.st_mode & S_IFDIR)
+	if (!args[1] || ft_strncmp(args[1], "~", 2) == 0)
 	{
-		panic("cd", pwd, "No such file or directory", 1);
-		g_status = 1;
+		var_pwd = envget(&env->vars, "HOME");
+		if (var_pwd)
+			return (*var_pwd->values);
+		panic(*args, NULL, "HOME not set", 1);
+		return (NULL);
 	}
+	return (args[1]);
 }
-
 
 void	builtin_cd(t_env *env, char **args)
 {
 	char	*pwd;
-	t_var	*var_pwd;
 	char	*new_pwd;
 
 	g_status = 0;
@@ -47,25 +48,19 @@ void	builtin_cd(t_env *env, char **args)
 	if (args[1] && args[2])
 	{
 		panic(*args, NULL, "too many arguments", 1);
-		g_status = 1;
 		return ;
 	}
-	if (!args[1] || ft_strncmp(args[1], "~", 2) == 0)
+	new_pwd = get_newpwd(env, args);
+	if (!new_pwd)
+		return ;
+	if (chdir(new_pwd))
 	{
-		var_pwd = envget(&env->vars, "HOME");
-		if (!var_pwd)
-		{
-			panic(*args, NULL, "HOME not set", 1);
-			return ;
-		}
-		new_pwd = *var_pwd->values;
+		panic("cd", args[1], "No such file or directory", 1);
+		return ;
 	}
-	else
-		new_pwd = args[1];
-	check_dir(new_pwd);
 	pwd = get_pwd();
-	chdir(new_pwd);
 	envadd(&env->vars, "OLD_PWD", pwd);
 	envadd(&env->vars, "PWD", new_pwd);
+	ft_putendl(pwd);
 	free(pwd);
 }

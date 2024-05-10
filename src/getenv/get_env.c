@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 17:36:57 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/08 19:07:03 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/09 20:54:56 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,14 +91,12 @@ char	**envexport(t_arraylist *var)
 	size_t	i;
 
 	i = 0;
-	env = (char **) malloc(sizeof(char *) * var->size + 1);
+	env = (char **) malloc(sizeof(char *) * var->size);
 	if (!env)
 		return (NULL);
-	while (i < var->size)
+	while (var->list[i])
 	{
 		content = var->list[i];
-		if (!content)
-			break ;
 		env[i] = ft_strdup(content->deflt);
 		i++;
 	}

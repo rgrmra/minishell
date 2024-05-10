@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 16:22:22 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/08 19:00:55 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/09 21:18:05 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define GET_ENV_H
 
 # include "arraylist.h"
+
+# define STDPATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 typedef struct s_var	t_var;
 

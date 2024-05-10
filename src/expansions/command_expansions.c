@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 09:57:54 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/05 11:01:38 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/09 18:54:28 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*check_bultins(char *word)
 	return (NULL);
 }
 
-static char	*check_expansion(t_env *env, char *word)
+static char	*check_cmd_expansion(t_env *env, char *word)
 {
 	size_t	i;
 	char	**paths;
@@ -72,7 +72,7 @@ void	command_expansions(t_env *env, char **content)
 		return ;
 	str = NULL;
 	if (!ft_strchr("./", **content))
-			str = check_expansion(env, *content);
+			str = check_cmd_expansion(env, *content);
 	if (str)
 	{
 		free(*content);

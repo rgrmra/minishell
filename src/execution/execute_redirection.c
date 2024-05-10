@@ -6,13 +6,11 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:54:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/08 21:57:36 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/09 20:01:19 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
-#include "ft_hashmap.h"
-#include "ft_stdlib.h"
 #include "execution.h"
 #include "expansions.h"
 #include "tokenizer.h"
@@ -58,7 +56,7 @@ t_ast	*redirection(t_env *env, t_ast *ast, int *fdin, int *fdout, int *fds)
 	else if (ast->left
 		&& ast->left->content->type & (LESS | DLESS | GREATER | DGREATER))
 		tmp = redirection(env, ast->left, fdin, fdout, fds);
-	if (ast->left->content->type & PAREN)
+	if (ast->left && ast->left->content->type & PAREN)
 		execute(env, ast->left, fds);
 	var_expansions(env, ast->right->content);
 	remove_quotes_aux(ast->right->content->literal);

@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:16:57 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/05/09 18:50:04 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static char	*var_to_string(t_var *var)
 	return (tmp);
 }
 
-static char	*check_expansion(t_env *env, char *word)
+char	*check_expansion(t_env *env, char *word)
 {
 	int		start;
 	int		end;
