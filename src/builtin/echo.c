@@ -6,20 +6,24 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 20:14:49 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/06 21:09:30 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/11 22:07:04 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_stdio.h"
 #include "ft_string.h"
 #include "types.h"
+#include <signal.h>
 #include <unistd.h>
+
+extern volatile sig_atomic_t	g_status;
 
 void	builtin_echo(t_env *env, char **cmd)
 {
 	int	i;
 	int	end;
 
+	g_status = 0;
 	(void)env;
 	i = 1;
 	end = false;

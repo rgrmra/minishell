@@ -6,15 +6,21 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:17:10 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/05/11 23:05:32 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "prompt.h"
+#include "parser.h"
+#include "builtin.h"
 #include "ft_linkedlist.h"
 #include "ft_string.h"
 #include "tokenizer.h"
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+extern volatile sig_atomic_t	g_status;
 
 static int	get_token(char *literal, int last_token)
 {
@@ -43,22 +49,27 @@ static int	get_token(char *literal, int last_token)
 	return (COMMAND);
 }
 
-static void	check_token(t_list **tokens, char *literal)
+static int	check_token(t_list **tokens, char *literal)
 {
 	t_token	*content;
+	t_list	*last;
 	int		last_token;
 
 	if (!literal)
-		return ;
+		return (ILLEGAL);
 	content = (t_token *)malloc(1 * sizeof(t_token));
 	if (!content)
-		return ;
+		return (ILLEGAL);
 	content->literal = literal;
 	last_token = 0;
+	last = ft_lstlast(*tokens);
 	if (*tokens)
-		last_token = ((t_token *)ft_lstlast(*tokens)->content)->type;
+		last_token = ((t_token *)last->content)->type;
 	content->type = get_token(literal, last_token);
+	if (content->type & END)
+		heredoc(&content->literal);
 	ft_lstaddcontent_back(tokens, (void *)content);
+	return (content->type);
 }
 
 void	token_clear(void *content)
@@ -77,6 +88,29 @@ t_list	*tokenizer(char **splitted)
 	i = 0;
 	tokens = NULL;
 	while (*(splitted + i))
-		check_token(&tokens, *(splitted + i++));
-	return (append_commands(tokens));
+	{
+		if (!find_quote(*(splitted + i)))
+		{
+			ft_lstclear(&tokens, token_clear);
+			while (*(splitted + i))
+				free(*(splitted + i++));
+			return (NULL);
+		}
+		if (!check_token(&tokens, *(splitted + i)))
+		{
+#include "ft_stdio.h"
+			ft_putstr("minishell: syntax error near type '");
+			ft_putstr(*(splitted + i));
+			ft_putstr("'\n");
+			g_status = 2;
+			ft_lstclear(&tokens, token_clear);
+			while (*(splitted + i))
+				free(*(splitted + i++));
+			return (NULL);
+		}
+		i++;
+	}
+	tokens = append_commands(tokens);
+	parser(&tokens);
+	return (tokens);
 }

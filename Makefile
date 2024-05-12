@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/19 10:09:46 by yuuko             #+#    #+#              #
-#    Updated: 2024/05/05 19:18:52 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/05/11 20:19:02 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,6 +64,7 @@ SRCS		:=	\
 	src/prompt/format_input.c \
 	src/tokenizer/tokenizer.c \
 	src/tokenizer/append_commands.c \
+	src/tokenizer/check_quote.c \
 	src/parser/parser.c \
 	src/expansions/var_expansions.c \
 	src/expansions/command_expansions.c \
@@ -86,7 +87,7 @@ SRCS		:=	\
 	src/execution/execute_command.c \
 	util/arraylist.c \
 	util/strjoinsep.c \
-	util/strrplc.c \
+	util/ft_strtok.c \
 
 SRCS		:=	$(addprefix $(SRC_DIR)/, $(SRCS))
 

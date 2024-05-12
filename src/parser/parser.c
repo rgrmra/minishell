@@ -6,14 +6,17 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 07:41:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/04/28 19:17:02 by rde-mour         ###   ########.fr       */
+/*   Updated: 2024/05/11 20:04:48 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_stdio.h"
 #include "ft_linkedlist.h"
 #include "tokenizer.h"
 #include "types.h"
-#include <stdio.h>
+#include <signal.h>
+
+extern volatile sig_atomic_t	g_status;
 
 static int	check_controllers(t_token *content, t_list *next_content)
 {
@@ -49,8 +52,8 @@ static int	check_operators(t_token *content, t_list *next_content)
 	if (!next_content)
 		return (false);
 	next = next_content->content;
-	if (content->type & (LESS | DLESS | GREATER | DGREATER)
-		&& next->type & (LESS | DLESS | GREATER | DGREATER | PAREN))
+	if (content->type & (LESS | DLESS | GREATER | DGREATER) && next->type
+		& (VBAR | AND | OR | LESS | DLESS | GREATER | DGREATER | PAREN))
 		return (true);
 	if (content->type & VBAR && next->type & VBAR)
 		return (true);
@@ -63,7 +66,10 @@ int	error(int errors, t_list **tokens, char *message)
 {
 	if (errors)
 	{
-		printf("minishell: syntax error near type '%s'\n", message);
+		ft_putstr("minishell: syntax error near type '");
+		ft_putstr(message);
+		ft_putstr("'\n");
+		g_status = 2;
 		ft_lstclear(tokens, &token_clear);
 		return (true);
 	}
@@ -79,8 +85,8 @@ void	parser(t_list **tokens)
 		return ;
 	errors = 0;
 	tmp = *tokens;
-	if (((t_token *)tmp->content)->type & (VBAR | AND | OR) && error(true,
-			tokens, ((t_token *)tmp->content)->literal))
+	if (!tmp->next && ((t_token *)tmp->content)->type & (VBAR | AND | OR)
+			&& error(true, tokens, ((t_token *)tmp->content)->literal))
 		return ;
 	while (tmp)
 	{

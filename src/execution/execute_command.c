@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/09 18:29:56 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/10 22:50:01 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,18 +102,18 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 void	execute_command(t_env *env, t_ast *ast, int *fds)
 {
 	char	**cmd;
-	int		i;
+	//int		i;
 
 	if (!ast)
 		return ;
 	var_expansions(env, ast->content);
-	find_quote(ast->content->literal);
-	cmd = ft_split(ast->content->literal, ' ');
+	//find_quote(ast->content->literal);
+	cmd = ft_strtok(ast->content->literal, ' ');
 	command_expansions(env, cmd);
 	remove_quotes(cmd);
-	i = 0;
-	while (cmd[i])
-		strrplc(cmd[i++], 0x1A, ' ');
+	//i = 0;
+	//while (cmd[i])
+	//	strrplc(cmd[i++], 0x1A, ' ');
 	if (execute_builtin(env, cmd, fds))
 		return ;
 	exec_subtree(env, cmd, fds);

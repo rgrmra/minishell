@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 10:55:34 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/04 12:55:17 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/11 13:34:57 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ t_list	*append_commands(t_list *tokens)
 	t_list	*tmp;
 	t_list	*next;
 
+	if (!tokens)
+		return (NULL);
 	pull_commands(tokens);
 	tmp = tokens;
 	while (tmp->next)

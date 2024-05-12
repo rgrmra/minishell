@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:30:01 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/09 18:58:34 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/11 15:10:58 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,15 +55,15 @@ static t_ast	*ast_build_redirect(t_list **tokens, t_ast **root, t_ast **prev)
 	{
 		(*prev)->left = *root;
 		(*prev)->right = ast_node(tokens);
-		if ((*prev)->right->content->type & END)
-			heredoc(&((*prev)->right->content->literal));
+		//if ((*prev)->right->content->type & END)
+		//	heredoc(&((*prev)->right->content->literal));
 		return (*prev);
 	}
 	if (*tokens && ((t_token *)(*tokens)->content)->type & (FILENAME | END))
 	{
 		(*prev)->right = ast_node(tokens);
-		if ((*prev)->right->content->type & END)
-			heredoc(&((*prev)->right->content->literal));
+		//if ((*prev)->right->content->type & END)
+		//	heredoc(&((*prev)->right->content->literal));
 	}
 	if (*tokens && ((t_token *)(*tokens)->content)->type & (COMMAND | PAREN))
 		(*prev)->left = ast_node(tokens);

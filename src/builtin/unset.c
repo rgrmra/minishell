@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 16:09:03 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/07 21:28:29 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/11 22:08:12 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ int	check_flags(char **args)
 	int	i;
 
 	i = 0;
-	g_status = 0;
 	while (args[++i])
 	{
 		if (args[i][0] == '-' && args[i][1])
