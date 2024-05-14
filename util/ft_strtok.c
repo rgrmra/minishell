@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 18:28:18 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/11 11:17:48 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/13 22:14:37 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static size_t	count_words(char *str, char c)
 		if (str[i])
 			words++;
 		quote = 0;
-		while ((str[i] && quote) || (str[i] && str[i] != c))
+		while (str[i] && (quote || str[i] != c))
 			quote = check_quote(quote, str, i++);
 	}
 	return (words);

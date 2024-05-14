@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/10 22:50:01 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/13 21:16:27 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "ft_hashmap.h"
 #include "ft_string.h"
 #include "get_env.h"
-#include "prompt.h"
 #include "types.h"
 #include "ft_stdio.h"
 #include "utils.h"
@@ -29,6 +28,7 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <termios.h>
 
 extern volatile sig_atomic_t	g_status;
 
@@ -81,6 +81,8 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 	pid = fork();
 	if (pid == 0 && cmd)
 	{
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
 		rl_clear_history();
 		closeall(fds);
 		close(3);
@@ -102,20 +104,18 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 void	execute_command(t_env *env, t_ast *ast, int *fds)
 {
 	char	**cmd;
-	//int		i;
+	struct termios fd;
+	tcgetattr(STDIN_FILENO, &fd);
 
 	if (!ast)
 		return ;
 	var_expansions(env, ast->content);
-	//find_quote(ast->content->literal);
 	cmd = ft_strtok(ast->content->literal, ' ');
 	command_expansions(env, cmd);
 	remove_quotes(cmd);
-	//i = 0;
-	//while (cmd[i])
-	//	strrplc(cmd[i++], 0x1A, ' ');
 	if (execute_builtin(env, cmd, fds))
 		return ;
 	exec_subtree(env, cmd, fds);
 	ft_freesplit(cmd);
+	tcsetattr(STDIN_FILENO, 0, &fd);
 }
