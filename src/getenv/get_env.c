@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 17:36:57 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/09 20:54:56 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/14 20:12:24 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	envprint(t_arraylist **var)
 {
 	t_var	*content;
 	size_t	i;
-	//size_t	j;
 
 	i = 0;
 	while (i < (*var)->size)
@@ -68,19 +67,6 @@ void	envprint(t_arraylist **var)
 		if (!content)
 			break ;
 		ft_putendl(content->deflt);
-		//if (content->name)
-		//{
-		//	ft_putstr_fd(content->name, STDOUT_FILENO);
-		//	ft_putstr_fd("=", STDOUT_FILENO);
-		//}
-		//j = 0;
-		//while (content->values[j])
-		//{
-		//	ft_putstr_fd(content->values[j++], STDOUT_FILENO);
-		//	if (content->values[j])
-		//		ft_putstr_fd(":", STDOUT_FILENO);
-		//}
-		//ft_putstr_fd("\n", STDOUT_FILENO);
 	}
 }
 

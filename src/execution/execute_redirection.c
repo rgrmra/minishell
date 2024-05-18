@@ -6,13 +6,15 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:54:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/09 20:01:19 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/14 19:52:38 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
+#include "ft_stdlib.h"
 #include "execution.h"
 #include "expansions.h"
+#include "ft_hashmap.h"
 #include "tokenizer.h"
 #include <asm-generic/errno-base.h>
 #include <errno.h>
@@ -63,9 +65,9 @@ t_ast	*redirection(t_env *env, t_ast *ast, int *fdin, int *fdout, int *fds)
 	if (ast->content->type & (LESS | DLESS))
 		open_file(ast, fdout, fdin, O_RDONLY);
 	if (ast->content->type & GREATER)
-		open_file(ast, fdin, fdout, O_CREAT | O_TRUNC | O_WRONLY);
+		open_file(ast, fdin, fdout, O_CLOEXEC | O_CREAT | O_TRUNC | O_WRONLY);
 	else if (ast->content->type & DGREATER)
-		open_file(ast, fdin, fdout, O_CREAT | O_APPEND | O_WRONLY);
+		open_file(ast, fdin, fdout, O_CLOEXEC | O_CREAT | O_APPEND | O_WRONLY);
 	if (*fdout == -1 || *fdin == -1)
 		return (NULL);
 	if (*fdin > -1)
@@ -75,14 +77,32 @@ t_ast	*redirection(t_env *env, t_ast *ast, int *fdin, int *fdout, int *fds)
 	return (tmp);
 }
 
+void	hshfdsclear(t_env *env)
+{
+	t_hsh_iterator	it;
+
+	it = ft_hshbegin(env->stdss);
+	while(ft_hshnext(&it))
+	{
+		close(ft_atoi(it.key));
+		free((void *) it.key);
+		free(it.value);
+	}
+	ft_hshfree(env->stdss);
+}
+
 void	execute_redirection(t_env *env, t_ast *ast)
 {
 	int		fds[4];
 	t_ast	*tmp;
 
 	env->stds[0] = dup(STDIN_FILENO);
+	ft_hshset(env->stdss, ft_itoa(env->stds[0]), (void *) ft_itoa(env->stds[0]));
 	env->stds[1] = dup(STDOUT_FILENO);
+	ft_hshset(env->stdss, ft_itoa(env->stds[1]), (void *) ft_itoa(env->stds[1]));
 	pipe(fds);
+	ft_hshset(env->stdss, ft_itoa(fds[0]), (void *) ft_itoa(fds[0]));
+	ft_hshset(env->stdss, ft_itoa(fds[1]), (void *) ft_itoa(fds[1]));
 	fds[2] = -2;
 	fds[3] = -2;
 	tmp = redirection(env, ast, &fds[2], &fds[3], fds);

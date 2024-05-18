@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 09:57:54 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/13 21:11:02 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/17 22:11:37 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	command_expansions(t_env *env, char **content)
 {
 	char	*str;
 
-	if (!env || !content)
+	if (!env || !*content || !**content)
 		return ;
 	str = NULL;
 	if (!ft_strchr("./", **content))

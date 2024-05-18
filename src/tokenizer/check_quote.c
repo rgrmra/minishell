@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 20:09:37 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/11 20:23:21 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/14 20:41:53 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <signal.h>
 
-extern volatile	sig_atomic_t	g_status;
+extern volatile sig_atomic_t	g_status;
 
 static char	check_sub(char *input, int i, int *sub)
 {

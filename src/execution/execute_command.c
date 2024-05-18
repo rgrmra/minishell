@@ -6,12 +6,13 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/13 21:16:27 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/17 21:59:57 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 #include "execution.h"
+#include "expansions.h"
 #include "ft_hashmap.h"
 #include "ft_string.h"
 #include "get_env.h"
@@ -73,7 +74,7 @@ static int	execute_builtin(t_env *env, char **cmd, int *fds)
 
 static void	exec_subtree(t_env *env, char **cmd, int *fds)
 {
-	char	**teste;
+	char	**tmp;
 	pid_t	pid;
 	int		status;
 
@@ -85,14 +86,12 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 		signal(SIGINT, SIG_DFL);
 		rl_clear_history();
 		closeall(fds);
-		close(3);
-		close(4);
-		teste = envexport(env->vars);
-		if (*cmd && access(*cmd, F_OK) == 0 && execve(*cmd, cmd, teste) < 0)
+		tmp = envexport(env->vars);
+		if (*cmd && access(*cmd, F_OK) == 0 && execve(*cmd, cmd, tmp) < 0)
 			panic(*cmd, NULL, strerror(errno), errno);
 		else
 			panic(*cmd, NULL, "command not found", errno);
-		ft_freesplit(teste);
+		ft_freesplit(tmp);
 		ft_freesplit(cmd);
 		clearall(env);
 	}
@@ -103,16 +102,17 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 
 void	execute_command(t_env *env, t_ast *ast, int *fds)
 {
-	char	**cmd;
-	struct termios fd;
-	tcgetattr(STDIN_FILENO, &fd);
+	char			**cmd;
+	struct termios	fd;
 
 	if (!ast)
 		return ;
+	fd = (struct termios){0};
+	tcgetattr(STDIN_FILENO, &fd);
 	var_expansions(env, ast->content);
 	cmd = ft_strtok(ast->content->literal, ' ');
-	command_expansions(env, cmd);
 	remove_quotes(cmd);
+	command_expansions(env, cmd);
 	if (execute_builtin(env, cmd, fds))
 		return ;
 	exec_subtree(env, cmd, fds);

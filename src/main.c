@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/13 20:57:45 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/14 20:16:26 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@
 
 volatile sig_atomic_t	g_status = 0;
 
-void	sigint_handler()
+void	sigint_handler(int sig)
 {
-	g_status = 128 + SIGINT;
+	g_status = 128 + sig;
 	ft_putendl("");
 	rl_replace_line("", 0);
 	rl_on_new_line();
@@ -45,6 +45,7 @@ int	main(void)
 	sigaction(SIGINT, &sa, 0);
 	signal(SIGQUIT, SIG_IGN);
 	env.builtins = ft_hshnew(NULL);
+	env.stdss = ft_hshnew(NULL);
 	ft_hshset(env.builtins, "echo", builtin_echo);
 	ft_hshset(env.builtins, "cd", builtin_cd);
 	ft_hshset(env.builtins, "pwd", builtin_pwd);

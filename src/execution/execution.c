@@ -6,12 +6,13 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 19:06:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/09 21:14:26 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/14 17:50:19 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 #include "execution.h"
+#include "expansions.h"
 #include "ft_string.h"
 #include "ft_hashmap.h"
 #include "get_env.h"
@@ -57,6 +58,7 @@ void	clearall(t_env *env)
 	ft_freesplit(env->environ);
 	ast_clear(env->ast);
 	envclear(&(env->vars));
+	hshfdsclear(env);
 	ft_hshfree(env->builtins);
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);

@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 18:28:18 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/13 22:14:37 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/14 19:51:17 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,15 +79,15 @@ static char	*find_word(const char **str, char c)
 
 	i[0] = 0;
 	string = (char *) *str;
-	while (string[i[0]] && string[i[0]] == c && (*str)++)
+	while (string[i[0]] && string[i[0]] == c)
 		i[0]++;
 	quote = 0;
-	i[1] = 0;
-	while (string[i[1]] && (quote || string[i[1]] != c) && (*str)++)
+	i[1] = i[0];
+	while (string[i[1]] && (quote || string[i[1]] != c))
 		quote = check_quote(quote, string, i[1]++);
-	word = ft_substr(string, i[0], i[1]);
-	while (string[i[1]] && string[i[1]] == c && (*str)++)
-		i[1]++;
+	word = ft_substr(string, i[0], i[1] - i[0]);
+	while (i[1]--)
+		(*str)++;
 	return (word);
 }
 

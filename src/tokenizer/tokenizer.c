@@ -6,10 +6,11 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/11 23:05:32 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/14 20:32:46 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_stdio.h"
 #include "prompt.h"
 #include "parser.h"
 #include "builtin.h"
@@ -98,7 +99,6 @@ t_list	*tokenizer(char **splitted)
 		}
 		if (!check_token(&tokens, *(splitted + i)))
 		{
-#include "ft_stdio.h"
 			ft_putstr("minishell: syntax error near type '");
 			ft_putstr(*(splitted + i));
 			ft_putstr("'\n");

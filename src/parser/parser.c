@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 07:41:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/11 20:04:48 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/14 20:17:44 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	parser(t_list **tokens)
 	errors = 0;
 	tmp = *tokens;
 	if (!tmp->next && ((t_token *)tmp->content)->type & (VBAR | AND | OR)
-			&& error(true, tokens, ((t_token *)tmp->content)->literal))
+		&& error(true, tokens, ((t_token *)tmp->content)->literal))
 		return ;
 	while (tmp)
 	{

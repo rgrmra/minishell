@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 16:08:45 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/09 21:06:57 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/14 20:19:34 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static void	export_arg(t_env *env, char *arg)
 void	builtin_export(t_env *env, char **args)
 {
 	char	**vars;
-	int i;
+	int		i;
 
 	g_status = 0;
 	if (check_flags(args))
