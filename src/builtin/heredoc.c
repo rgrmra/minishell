@@ -6,19 +6,23 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 22:22:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/09 18:58:16 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/19 17:38:12 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansions.h"
 #include "ft_stdlib.h"
 #include "ft_string.h"
+#include "prompt.h"
 #include <fcntl.h>
 #include <readline/history.h>
 #include <readline/readline.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 
+extern volatile sig_atomic_t	g_status;
 static char	*get_filename(void)
 {
 	static int	count = 100;
@@ -49,7 +53,7 @@ static int	get_fd(char **filename)
 	return (fd);
 }
 
-void	heredoc(char **limiter)
+static void	inner_heredoc(char **limiter)
 {
 	char	*filename;
 	char	*input;
@@ -59,6 +63,7 @@ void	heredoc(char **limiter)
 	remove_quotes_aux(*limiter);
 	while (1)
 	{
+		signal(SIGQUIT, SIG_DFL);
 		input = readline("> ");
 		if (!input || ft_strncmp(*limiter, input, ft_strlen(*limiter) + 1) == 0)
 			break ;
@@ -71,4 +76,27 @@ void	heredoc(char **limiter)
 	free(*limiter);
 	close(fd);
 	*limiter = filename;
+}
+
+#include <ft_stdio.h>
+static void	sigint_handler(int sig)
+{
+	g_status = 128 + sig;
+	ft_putendl("");
+	main();
+	//rl_replace_line("", 0);
+	//rl_on_new_line();
+	//rl_redisplay();
+}
+
+void	heredoc(char	**limiter)
+{
+	struct sigaction	sa;
+
+	sa = (struct sigaction){0};
+	sa.sa_flags = SA_RESTART;
+	sa.sa_handler = sigint_handler;
+	sigaction(SIGINT, &sa, 0);
+	inner_heredoc(limiter);
+	signal(SIGINT, SIG_IGN);
 }

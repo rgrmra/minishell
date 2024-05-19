@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 00:19:30 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/19 17:53:20 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,18 @@ static int	execute_builtin(t_env *env, char **cmd)
 	return (true);
 }
 
+static void	exitedstatus(int status)
+{
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGQUIT)
+			ft_putendl("Quit (core dumped)");
+		g_status = 128 + WTERMSIG(status);
+	}
+	else
+		g_status = WEXITSTATUS(status);
+}
+
 static void	exec_subtree(t_env *env, char **cmd)
 {
 	char	**tmp;
@@ -81,10 +93,11 @@ static void	exec_subtree(t_env *env, char **cmd)
 	pid = fork();
 	if (pid == 0)
 	{
-		g_status = 0;
 		rl_clear_history();
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
 		tmp = envexport(env->vars);
-		if (*cmd && access(*cmd, F_OK) == 0 && execve(*cmd, cmd, tmp) < 0)
+		if (*cmd && ft_strchr("./", **cmd) && execve(*cmd, cmd, tmp) < 0)
 			panic(*cmd, NULL, strerror(errno), errno);
 		else
 			panic(*cmd, NULL, "command not found", errno);
@@ -93,7 +106,7 @@ static void	exec_subtree(t_env *env, char **cmd)
 		clearall(env);
 	}
 	waitpid(pid, &status, WUNTRACED);
-	g_status = WEXITSTATUS(status);
+	exitedstatus(status);
 }
 
 void	execute_command(t_env *env, t_ast *ast)

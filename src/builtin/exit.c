@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 18:49:21 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/05 21:11:36 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/19 15:47:53 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static int	check_arg(char *arg)
 {
 	int	i;
 
+	rl_clear_history();
 	if (!arg)
 		return (true);
 	i = 0;
@@ -68,7 +69,6 @@ void	builtin_exit(t_env *env, char **args)
 		panic(*args, NULL, "too many arguments", 1);
 		return ;
 	}
-	rl_clear_history();
 	ft_freesplit(args);
 	clearall(env);
 }
