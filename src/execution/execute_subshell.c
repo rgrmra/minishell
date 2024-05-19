@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:50:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/14 19:53:38 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/18 23:14:03 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	execute_subshell(t_env *env, t_ast *ast)
 	if (pid == 0)
 	{
 		rl_clear_history();
-		execute(env, ast->left, NULL);
+		execute(env, ast->left);
 		clearall(env);
 	}
 	waitpid(pid, &status, WUNTRACED);

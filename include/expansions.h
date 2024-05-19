@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 08:57:37 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/14 17:41:11 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/18 21:37:17 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,8 @@ typedef struct s_env	t_env;
 struct					s_env
 {
 	t_arraylist			*vars;
-	char				**environ;
 	t_hashmap			*builtins;
 	t_ast				*ast;
-	int					stds[2];
-	t_hashmap			*stdss;
 };
 
 void	hshfdsclear(t_env *env);

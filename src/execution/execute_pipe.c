@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:57:29 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/08 21:43:58 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/18 23:14:44 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ void	exec_left_subtree(t_env *env, t_ast *ast, int *fds)
 	{
 		rl_clear_history();
 		dup2(fds[1], STDOUT_FILENO);
-		closeall(fds);
-		execute(env, ast->left, fds);
+		closefds(fds);
+		execute(env, ast->left);
 		clearall(env);
 	}
 }
@@ -46,23 +46,20 @@ void	exec_right_subtree(t_env *env, t_ast *ast, int *fds)
 	{
 		rl_clear_history();
 		dup2(fds[0], STDIN_FILENO);
-		closeall(fds);
-		execute(env, ast->right, fds);
+		closefds(fds);
+		execute(env, ast->right);
 		clearall(env);
 	}
-	close(fds[0]);
-	close(fds[1]);
+	closefds(fds);
 	waitpid(pid, &status, WUNTRACED);
 	g_status = WEXITSTATUS(status);
 }
 
 void	execute_pipe(t_env *env, t_ast *ast)
 {
-	int	fds[4];
+	int	fds[2];
 
 	pipe(fds);
-	fds[2] = -2;
-	fds[3] = -2;
 	exec_left_subtree(env, ast, fds);
 	exec_right_subtree(env, ast, fds);
 }

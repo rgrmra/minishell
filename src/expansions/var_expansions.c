@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/17 22:12:30 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/18 10:52:02 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	*expand(char *begin, char *var, char *end)
 	if (tmp && end)
 		literal = ft_strjoin(tmp, end);
 	if (!literal)
-		literal =  ft_strdup("");
+		literal = ft_strdup("");
 	if (end)
 		free(end);
 	if (tmp)
@@ -120,7 +120,7 @@ void	var_expansions(t_env *env, t_token *content)
 	{
 		quote = check_quote(quote, str, i);
 		if (quote != '\'' && str[i] == '$' && (ft_isalpha(str[i + 1])
-			|| str[i + 1] == '_' || str[i + 1] == '?'))
+				|| str[i + 1] == '_' || str[i + 1] == '?'))
 		{
 			str = check_expansion(env, str);
 			free(content->literal);

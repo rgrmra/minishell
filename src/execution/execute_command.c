@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/17 21:59:57 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/19 00:19:30 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	panic(char *cmd, char *flag, char *message, int error)
 {
 	struct stat	path_stat;
 
-	ft_memset(&path_stat, '\0', sizeof(path_stat));
+	path_stat = (struct stat){0};
 	stat((const char *) cmd, &path_stat);
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(cmd, STDERR_FILENO);
@@ -59,7 +59,7 @@ void	panic(char *cmd, char *flag, char *message, int error)
 		g_status = error;
 }
 
-static int	execute_builtin(t_env *env, char **cmd, int *fds)
+static int	execute_builtin(t_env *env, char **cmd)
 {
 	t_exec_func	builtin;
 
@@ -68,11 +68,10 @@ static int	execute_builtin(t_env *env, char **cmd, int *fds)
 		return (false);
 	builtin(env, cmd);
 	ft_freesplit(cmd);
-	closeall(fds);
 	return (true);
 }
 
-static void	exec_subtree(t_env *env, char **cmd, int *fds)
+static void	exec_subtree(t_env *env, char **cmd)
 {
 	char	**tmp;
 	pid_t	pid;
@@ -80,12 +79,10 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 
 	status = 0;
 	pid = fork();
-	if (pid == 0 && cmd)
+	if (pid == 0)
 	{
-		signal(SIGQUIT, SIG_DFL);
-		signal(SIGINT, SIG_DFL);
+		g_status = 0;
 		rl_clear_history();
-		closeall(fds);
 		tmp = envexport(env->vars);
 		if (*cmd && access(*cmd, F_OK) == 0 && execve(*cmd, cmd, tmp) < 0)
 			panic(*cmd, NULL, strerror(errno), errno);
@@ -95,12 +92,11 @@ static void	exec_subtree(t_env *env, char **cmd, int *fds)
 		ft_freesplit(cmd);
 		clearall(env);
 	}
-	closeall(fds);
 	waitpid(pid, &status, WUNTRACED);
 	g_status = WEXITSTATUS(status);
 }
 
-void	execute_command(t_env *env, t_ast *ast, int *fds)
+void	execute_command(t_env *env, t_ast *ast)
 {
 	char			**cmd;
 	struct termios	fd;
@@ -113,9 +109,9 @@ void	execute_command(t_env *env, t_ast *ast, int *fds)
 	cmd = ft_strtok(ast->content->literal, ' ');
 	remove_quotes(cmd);
 	command_expansions(env, cmd);
-	if (execute_builtin(env, cmd, fds))
+	if (execute_builtin(env, cmd))
 		return ;
-	exec_subtree(env, cmd, fds);
+	exec_subtree(env, cmd);
 	ft_freesplit(cmd);
 	tcsetattr(STDIN_FILENO, 0, &fd);
 }

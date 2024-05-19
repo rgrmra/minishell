@@ -6,17 +6,15 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:54:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/14 19:52:38 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/18 23:24:12 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
-#include "ft_stdlib.h"
 #include "execution.h"
 #include "expansions.h"
-#include "ft_hashmap.h"
 #include "tokenizer.h"
-#include <asm-generic/errno-base.h>
+#include <asm-generic/errno.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>
@@ -46,20 +44,16 @@ static void	open_file(t_ast *ast, int *to_open, int *to_check, mode_t flags)
 	}
 }
 
-t_ast	*redirection(t_env *env, t_ast *ast, int *fdin, int *fdout, int *fds)
+t_ast	*redirection(t_env *env, t_ast *ast, int *fdin, int *fdout)
 {
 	t_ast	*tmp;
 
-	if (!ast)
-		return (NULL);
 	tmp = NULL;
-	if (ast->left && ast->left->content->type & COMMAND)
+	if (!ast || (ast->left && ast->left->content->type & COMMAND))
 		tmp = ast->left;
 	else if (ast->left
 		&& ast->left->content->type & (LESS | DLESS | GREATER | DGREATER))
-		tmp = redirection(env, ast->left, fdin, fdout, fds);
-	if (ast->left && ast->left->content->type & PAREN)
-		execute(env, ast->left, fds);
+		tmp = redirection(env, ast->left, fdin, fdout);
 	var_expansions(env, ast->right->content);
 	remove_quotes_aux(ast->right->content->literal);
 	if (ast->content->type & (LESS | DLESS))
@@ -74,45 +68,27 @@ t_ast	*redirection(t_env *env, t_ast *ast, int *fdin, int *fdout, int *fds)
 		dup2(*fdin, STDOUT_FILENO);
 	if (*fdout > -1)
 		dup2(*fdout, STDIN_FILENO);
+	if (ast->left && ast->left->content->type & PAREN)
+		execute(env, ast->left);
 	return (tmp);
-}
-
-void	hshfdsclear(t_env *env)
-{
-	t_hsh_iterator	it;
-
-	it = ft_hshbegin(env->stdss);
-	while(ft_hshnext(&it))
-	{
-		close(ft_atoi(it.key));
-		free((void *) it.key);
-		free(it.value);
-	}
-	ft_hshfree(env->stdss);
 }
 
 void	execute_redirection(t_env *env, t_ast *ast)
 {
-	int		fds[4];
+	int		fds[2];
+	int		std[2];
 	t_ast	*tmp;
 
-	env->stds[0] = dup(STDIN_FILENO);
-	ft_hshset(env->stdss, ft_itoa(env->stds[0]), (void *) ft_itoa(env->stds[0]));
-	env->stds[1] = dup(STDOUT_FILENO);
-	ft_hshset(env->stdss, ft_itoa(env->stds[1]), (void *) ft_itoa(env->stds[1]));
-	pipe(fds);
-	ft_hshset(env->stdss, ft_itoa(fds[0]), (void *) ft_itoa(fds[0]));
-	ft_hshset(env->stdss, ft_itoa(fds[1]), (void *) ft_itoa(fds[1]));
-	fds[2] = -2;
-	fds[3] = -2;
-	tmp = redirection(env, ast, &fds[2], &fds[3], fds);
-	if (!tmp || fds[2] == -1 || fds[3] == -1)
-		closeall(fds);
-	else
-		execute(env, tmp, fds);
-	closeall(fds);
-	dup2(env->stds[0], STDIN_FILENO);
-	dup2(env->stds[1], STDOUT_FILENO);
-	close(env->stds[0]);
-	close(env->stds[1]);
+	std[0] = dup(STDIN_FILENO);
+	std[1] = dup(STDOUT_FILENO);
+	fds[0] = -2;
+	fds[1] = -2;
+	tmp = redirection(env, ast, &fds[0], &fds[1]);
+	if (tmp && fds[0] != -1 && fds[1] != -1)
+		execute(env, tmp);
+	dup2(STDIN_FILENO, STDIN_FILENO);
+	dup2(std[0], STDIN_FILENO);
+	dup2(std[1], STDOUT_FILENO);
+	closefds(fds);
+	closefds(std);
 }

@@ -6,14 +6,15 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 18:28:18 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/14 19:51:17 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/18 10:50:12 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_string.h"
+#include <stdio.h>
 #include <stdlib.h>
 
-static char	check_sub(char *input, size_t i, size_t *sub)
+static char	check_sub(char *input, ssize_t i, ssize_t *sub)
 {
 	static char	tmp;
 
@@ -34,9 +35,9 @@ static char	check_sub(char *input, size_t i, size_t *sub)
 	return ('\0');
 }
 
-static char	check_quote(char quote, char *input, size_t i)
+static char	check_quote(char quote, char *input, ssize_t i)
 {
-	static size_t	sub;
+	static ssize_t	sub;
 
 	if (i == 0)
 		sub = 0;
@@ -55,6 +56,8 @@ static size_t	count_words(char *str, char c)
 	size_t	words;
 	char	quote;
 
+	if (!str)
+		return (0);
 	i = 0;
 	words = 0;
 	while (str[i])
@@ -97,13 +100,13 @@ char	**ft_strtok(const char *str, char c)
 	size_t	words;
 	char	**new;
 
-	if (!str)
-		return (0);
 	words = count_words((char *) str, c);
-	new = (char **) malloc(sizeof(char *) * (words + 1));
+	new = (char **) malloc(sizeof(char *) * (words + 2));
 	if (!new)
 		return (0);
 	i = 0;
+	if (!words)
+		new[i++] = ft_strdup("");
 	while (words--)
 	{
 		*(new + i) = find_word(&str, c);

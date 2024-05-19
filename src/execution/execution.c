@@ -6,16 +6,17 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 19:06:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/14 17:50:19 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/18 23:13:46 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 #include "execution.h"
 #include "expansions.h"
-#include "ft_string.h"
 #include "ft_hashmap.h"
 #include "get_env.h"
+#include "ft_stdlib.h"
+#include <dirent.h>
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <signal.h>
@@ -23,7 +24,7 @@
 
 extern volatile sig_atomic_t	g_status;
 
-void	closeall(int *fds)
+void	closefds(int *fds)
 {
 	if (!fds)
 		return ;
@@ -31,18 +32,14 @@ void	closeall(int *fds)
 		close(fds[0]);
 	if (fds[1] > -1)
 		close(fds[1]);
-	if (fds[2] > -1)
-		close(fds[2]);
-	if (fds[3] > -1)
-		close(fds[3]);
 }
 
-void	execute(t_env *env, t_ast *ast, int *fds)
+void	execute(t_env *env, t_ast *ast)
 {
 	if (!ast)
 		return ;
 	if (ast->content->type & COMMAND)
-		execute_command(env, ast, fds);
+		execute_command(env, ast);
 	else if (ast->content->type & (LESS | DLESS | GREATER | DGREATER))
 		execute_redirection(env, ast);
 	else if (ast->content->type & VBAR)
@@ -53,15 +50,30 @@ void	execute(t_env *env, t_ast *ast, int *fds)
 		execute_subshell(env, ast);
 }
 
+static void	close_open_fds(void)
+{
+	struct dirent	*file;
+	DIR				*root;
+	int				fd;
+
+	root = opendir("/proc/self/fd/");
+	while (1)
+	{
+		file = readdir(root);
+		if (!file)
+			break ;
+		fd = ft_atoi(file->d_name);
+		if (fd > -1 && fd < 1024)
+			close(ft_atoi(file->d_name));
+	}
+	closedir(root);
+}
+
 void	clearall(t_env *env)
 {
-	ft_freesplit(env->environ);
+	close_open_fds();
 	ast_clear(env->ast);
 	envclear(&(env->vars));
-	hshfdsclear(env);
 	ft_hshfree(env->builtins);
-	close(STDIN_FILENO);
-	close(STDOUT_FILENO);
-	close(STDERR_FILENO);
 	exit(g_status);
 }
