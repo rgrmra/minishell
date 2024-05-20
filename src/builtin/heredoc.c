@@ -6,13 +6,14 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 22:22:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 17:38:12 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/19 21:34:04 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansions.h"
 #include "ft_stdlib.h"
 #include "ft_string.h"
+#include "types.h"
 #include "prompt.h"
 #include <fcntl.h>
 #include <readline/history.h>
@@ -21,6 +22,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include "get_env.h"
 
 extern volatile sig_atomic_t	g_status;
 static char	*get_filename(void)
@@ -53,20 +55,35 @@ static int	get_fd(char **filename)
 	return (fd);
 }
 
-static void	inner_heredoc(char **limiter)
+static int	check_expand(char *limiter)
+{
+	int	expand;
+
+	expand = false;
+	if (ft_strchr(limiter, '\'') == 0)
+		expand = true;
+	else if (ft_strchr(limiter, '\"') == 0)
+		expand = true;
+	return (expand);
+}
+
+static void	inner_heredoc(t_env	*env, char **limiter)
 {
 	char	*filename;
 	char	*input;
 	int		fd;
+	int		expand;
 
 	fd = get_fd(&filename);
+	expand = check_expand(*limiter);
 	remove_quotes_aux(*limiter);
 	while (1)
 	{
-		signal(SIGQUIT, SIG_DFL);
 		input = readline("> ");
 		if (!input || ft_strncmp(*limiter, input, ft_strlen(*limiter) + 1) == 0)
 			break ;
+		if (expand)
+			var_expansions(env, &input);
 		write(fd, input, ft_strlen(input));
 		write(fd, "\n", 1);
 		free(input);
@@ -78,25 +95,10 @@ static void	inner_heredoc(char **limiter)
 	*limiter = filename;
 }
 
-#include <ft_stdio.h>
-static void	sigint_handler(int sig)
+void	heredoc(char **limiter)
 {
-	g_status = 128 + sig;
-	ft_putendl("");
-	main();
-	//rl_replace_line("", 0);
-	//rl_on_new_line();
-	//rl_redisplay();
-}
+	t_env	*env;
 
-void	heredoc(char	**limiter)
-{
-	struct sigaction	sa;
-
-	sa = (struct sigaction){0};
-	sa.sa_flags = SA_RESTART;
-	sa.sa_handler = sigint_handler;
-	sigaction(SIGINT, &sa, 0);
-	inner_heredoc(limiter);
-	signal(SIGINT, SIG_IGN);
+	env = tenv(NULL);
+	inner_heredoc(env, limiter);
 }

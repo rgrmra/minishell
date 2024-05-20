@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 15:47:11 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/19 20:40:49 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ static char	check_quote(char quote, char *input, int i)
 	return (quote);
 }
 
-void	var_expansions(t_env *env, t_token *content)
+void	var_expansions(t_env *env, char	**content)
 {
 	size_t	i;
 	char	*str;
@@ -114,7 +114,7 @@ void	var_expansions(t_env *env, t_token *content)
 	if (!env || !content)
 		return ;
 	i = 0;
-	str = content->literal;
+	str = *content;
 	quote = 0;
 	while (str && str[i] != '\0')
 	{
@@ -123,8 +123,8 @@ void	var_expansions(t_env *env, t_token *content)
 				|| str[i + 1] == '_' || str[i + 1] == '?'))
 		{
 			str = check_expansion(env, str);
-			free(content->literal);
-			content->literal = str;
+			free(*content);
+			*content = str;
 		}
 		else
 			i++;

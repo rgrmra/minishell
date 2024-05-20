@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/14 19:55:19 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/19 23:24:57 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,28 @@
 
 extern volatile sig_atomic_t	g_status;
 
+static char	check_quote(char quote, char *input, int i)
+{
+	if (quote && (input[i] == quote))
+		return ('\0');
+	else if (!quote && ft_strchr("\"\'", input[i]))
+		return (input[i]);
+	return (quote);
+}
+
 static char	*expand_input(char *tmp, char *input)
 {
 	size_t	i;
 	size_t	j;
+	char	quote;
 
 	i = -1;
 	j = 0;
+	quote = 0;
 	while (input[++i])
 	{
-		if (ft_strchr("|<>&", input[i]))
+		quote = check_quote(quote, input, i);
+		if (!quote && ft_strchr("|<>&", input[i]))
 		{
 			if (i && input[i - 1] != input[i])
 				tmp[j++] = ' ';

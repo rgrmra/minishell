@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 16:08:45 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 15:48:11 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/19 23:32:23 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,13 @@ static void	export_arg(t_env *env, char *arg)
 
 	i = 0;
 	while (arg[i] && arg[i] != '=')
+	{
+		if (i > 0 && !ft_isalnum(arg[i]))
+			g_status = 1;
 		i++;
+	}
 	key = ft_substr(arg, 0, i + 1);
-	if (!ft_isalpha(key[0]) && key[0] != '_')
+	if (g_status == 1 || (!ft_isalpha(key[0]) && key[0] != '_'))
 	{
 		panic("export", key, "not a valid identifier", 1);
 		free(key);

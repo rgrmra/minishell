@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 17:53:20 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/19 23:37:02 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #include "types.h"
 #include "ft_stdio.h"
 #include "utils.h"
-#include <asm-generic/errno-base.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <signal.h>
@@ -93,9 +92,9 @@ static void	exec_subtree(t_env *env, char **cmd)
 	pid = fork();
 	if (pid == 0)
 	{
-		rl_clear_history();
 		signal(SIGQUIT, SIG_DFL);
 		signal(SIGINT, SIG_DFL);
+		rl_clear_history();
 		tmp = envexport(env->vars);
 		if (*cmd && ft_strchr("./", **cmd) && execve(*cmd, cmd, tmp) < 0)
 			panic(*cmd, NULL, strerror(errno), errno);
@@ -118,7 +117,9 @@ void	execute_command(t_env *env, t_ast *ast)
 		return ;
 	fd = (struct termios){0};
 	tcgetattr(STDIN_FILENO, &fd);
-	var_expansions(env, ast->content);
+	var_expansions(env, &ast->content->literal);
+	if (!ast->content->literal[0])
+		return ;
 	cmd = ft_strtok(ast->content->literal, ' ');
 	remove_quotes(cmd);
 	command_expansions(env, cmd);
@@ -126,5 +127,5 @@ void	execute_command(t_env *env, t_ast *ast)
 		return ;
 	exec_subtree(env, cmd);
 	ft_freesplit(cmd);
-	tcsetattr(STDIN_FILENO, 0, &fd);
+	tcsetattr(STDIN_FILENO, TCSANOW, &fd);
 }

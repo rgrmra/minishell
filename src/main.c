@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 17:31:38 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/19 22:48:36 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,26 @@
 
 volatile sig_atomic_t	g_status = 0;
 
+t_env	*tenv(t_env *env)
+{
+	static t_env *envloc;
+
+	if (env)
+		envloc = env;
+	return (envloc);
+}
+
 static void	sigint_handler(int sig)
 {
+	t_env	*env;
+
+	env = tenv(NULL);
 	g_status = 128 + sig;
-	ft_putendl("");
-	rl_replace_line("", 0);
+	ft_putstr("\n");
 	rl_on_new_line();
-	rl_redisplay();
+	rl_replace_line("", 0);
+	if (!env->redisplay)
+		rl_redisplay();
 }
 
 int	main(void)
@@ -56,5 +69,6 @@ int	main(void)
 	envnew(&env.vars, environ);
 	if (!envget(&env.vars, "PATH"))
 		envadd(&env.vars, "PATH", STDPATH);
+	tenv(&env);
 	prompt(&env);
 }

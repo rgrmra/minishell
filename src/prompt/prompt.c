@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 20:00:16 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 17:19:31 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/19 23:00:19 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "execution.h"
 #include "expansions.h"
 #include "ft_linkedlist.h"
+#include "ft_stdio.h"
 #include "ft_string.h"
 #include "prompt.h"
 #include "tokenizer.h"
@@ -50,7 +51,9 @@ void	prompt(t_env *env)
 
 	while (true)
 	{
+		env->redisplay = false;
 		input = readline("$ ");
+		env->redisplay = true;
 		if (!input)
 			input = ft_strdup("exit");
 		else if (*input != '\0')
@@ -58,7 +61,7 @@ void	prompt(t_env *env)
 		else
 			g_status = 0;
 		tokens(env, format_input(&input));
-		printf("%d\n", g_status);
+	//	printf("%d\n", g_status);
 	}
 	rl_clear_history();
 }

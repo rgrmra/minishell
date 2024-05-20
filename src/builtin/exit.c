@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 18:49:21 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 15:47:53 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/19 23:20:47 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ static int	check_arg(char *arg)
 {
 	int	i;
 
-	rl_clear_history();
 	if (!arg)
 		return (true);
 	i = 0;
@@ -45,25 +44,24 @@ static int	check_arg(char *arg)
 void	builtin_exit(t_env *env, char **args)
 {
 	int	i;
-	int	status;
 
 	i = 0;
-	status = 0;
+	rl_clear_history();
 	while (args[++i])
 	{
 		if (check_arg(args[i]))
 		{
-			status = ft_atoi(args[i]);
+			g_status = ft_atoi(args[i]);
 			break ;
 		}
 	}
 	ft_putendl_fd(*args, 2);
-	if (status < 0)
-		status = -status;
-	if (i > 1 || status > 0)
-		g_status = status;
 	if (i > 1 && args[1] && !check_arg(args[1]))
-		panic(*args, args[i], "numeric argument required", 2);
+	{
+		printf("%s: %s: numeric argument required", *args, args[i]);
+		g_status = 2;
+		//panic(*args, args[i], "numeric argument required", 2);
+	}
 	else if (args[1] && args[2])
 	{
 		panic(*args, NULL, "too many arguments", 1);

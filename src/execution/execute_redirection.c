@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:54:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 15:49:30 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/19 20:05:24 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_ast	*redirection(t_env *env, t_ast *ast, int *fdin, int *fdout)
 	else if (ast->left
 		&& ast->left->content->type & (LESS | DLESS | GREATER | DGREATER))
 		tmp = redirection(env, ast->left, fdin, fdout);
-	var_expansions(env, ast->right->content);
+	var_expansions(env, &ast->right->content->literal);
 	remove_quotes_aux(ast->right->content->literal);
 	if (ast->content->type & (LESS | DLESS))
 		open_file(ast, fdout, fdin, O_RDONLY);
