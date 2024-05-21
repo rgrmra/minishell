@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/20 21:07:51 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/20 21:45:05 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,14 @@ void	token_clear(void *content)
 	free(content);
 }
 
+static t_list	*clear_error(t_list **tokens, char **splitted, int i)
+{
+	ft_lstclear(tokens, token_clear);
+	while (*(splitted + i))
+		free(*(splitted + i++));
+	return (NULL);
+}
+
 t_list	*tokenizer(char **splitted)
 {
 	t_env	*env;
@@ -95,19 +103,14 @@ t_list	*tokenizer(char **splitted)
 	{
 		if (!find_quote(*(splitted + i)))
 			env->execute = true;
-		if (!check_token(&tokens, *(splitted + i)))
+		else if (!check_token(&tokens, *(splitted + i)))
 		{
 			printf("minishell: syntax error type\n");
 			g_status = 2;
 			env->execute = true;
 		}
 		if (env->execute)
-		{
-			ft_lstclear(&tokens, token_clear);
-			while (*(splitted + i))
-				free(*(splitted + i++));
-			return (NULL);
-		}
+			return (clear_error(&tokens, splitted, i));
 		i++;
 	}
 	tokens = append_commands(tokens);

@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 20:00:16 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/20 20:26:55 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/20 21:45:39 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "execution.h"
 #include "expansions.h"
 #include "ft_linkedlist.h"
-#include "ft_stdio.h"
 #include "ft_string.h"
 #include "prompt.h"
 #include "tokenizer.h"
