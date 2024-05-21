@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 20:00:16 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/20 21:45:39 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/20 23:26:37 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ void	prompt(t_env *env)
 {
 	char	*input;
 
-	env->fd = (struct termios){0};
-	tcgetattr(STDIN_FILENO, &env->fd);
+	//env->fd = (struct termios){0};
+	//tcgetattr(STDIN_FILENO, &env->fd);
 	while (true)
 	{
 		env->redisplay = false;
@@ -63,8 +63,8 @@ void	prompt(t_env *env)
 		else
 			g_status = 0;
 		tokens(env, format_input(&input));
-		tcsetattr(STDIN_FILENO, TCSANOW, &env->fd);
-		printf("%d\n", g_status);
+		//printf("%d\n", g_status);
 	}
+	//tcsetattr(STDIN_FILENO, TCSANOW, &env->fd);
 	rl_clear_history();
 }
