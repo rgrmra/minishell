@@ -6,37 +6,53 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 11:47:00 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/17 22:02:13 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/20 23:15:18 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "expansions.h"
 #include "ft_string.h"
+
+static void	copy(char *word)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (word[i])
+	{
+		if (word[i] != -1)
+			word[j++] = word[i];
+		i++;
+	}
+	word[j] = '\0';
+}
 
 void	remove_quotes_aux(char *word)
 {
-	int		i;
-	int		quote;
-	char	sign;
+	int	i;
+	int	len;
+	int	quote;
 
 	i = 0;
+	len = ft_strlen(word);
 	quote = 0;
-	sign = '\0';
-	while (word && word[i])
+	while (word[i])
 	{
-		if (sign != '\0' && quote == 2)
+		if (quote && quote == word[i])
 		{
-			quote = 0;
-			sign = '\0';
+			quote = '\0';
+			word[i] = -1;
 		}
-		if (sign == '\0' && quote == 0 && ft_strchr("\'\"", word[i]))
-			sign = word[i];
-		if (sign != '\0' && word[i] == sign && quote++ < 2)
+		else if (!quote && ft_strchr("\'\"", word[i]))
 		{
-			ft_strlcpy(&word[i], &word[i + 1], ft_strlen(word) - 1);
-			i--;
+			quote = word[i];
+			word[i] = -1;
 		}
 		i++;
 	}
+	copy(word);
 }
 
 void	remove_quotes(char **word)
