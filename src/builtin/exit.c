@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 18:49:21 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 23:20:47 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/20 20:42:26 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,9 @@ void	builtin_exit(t_env *env, char **args)
 	{
 		printf("%s: %s: numeric argument required", *args, args[i]);
 		g_status = 2;
-		//panic(*args, args[i], "numeric argument required", 2);
 	}
 	else if (args[1] && args[2])
-	{
-		panic(*args, NULL, "too many arguments", 1);
-		return ;
-	}
+		return (panic(*args, NULL, "too many arguments", 1));
 	ft_freesplit(args);
 	clearall(env);
 }

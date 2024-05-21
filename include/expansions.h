@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 08:57:37 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 22:46:51 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/20 20:13:47 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "ast.h"
 # include "arraylist.h"
 # include "ft_hashmap.h"
+# include "termio.h"
 
 typedef struct s_env	t_env;
 
@@ -25,6 +26,8 @@ struct					s_env
 	t_hashmap			*builtins;
 	t_ast				*ast;
 	int					redisplay;
+	int					execute;
+	struct termios		fd;
 };
 
 void	hshfdsclear(t_env *env);

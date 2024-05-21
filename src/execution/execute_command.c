@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 23:37:02 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/20 20:34:56 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,13 +110,10 @@ static void	exec_subtree(t_env *env, char **cmd)
 
 void	execute_command(t_env *env, t_ast *ast)
 {
-	char			**cmd;
-	struct termios	fd;
+	char	**cmd;
 
 	if (!ast)
 		return ;
-	fd = (struct termios){0};
-	tcgetattr(STDIN_FILENO, &fd);
 	var_expansions(env, &ast->content->literal);
 	if (!ast->content->literal[0])
 		return ;
@@ -127,5 +124,4 @@ void	execute_command(t_env *env, t_ast *ast)
 		return ;
 	exec_subtree(env, cmd);
 	ft_freesplit(cmd);
-	tcsetattr(STDIN_FILENO, TCSANOW, &fd);
 }

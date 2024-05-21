@@ -6,17 +6,19 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 22:48:36 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/20 20:34:05 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansions.h"
 #include "ft_stdio.h"
+#include "types.h"
 #include "get_env.h"
 #include "prompt.h"
 #include <readline/readline.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <termios.h>
 #include <unistd.h>
 #include "ft_hashmap.h"
 #include <sys/wait.h>
@@ -26,7 +28,7 @@ volatile sig_atomic_t	g_status = 0;
 
 t_env	*tenv(t_env *env)
 {
-	static t_env *envloc;
+	static t_env	*envloc;
 
 	if (env)
 		envloc = env;
@@ -38,7 +40,10 @@ static void	sigint_handler(int sig)
 	t_env	*env;
 
 	env = tenv(NULL);
+	env->execute = true;
 	g_status = 128 + sig;
+	if (env->redisplay == 2)
+		close(STDIN_FILENO);
 	ft_putstr("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);

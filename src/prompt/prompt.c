@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 20:00:16 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 23:00:19 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/20 20:26:55 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static void	tokens(t_env *env, char **splitted)
 	t_list	*tokens;
 	t_ast	*ast;
 
+	env->execute = false;
 	tokens = tokenizer(splitted);
 	if (splitted)
 		free(splitted);
@@ -49,6 +50,8 @@ void	prompt(t_env *env)
 {
 	char	*input;
 
+	env->fd = (struct termios){0};
+	tcgetattr(STDIN_FILENO, &env->fd);
 	while (true)
 	{
 		env->redisplay = false;
@@ -61,7 +64,8 @@ void	prompt(t_env *env)
 		else
 			g_status = 0;
 		tokens(env, format_input(&input));
-	//	printf("%d\n", g_status);
+		tcsetattr(STDIN_FILENO, TCSANOW, &env->fd);
+		printf("%d\n", g_status);
 	}
 	rl_clear_history();
 }

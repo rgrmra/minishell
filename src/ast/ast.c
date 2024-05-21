@@ -6,14 +6,14 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 15:47:25 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/20 20:31:19 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
+#include "types.h"
 #include "ft_linkedlist.h"
 #include "ft_string.h"
-#include "parser.h"
 #include "prompt.h"
 #include "tokenizer.h"
 #include <linux/limits.h>
@@ -55,7 +55,7 @@ t_ast	*ast_clear(t_ast *ast)
 	return (NULL);
 }
 
-static t_ast	*ast_get(t_ast **paren)
+static t_ast	*ast_get(t_env *env, t_ast **paren)
 {
 	char	**splitted;
 	t_list	*tokens;
@@ -71,18 +71,23 @@ static t_ast	*ast_get(t_ast **paren)
 		free(splitted);
 	tmp = ast_new(&tokens);
 	if (!tmp)
+	{
+		env->execute = true;
 		g_status = 2;
+	}
 	(*paren)->left = tmp;
 	return (*paren);
 }
 
 t_ast	*ast_node(t_list **tokens)
 {
+	t_env	*env;
 	t_list	*tmp;
 	t_ast	*ast;
 
 	if (!tokens || !(*tokens))
 		return (NULL);
+	env = tenv(NULL);
 	ast = (t_ast *)malloc(1 * sizeof(t_ast));
 	if (!ast)
 		return (NULL);
@@ -94,7 +99,7 @@ t_ast	*ast_node(t_list **tokens)
 	free(tmp);
 	if (ast->content->type & ~PAREN)
 		return (ast);
-	return (ast_get(&ast));
+	return (ast_get(env, &ast));
 }
 
 t_ast	*ast_new(t_list **tokens)
@@ -102,21 +107,21 @@ t_ast	*ast_new(t_list **tokens)
 	int		status;
 	t_ast	*ast;
 	t_ast	*root;
+	t_env	*env;
 
 	if (!tokens || !(*tokens))
 		return (NULL);
 	status = g_status;
 	g_status = 0;
 	root = NULL;
+	env = tenv(NULL);
 	while (*tokens)
 	{
 		ast = NULL;
 		ast = ast_build(tokens, &ast);
 		root = ast_build_operators(tokens, &root, &ast);
 	}
-	if (root && g_status == 2)
+	if (env->execute)
 		root = ast_clear(root);
-	if (g_status != 2)
-		g_status = status;
 	return (root);
 }

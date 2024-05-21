@@ -6,25 +6,28 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 22:22:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 21:34:04 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/20 20:56:43 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansions.h"
+#include "ft_stdio.h"
 #include "ft_stdlib.h"
 #include "ft_string.h"
 #include "types.h"
 #include "prompt.h"
+#include "builtin.h"
 #include <fcntl.h>
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <signal.h>
-#include "get_env.h"
 
 extern volatile sig_atomic_t	g_status;
+
 static char	*get_filename(void)
 {
 	static int	count = 100;
@@ -67,38 +70,46 @@ static int	check_expand(char *limiter)
 	return (expand);
 }
 
-static void	inner_heredoc(t_env	*env, char **limiter)
+static void	inner_heredoc(t_env	*env, char **limiter, int fd)
 {
-	char	*filename;
 	char	*input;
-	int		fd;
 	int		expand;
 
-	fd = get_fd(&filename);
 	expand = check_expand(*limiter);
 	remove_quotes_aux(*limiter);
 	while (1)
 	{
+		env->redisplay = 2;
 		input = readline("> ");
+		env->redisplay = 2;
+		if (g_status == 128 + SIGINT)
+			return ;
 		if (!input || ft_strncmp(*limiter, input, ft_strlen(*limiter) + 1) == 0)
 			break ;
 		if (expand)
 			var_expansions(env, &input);
-		write(fd, input, ft_strlen(input));
-		write(fd, "\n", 1);
+		ft_putendl_fd(input, fd);
 		free(input);
 	}
 	if (input)
 		free(input);
+	else
+		printf("minishell: %s (wanted '%s')\n", HEREDOC_MESSAGE, *limiter);
 	free(*limiter);
-	close(fd);
-	*limiter = filename;
 }
 
 void	heredoc(char **limiter)
 {
 	t_env	*env;
+	char	*filename;
+	int		fd;
+	int		in;
 
 	env = tenv(NULL);
-	inner_heredoc(env, limiter);
+	fd = get_fd(&filename);
+	in = dup(STDIN_FILENO);
+	inner_heredoc(env, limiter, fd);
+	dup2(in, STDIN_FILENO);
+	*limiter = filename;
+	close(fd);
 }

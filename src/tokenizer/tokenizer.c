@@ -6,13 +6,14 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 20:29:21 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/20 21:07:51 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_stdio.h"
 #include "prompt.h"
 #include "parser.h"
+#include "types.h"
 #include "builtin.h"
 #include "ft_linkedlist.h"
 #include "ft_string.h"
@@ -81,6 +82,7 @@ void	token_clear(void *content)
 
 t_list	*tokenizer(char **splitted)
 {
+	t_env	*env;
 	t_list	*tokens;
 	int		i;
 
@@ -88,21 +90,19 @@ t_list	*tokenizer(char **splitted)
 		return (NULL);
 	i = 0;
 	tokens = NULL;
+	env = tenv(NULL);
 	while (*(splitted + i))
 	{
 		if (!find_quote(*(splitted + i)))
-		{
-			ft_lstclear(&tokens, token_clear);
-			while (*(splitted + i))
-				free(*(splitted + i++));
-			return (NULL);
-		}
+			env->execute = true;
 		if (!check_token(&tokens, *(splitted + i)))
 		{
-			ft_putstr("minishell: syntax error near type '");
-			ft_putstr(*(splitted + i));
-			ft_putstr("'\n");
+			printf("minishell: syntax error type\n");
 			g_status = 2;
+			env->execute = true;
+		}
+		if (env->execute)
+		{
 			ft_lstclear(&tokens, token_clear);
 			while (*(splitted + i))
 				free(*(splitted + i++));
@@ -111,6 +111,5 @@ t_list	*tokenizer(char **splitted)
 		i++;
 	}
 	tokens = append_commands(tokens);
-	parser(&tokens);
-	return (tokens);
+	return (parser(&tokens), tokens);
 }

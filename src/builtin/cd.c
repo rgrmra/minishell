@@ -6,11 +6,10 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 16:03:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 23:11:01 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/20 20:35:38 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_stdio.h"
 #include "ft_string.h"
 #include "execution.h"
 #include "expansions.h"
@@ -61,6 +60,5 @@ void	builtin_cd(t_env *env, char **args)
 	pwd = get_pwd();
 	envadd(&env->vars, "OLD_PWD", pwd);
 	envadd(&env->vars, "PWD", new_pwd);
-	//ft_putendl(pwd);
 	free(pwd);
 }

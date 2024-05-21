@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 19:22:28 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 20:39:10 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/20 20:02:33 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define BUILTIN_H
 
 # include "expansions.h"
+
+# define HEREDOC_MESSAGE "warning: here-document delimited by end-of-file"
 
 char	*get_pwd(void);
 int		check_flags(char **args);
