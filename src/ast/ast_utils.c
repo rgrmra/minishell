@@ -6,11 +6,13 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:30:01 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 15:47:30 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/21 12:20:49 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
+#include "prompt.h"
+#include "expansions.h"
 #include "ft_linkedlist.h"
 #include "tokenizer.h"
 #include <signal.h>
@@ -95,10 +97,12 @@ t_ast	*ast_build_operators(t_list **tokens, t_ast **root, t_ast **prev)
 t_ast	*ast_build(t_list **tokens, t_ast **prev)
 {
 	t_ast	*ast;
+	t_env	*env;
 
 	if (!tokens || !(*tokens) || (*tokens
 			&& ((t_token *)(*tokens)->content)->type & (AND | OR)))
 		return (*prev);
+	env = tenv(NULL);
 	ast = ast_node(tokens);
 	if (!ast)
 		return (*prev);
@@ -108,7 +112,7 @@ t_ast	*ast_build(t_list **tokens, t_ast **prev)
 		ast = ast_build_redirect(tokens, prev, &ast);
 	else if (ast->content->type & VBAR)
 		ast = ast_build_pipeline(tokens, prev, &ast);
-	if (g_status == 2)
+	if (env->execute)
 		ft_lstclear(tokens, &token_clear);
 	return (ast_build(tokens, &ast));
 }

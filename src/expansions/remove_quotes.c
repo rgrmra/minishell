@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 11:47:00 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/20 23:15:18 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/21 08:09:17 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,9 @@ static void	copy(char *word)
 void	remove_quotes_aux(char *word)
 {
 	int	i;
-	int	len;
 	int	quote;
 
 	i = 0;
-	len = ft_strlen(word);
 	quote = 0;
 	while (word[i])
 	{

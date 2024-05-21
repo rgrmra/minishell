@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/20 23:23:17 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/21 13:52:11 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "types.h"
 #include "ft_stdio.h"
 #include "utils.h"
+#include <asm-generic/errno-base.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <signal.h>
@@ -46,7 +47,8 @@ void	panic(char *cmd, char *flag, char *message, int error)
 		ft_putstr_fd(flag, STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
 	}
-	if (error != 127 && path_stat.st_mode & S_IFDIR)
+	if ((ft_strchr("./", *cmd) || cmd[ft_strlen(cmd) - 1] == '/')
+		&& error != ENOENT && path_stat.st_mode & S_IFDIR)
 		ft_putendl_fd("Is a directory", STDERR_FILENO);
 	else
 		ft_putendl_fd(message, STDERR_FILENO);
@@ -70,21 +72,22 @@ static int	execute_builtin(t_env *env, char **cmd)
 	return (true);
 }
 
-static void	exitedstatus(int status)
+static void	execution(t_env *env, char **cmd)
 {
-	if (WIFSIGNALED(status))
-	{
-		if (WTERMSIG(status) == SIGQUIT)
-			ft_putendl("Quit (core dumped)");
-		g_status = 128 + WTERMSIG(status);
-	}
-	else
-		g_status = WEXITSTATUS(status);
+	char	**tmp;
+
+	tmp = envexport(env->vars);
+	if (access(*cmd, F_OK) < 0)
+		panic(*cmd, NULL, "No such file or directory", ENOENT);
+	else if (access(*cmd, X_OK) < 0)
+		panic(*cmd, NULL, "Permission Denied", EACCES);
+	else if (execve(*cmd, cmd, tmp) < 0)
+		panic(*cmd, NULL, strerror(errno), errno);
+	ft_freesplit(tmp);
 }
 
 static void	exec_subtree(t_env *env, char **cmd)
 {
-	char	**tmp;
 	pid_t	pid;
 	int		status;
 
@@ -95,17 +98,19 @@ static void	exec_subtree(t_env *env, char **cmd)
 		signal(SIGQUIT, SIG_DFL);
 		signal(SIGINT, SIG_DFL);
 		rl_clear_history();
-		tmp = envexport(env->vars);
-		if (*cmd && ft_strchr("./", **cmd) && execve(*cmd, cmd, tmp) < 0)
-			panic(*cmd, NULL, strerror(errno), errno);
-		else
-			panic(*cmd, NULL, "command not found", errno);
-		ft_freesplit(tmp);
+		execution(env, cmd);
 		ft_freesplit(cmd);
 		clearall(env);
 	}
 	waitpid(pid, &status, WUNTRACED);
-	exitedstatus(status);
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGQUIT)
+			ft_putendl("Quit (core dumped)");
+		g_status = 128 + WTERMSIG(status);
+	}
+	else
+		g_status = WEXITSTATUS(status);
 }
 
 void	execute_command(t_env *env, t_ast *ast)
@@ -116,12 +121,19 @@ void	execute_command(t_env *env, t_ast *ast)
 		return ;
 	var_expansions(env, &ast->content->literal);
 	if (!ast->content->literal[0])
+	{
+		g_status = 0;
 		return ;
+	}
 	cmd = ft_strtok(ast->content->literal, ' ');
 	remove_quotes(cmd);
 	command_expansions(env, cmd);
 	if (execute_builtin(env, cmd))
 		return ;
-	exec_subtree(env, cmd);
+	if (*cmd && **cmd && (**cmd == '/' || ft_strncmp(*cmd, "./", 2) == 0
+			|| cmd[0][ft_strlen(*cmd) - 1] == '/'))
+		exec_subtree(env, cmd);
+	else
+		panic(*cmd, NULL, "command not found", ENOENT);
 	ft_freesplit(cmd);
 }

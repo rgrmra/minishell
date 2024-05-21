@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 16:03:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/20 20:35:38 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/21 13:37:07 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	builtin_cd(t_env *env, char **args)
 		panic(*args, NULL, "too many arguments", 1);
 		return ;
 	}
+	pwd = get_pwd();
 	new_pwd = get_newpwd(env, args);
 	if (!new_pwd)
 		return ;
@@ -57,8 +58,9 @@ void	builtin_cd(t_env *env, char **args)
 		panic("cd", args[1], "No such file or directory", 1);
 		return ;
 	}
+	envadd(&env->vars, "OLDPWD", pwd);
+	free(pwd);
 	pwd = get_pwd();
-	envadd(&env->vars, "OLD_PWD", pwd);
-	envadd(&env->vars, "PWD", new_pwd);
+	envadd(&env->vars, "PWD", pwd);
 	free(pwd);
 }

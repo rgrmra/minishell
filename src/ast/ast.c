@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/20 23:29:01 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/21 12:23:00 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,14 +104,12 @@ t_ast	*ast_node(t_list **tokens)
 
 t_ast	*ast_new(t_list **tokens)
 {
-	int		status;
 	t_ast	*ast;
 	t_ast	*root;
 	t_env	*env;
 
 	if (!tokens || !(*tokens))
 		return (NULL);
-	status = g_status;
 	root = NULL;
 	env = tenv(NULL);
 	while (*tokens)

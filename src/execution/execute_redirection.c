@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:54:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 20:05:24 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/21 08:18:51 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ t_ast	*redirection(t_env *env, t_ast *ast, int *fdin, int *fdout)
 	if (ast->content->type & (LESS | DLESS))
 		open_file(ast, fdout, fdin, O_RDONLY);
 	if (ast->content->type & GREATER)
-		open_file(ast, fdin, fdout, O_CLOEXEC | O_CREAT | O_TRUNC | O_WRONLY);
+		open_file(ast, fdin, fdout, O_CREAT | O_TRUNC | O_WRONLY);
 	else if (ast->content->type & DGREATER)
-		open_file(ast, fdin, fdout, O_CLOEXEC | O_CREAT | O_APPEND | O_WRONLY);
+		open_file(ast, fdin, fdout, O_CREAT | O_APPEND | O_WRONLY);
 	if (*fdout == -1 || *fdin == -1)
 		return (NULL);
 	if (*fdin > -1)
