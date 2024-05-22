@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/19 10:09:46 by yuuko             #+#    #+#              #
-#    Updated: 2024/05/19 17:53:50 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/05/21 21:46:04 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,6 +69,8 @@ SRCS		:=	\
 	src/expansions/var_expansions.c \
 	src/expansions/command_expansions.c \
 	src/expansions/remove_quotes.c \
+	src/expansions/wildcard_expansions.c \
+	src/expansions/wildcard_expansions_utils.c \
 	src/ast/ast.c \
 	src/ast/ast_utils.c \
 	src/builtin/heredoc.c \

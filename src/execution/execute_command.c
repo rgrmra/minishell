@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/21 13:52:11 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/21 21:46:46 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "ft_hashmap.h"
 #include "ft_string.h"
 #include "get_env.h"
+#include "glob.h"
 #include "types.h"
 #include "ft_stdio.h"
 #include "utils.h"
@@ -126,6 +127,7 @@ void	execute_command(t_env *env, t_ast *ast)
 		return ;
 	}
 	cmd = ft_strtok(ast->content->literal, ' ');
+	cmd = wildcard_expansions(cmd);
 	remove_quotes(cmd);
 	command_expansions(env, cmd);
 	if (execute_builtin(env, cmd))
