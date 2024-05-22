@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 16:08:45 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/20 23:20:54 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 07:27:13 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "expansions.h"
 #include "get_env.h"
 #include <signal.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 extern volatile sig_atomic_t	g_status;
@@ -67,8 +68,8 @@ static void	export_arg(t_env *env, char *arg)
 	key = ft_substr(arg, 0, i + 1);
 	if (g_status == 1 || (!ft_isalpha(key[0]) && key[0] != '_'))
 	{
-		panic("export", key, "not a valid identifier", 1);
-		g_status = 1;
+		panic("export", key, "not a valid identifier", EXIT_FAILURE);
+		g_status = EXIT_FAILURE;
 		return (free(key));
 	}
 	key[i] = '\0';
@@ -80,17 +81,17 @@ static void	export_arg(t_env *env, char *arg)
 	free(value);
 }
 
-void	builtin_export(t_env *env, char **args)
+void	builtin_export(t_env *env, char **cmd)
 {
 	char	**vars;
 	int		i;
 
-	g_status = 0;
-	if (check_flags(args))
+	g_status = EXIT_SUCCESS;
+	if (check_flags(cmd))
 		return ;
 	i = 0;
-	while (args[++i])
-		export_arg(env, args[i]);
+	while (cmd[++i])
+		export_arg(env, cmd[i]);
 	if (i == 1)
 	{
 		vars = envexport(env->vars);

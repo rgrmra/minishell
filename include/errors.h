@@ -1,29 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   errors.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/05 16:09:37 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 07:19:16 by rde-mour         ###   ########.org.br   */
+/*   Created: 2024/05/22 06:21:02 by rde-mour          #+#    #+#             */
+/*   Updated: 2024/05/22 07:21:54 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtin.h"
-#include "execution.h"
-#include "expansions.h"
-#include "get_env.h"
-#include <signal.h>
-#include <stdlib.h>
+#ifndef ERRORS_H
+# define ERRORS_H
 
-extern volatile sig_atomic_t	g_status;
+# define ARGUMENT_ERROR 2
+# define MALLOC_FAILURE 3
+# define TCGETATTR_FAILURE 4
+# define TCSETATTR_FAILURE 5
 
-void	builtin_env(t_env *env, char **cmd)
-{
-	g_status = EXIT_SUCCESS;
-	if (cmd[1])
-		panic(*cmd, cmd[1], "doesn't accept arguments or flags", EXIT_FAILURE);
-	else
-		envprint(&env->vars);
-}
+void	exit_error(char *message, int status);
+
+#endif

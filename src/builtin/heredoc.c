@@ -6,10 +6,11 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 22:22:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/20 20:56:43 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 07:31:20 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "execution.h"
 #include "expansions.h"
 #include "ft_stdio.h"
 #include "ft_stdlib.h"
@@ -94,7 +95,7 @@ static void	inner_heredoc(t_env	*env, char **limiter, int fd)
 	if (input)
 		free(input);
 	else
-		printf("minishell: %s (wanted '%s')\n", HEREDOC_MESSAGE, *limiter);
+		panic(HEREDOC_MESSAGE, "wanted", *limiter, EXIT_SUCCESS);
 	free(*limiter);
 }
 

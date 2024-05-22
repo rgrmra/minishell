@@ -6,7 +6,7 @@
 #    By: rde-mour <rde-mour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/19 10:09:46 by yuuko             #+#    #+#              #
-#    Updated: 2024/05/21 21:46:04 by rde-mour         ###   ########.org.br    #
+#    Updated: 2024/05/22 06:42:00 by rde-mour         ###   ########.org.br    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -87,6 +87,7 @@ SRCS		:=	\
 	src/execution/execute_redirection.c \
 	src/execution/execute_pipe.c \
 	src/execution/execute_command.c \
+	src/error/errors.c \
 	util/arraylist.c \
 	util/strjoinsep.c \
 	util/ft_strtok.c \

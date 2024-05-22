@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 07:41:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 15:47:01 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 07:02:20 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "tokenizer.h"
 #include "types.h"
 #include <signal.h>
+#include <unistd.h>
 
 extern volatile sig_atomic_t	g_status;
 
@@ -62,13 +63,11 @@ static int	check_operators(t_token *content, t_list *next_content)
 	return (false);
 }
 
-int	error(int errors, t_list **tokens, char *message)
+int	error(int errors, t_list **tokens)
 {
 	if (errors)
 	{
-		ft_putstr("minishell: syntax error near type '");
-		ft_putstr(message);
-		ft_putstr("'\n");
+		ft_putendl_fd("minishell: syntax error", STDERR_FILENO);
 		g_status = 2;
 		ft_lstclear(tokens, &token_clear);
 		return (true);
@@ -86,17 +85,15 @@ void	parser(t_list **tokens)
 	errors = 0;
 	tmp = *tokens;
 	if (!tmp->next && ((t_token *)tmp->content)->type & (VBAR | AND | OR)
-		&& error(true, tokens, ((t_token *)tmp->content)->literal))
+		&& error(true, tokens))
 		return ;
 	while (tmp)
 	{
 		errors += check_controllers((t_token *)tmp->content, tmp->next);
-		if (error(errors, tokens, ((t_token *)tmp->content)->literal))
+		if (error(errors, tokens))
 			return ;
 		errors += check_operators((t_token *)tmp->content, tmp->next);
-		if ((tmp->next && error(errors, tokens,
-					((t_token *)tmp->next->content)->literal)) || error(errors,
-				tokens, ((t_token *)tmp->content)->literal))
+		if (tmp->next && error(errors, tokens))
 			return ;
 		tmp = tmp->next;
 	}

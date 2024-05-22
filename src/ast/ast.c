@@ -6,37 +6,22 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/21 12:23:00 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 07:11:44 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
+#include "errors.h"
 #include "types.h"
 #include "ft_linkedlist.h"
 #include "ft_string.h"
 #include "prompt.h"
 #include "tokenizer.h"
-#include <linux/limits.h>
 #include <signal.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 extern volatile sig_atomic_t	g_status;
-
-void	ast_print(t_ast **ast)
-{
-	t_ast	*tmp;
-
-	if (!ast || !(*ast))
-		return ;
-	tmp = *ast;
-	if ((*ast)->left)
-		ast_print(&(*ast)->left);
-	if ((*ast)->right)
-		ast_print(&(*ast)->right);
-	printf("%d %s\n", tmp->content->type, tmp->content->literal);
-}
 
 t_ast	*ast_clear(t_ast *ast)
 {
@@ -90,7 +75,7 @@ t_ast	*ast_node(t_list **tokens)
 	env = tenv(NULL);
 	ast = (t_ast *)malloc(1 * sizeof(t_ast));
 	if (!ast)
-		return (NULL);
+		exit_error("malloc", EXIT_FAILURE);
 	ast->left = NULL;
 	ast->right = NULL;
 	ast->content = (*tokens)->content;

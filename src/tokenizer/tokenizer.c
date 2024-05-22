@@ -6,10 +6,11 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/21 13:42:57 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 06:57:00 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "errors.h"
 #include "ft_stdio.h"
 #include "prompt.h"
 #include "parser.h"
@@ -21,6 +22,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 extern volatile sig_atomic_t	g_status;
 
@@ -61,7 +63,7 @@ static int	check_token(t_list **tokens, char *literal)
 		return (ILLEGAL);
 	content = (t_token *)malloc(1 * sizeof(t_token));
 	if (!content)
-		return (ILLEGAL);
+		exit_error("malloc", EXIT_FAILURE);
 	content->literal = literal;
 	last_token = 0;
 	last = ft_lstlast(*tokens);
@@ -105,7 +107,7 @@ t_list	*tokenizer(char **splitted)
 			env->execute = true;
 		else if (!check_token(&tokens, *(splitted + i)))
 		{
-			printf("minishell: syntax error type\n");
+			ft_putendl_fd("minishell: syntax error", STDERR_FILENO);
 			g_status = 2;
 			env->execute = true;
 		}

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   glob_expansions_utils.c                            :+:      :+:    :+:   */
+/*   wildcard_expansions_utils.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 21:32:28 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/21 21:39:14 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 06:50:48 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,10 @@ int	check_wildcard(char *cmd)
 
 int	has_wildcard(char **cmd)
 {
-	char	quote;
 	int		count;
 	int		size;
 
 	size = 0;
-	quote = 0;
 	count = 0;
 	while (cmd[size])
 	{

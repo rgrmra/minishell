@@ -6,13 +6,14 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 20:09:37 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/20 21:10:48 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 06:58:34 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_stdio.h"
 #include "ft_string.h"
-#include <stdio.h>
 #include <signal.h>
+#include <unistd.h>
 
 extern volatile sig_atomic_t	g_status;
 
@@ -70,7 +71,7 @@ int	find_quote(char *tmp)
 	}
 	if (!quote)
 		return (1);
-	printf("%s %c\n", "unclosed parser error", quote);
+	ft_putendl_fd("minishell: unclosed parser error", STDERR_FILENO);
 	g_status = 2;
 	return (0);
 }

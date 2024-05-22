@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 09:08:52 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 20:40:49 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 07:05:58 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "ft_string.h"
 #include "get_env.h"
 #include "ft_stdlib.h"
-#include "tokenizer.h"
 #include "utils.h"
 #include <signal.h>
 #include <stdlib.h>

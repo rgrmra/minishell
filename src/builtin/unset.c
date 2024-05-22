@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 16:09:03 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 15:48:30 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 07:34:18 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "expansions.h"
 #include "types.h"
 #include <signal.h>
+#include <stdlib.h>
 
 extern volatile sig_atomic_t	g_status;
 
@@ -36,39 +37,39 @@ static int	check_args(char *arg)
 	return (true);
 }
 
-int	check_flags(char **args)
+int	check_flags(char **cmd)
 {
 	int	i;
 
 	i = 0;
-	while (args[++i])
+	while (cmd[++i])
 	{
-		if (args[i][0] == '-' && args[i][1])
+		if (cmd[i][0] == '-' && cmd[i][1])
 		{
-			panic(*args, args[i], "doesn't accept options", 1);
-			g_status = 1;
+			panic(*cmd, cmd[i], "doesn't accept options", EXIT_FAILURE);
+			g_status = EXIT_FAILURE;
 			return (true);
 		}
 	}
 	return (false);
 }
 
-void	builtin_unset(t_env *env, char **args)
+void	builtin_unset(t_env *env, char **cmd)
 {
 	int	i;
 
-	g_status = 0;
-	if (check_flags(args))
+	g_status = EXIT_SUCCESS;
+	if (check_flags(cmd))
 		return ;
 	i = 0;
-	while (args[++i])
+	while (cmd[++i])
 	{
-		if (!check_args(args[i]))
+		if (!check_args(cmd[i]))
 		{
-			panic(*args, args[i], "not a valid identifier", 1);
-			g_status = 1;
+			panic(*cmd, cmd[i], "not a valid identifier", EXIT_FAILURE);
+			g_status = EXIT_FAILURE;
 		}
 		else
-			envdel(&env->vars, args[i]);
+			envdel(&env->vars, cmd[i]);
 	}
 }

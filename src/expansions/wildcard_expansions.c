@@ -6,10 +6,11 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 21:40:29 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/21 21:50:58 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 07:05:17 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "errors.h"
 #include "expansions.h"
 #include "ft_string.h"
 #include <stdio.h>
@@ -23,6 +24,8 @@ void	expand_wildcard(char **cmd, int *j, char *pattern)
 	DIR				*root;
 
 	root = opendir(".");
+	if (!root)
+		exit_error("opendir", EXIT_FAILURE);
 	while (1)
 	{
 		file = readdir(root);
@@ -43,7 +46,7 @@ char	**copy_wildcard(char **old_cmd, int size)
 
 	cmd = (char **) malloc(sizeof(char *) * size);
 	if (!cmd)
-		return (NULL);
+		exit_error("malloc", EXIT_FAILURE);
 	i = 0;
 	j = 0;
 	while (old_cmd[i])
@@ -71,6 +74,8 @@ char	**wildcard_expansions(char **cmd)
 		return (cmd);
 	j = 0;
 	root = opendir(".");
+	if (!root)
+		exit_error("opendir", EXIT_FAILURE);
 	while (1)
 	{
 		file = readdir(root);

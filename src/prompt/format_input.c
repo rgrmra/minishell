@@ -6,10 +6,11 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 23:24:57 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 06:53:02 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "errors.h"
 #include "ft_string.h"
 #include "utils.h"
 #include <signal.h>
@@ -63,9 +64,9 @@ char	**format_input(char **str)
 	input = *str;
 	if (!input || !(*input))
 		return (NULL);
-	tmp = (char *)malloc(ft_strlen(input) * 3 * sizeof(char));
+	tmp = (char *) malloc(ft_strlen(input) * 3 * sizeof(char));
 	if (!tmp)
-		return (NULL);
+		exit_error("malloc", MALLOC_FAILURE);
 	tmp = expand_input(tmp, input);
 	splitted = ft_strtok(tmp, ' ');
 	free(tmp);

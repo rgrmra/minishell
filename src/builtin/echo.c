@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 20:14:49 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/20 23:27:37 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 07:15:43 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "ft_string.h"
 #include "types.h"
 #include <signal.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 extern volatile sig_atomic_t	g_status;
@@ -23,7 +24,7 @@ void	builtin_echo(t_env *env, char **cmd)
 	int	i;
 	int	end;
 
-	g_status = 0;
+	g_status = EXIT_SUCCESS;
 	(void)env;
 	i = 1;
 	end = false;
