@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 20:00:16 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/21 12:24:11 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/21 21:51:23 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <signal.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -64,7 +63,6 @@ void	prompt(t_env *env)
 		else
 			g_status = 0;
 		tokens(env, format_input(&input));
-		//printf("%d\n", g_status);
 		tcsetattr(STDIN_FILENO, TCSANOW, &fd);
 	}
 	rl_clear_history();

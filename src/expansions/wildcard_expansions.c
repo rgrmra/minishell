@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 21:40:29 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/21 21:48:39 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/21 21:50:58 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	expand_wildcard(char **cmd, int *j, char *pattern)
 	DIR				*root;
 
 	root = opendir(".");
-	while(1)
+	while (1)
 	{
 		file = readdir(root);
 		if (!file)
@@ -75,7 +75,7 @@ char	**wildcard_expansions(char **cmd)
 	{
 		file = readdir(root);
 		if (!file)
-			break;
+			break ;
 		j++;
 	}
 	closedir(root);
