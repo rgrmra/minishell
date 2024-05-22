@@ -6,17 +6,17 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/21 21:46:46 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 18:49:54 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 #include "execution.h"
+#include "errors.h"
 #include "expansions.h"
 #include "ft_hashmap.h"
 #include "ft_string.h"
 #include "get_env.h"
-#include "glob.h"
 #include "types.h"
 #include "ft_stdio.h"
 #include "utils.h"
@@ -94,6 +94,8 @@ static void	exec_subtree(t_env *env, char **cmd)
 
 	status = 0;
 	pid = fork();
+	if (pid < 0)
+		exit_error("fork", EXIT_FAILURE);
 	if (pid == 0)
 	{
 		signal(SIGQUIT, SIG_DFL);
@@ -123,7 +125,7 @@ void	execute_command(t_env *env, t_ast *ast)
 	var_expansions(env, &ast->content->literal);
 	if (!ast->content->literal[0])
 	{
-		g_status = 0;
+		g_status = EXIT_SUCCESS;
 		return ;
 	}
 	cmd = ft_strtok(ast->content->literal, ' ');

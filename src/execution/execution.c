@@ -6,12 +6,13 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 19:06:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/20 18:19:42 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 18:43:09 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 #include "execution.h"
+#include "errors.h"
 #include "expansions.h"
 #include "ft_hashmap.h"
 #include "get_env.h"
@@ -20,6 +21,7 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <signal.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 extern volatile sig_atomic_t	g_status;
@@ -57,6 +59,8 @@ void	close_open_fds(void)
 	int				fd;
 
 	root = opendir("/proc/self/fd/");
+	if (!root)
+		exit_error("opendir", EXIT_FAILURE);
 	while (1)
 	{
 		file = readdir(root);

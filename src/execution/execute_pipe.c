@@ -6,11 +6,12 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:57:29 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 15:49:36 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 18:49:05 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
+#include "errors.h"
 #include "execution.h"
 #include <readline/readline.h>
 #include <signal.h>
@@ -25,6 +26,8 @@ void	exec_left_subtree(t_env *env, t_ast *ast, int *fds)
 	pid_t	pid;
 
 	pid = fork();
+	if (pid < 0)
+		exit_error("fork", EXIT_FAILURE);
 	if (pid == 0)
 	{
 		rl_clear_history();
@@ -42,6 +45,8 @@ void	exec_right_subtree(t_env *env, t_ast *ast, int *fds)
 
 	status = 0;
 	pid = fork();
+	if (pid < 0)
+		exit_error("fork", EXIT_FAILURE);
 	if (pid == 0)
 	{
 		rl_clear_history();

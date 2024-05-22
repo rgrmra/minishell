@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 13:54:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/21 08:18:51 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 18:38:07 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -28,6 +29,7 @@ extern volatile sig_atomic_t	g_status;
 static void	open_file(t_ast *ast, int *to_open, int *to_check, mode_t flags)
 {
 	static const mode_t	mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
+	char				*literal;
 
 	if (*to_open > -1)
 	{
@@ -36,11 +38,12 @@ static void	open_file(t_ast *ast, int *to_open, int *to_check, mode_t flags)
 	}
 	if (*to_open != -1 && *to_check != -1)
 	{
-		*to_open = open(ast->right->content->literal, flags, mode);
+		literal = ast->right->content->literal;
+		*to_open = open(literal, flags, mode);
 		if (*to_open == -1)
-			panic(ast->right->content->literal, NULL, strerror(errno), 1);
+			panic(literal, NULL, strerror(errno), EXIT_FAILURE);
 		else
-			g_status = 0;
+			g_status = EXIT_SUCCESS;
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 16:03:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 07:19:29 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 18:09:04 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	builtin_cd(t_env *env, char **cmd)
 	}
 	pwd = get_pwd();
 	new_pwd = get_newpwd(env, cmd);
-	if (!new_pwd)
+	if (!pwd || !new_pwd)
 		return ;
 	if (chdir(new_pwd))
 	{

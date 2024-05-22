@@ -6,13 +6,14 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 16:07:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 07:32:51 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 18:19:23 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "errors.h"
 #include "expansions.h"
+#include "execution.h"
 #include "ft_stdio.h"
 #include <signal.h>
 #include <stdlib.h>
@@ -38,6 +39,12 @@ char	*get_pwd(void)
 			exit_error("malloc", EXIT_FAILURE);
 		status = getcwd(pwd, size);
 		size *= 2;
+		if (size > 4096)
+		{
+			free(pwd);
+			g_status = EXIT_FAILURE;
+			return (NULL);
+		}
 	}
 	return (pwd);
 }
@@ -51,6 +58,9 @@ void	builtin_pwd(t_env *env, char **cmd)
 	if (check_flags(cmd))
 		return ;
 	pwd = get_pwd();
-	ft_putendl_fd(pwd, STDOUT_FILENO);
+	if (pwd)
+		ft_putendl_fd(pwd, STDOUT_FILENO);
+	else
+		panic(*cmd, NULL, "error retrieving current directory", EXIT_FAILURE);
 	free(pwd);
 }
