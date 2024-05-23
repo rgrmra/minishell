@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 17:36:57 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/14 20:12:24 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 22:31:36 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "ft_stdio.h"
 #include "ft_stdlib.h"
 #include "ft_string.h"
+#include "utils.h"
 #include "get_env.h"
 #include <stdlib.h>
 #include <unistd.h>
@@ -51,6 +52,20 @@ void	envadd(t_arraylist **var, char *name, char *values)
 	content->name = ft_strdup(name);
 	content->values = ft_split(values, ':');
 	content->deflt = ft_strdup(values);
+	envdel(var, name);
+	arradd(var, content);
+}
+
+void	envaddx(t_arraylist **var, char *name, char *values)
+{
+	t_var	*content;
+
+	content = (t_var *)ft_calloc(1, sizeof(t_var));
+	if (!content)
+		return ;
+	content->name = ft_strdup(name);
+	content->values = ft_split(values, ':');
+	content->deflt = strjoinsep(name, values, '=');
 	envdel(var, name);
 	arradd(var, content);
 }

@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 18:28:18 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 23:22:49 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 22:31:16 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,18 +122,3 @@ char	**ft_strtok(const char *str, char c)
 	new[i] = NULL;
 	return (new);
 }
-
-//#include <stdio.h>
-//int	main(int argc, char **argv)
-//{
-//	int	i;
-//	char **str = ft_strtok(argv[1], ' ');
-//
-//	i = 0;
-//	while (str[i])
-//	{
-//		printf("%s\n", str[i]);
-//		free(str[i++]);
-//	}
-//	free(str);
-//}

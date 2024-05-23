@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 19:09:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/20 20:34:05 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 22:30:01 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	main(void)
 	env.vars = arrnew();
 	envnew(&env.vars, environ);
 	if (!envget(&env.vars, "PATH"))
-		envadd(&env.vars, "PATH", STDPATH);
+		envaddx(&env.vars, "PATH", STDPATH);
 	tenv(&env);
 	prompt(&env);
 }

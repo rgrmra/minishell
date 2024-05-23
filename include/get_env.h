@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 16:22:22 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/09 21:18:05 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 22:26:49 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ struct		s_var
 };
 
 void	envadd(t_arraylist **var, char *name, char *values);
+void	envaddx(t_arraylist **var, char *name, char *values);
 void	envclear(t_arraylist **var);
 void	envdel(t_arraylist **var, char *name);
 t_var	*envget(t_arraylist **var, char *name);

@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 16:08:45 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 07:27:13 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 22:26:07 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static void	export_arg(t_env *env, char *arg)
 	if (!arg[i++])
 		return (free(key));
 	value = ft_substr(arg, i, ft_strlen(arg));
-	envadd(&env->vars, key, value);
+	envaddx(&env->vars, key, value);
 	free(key);
 	free(value);
 }

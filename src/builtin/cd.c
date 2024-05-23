@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 16:03:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 18:09:04 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/22 22:28:12 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ void	builtin_cd(t_env *env, char **cmd)
 		panic("cd", cmd[1], "No such file or directory", EXIT_FAILURE);
 		return ;
 	}
-	envadd(&env->vars, "OLDPWD", pwd);
+	envaddx(&env->vars, "OLDPWD", pwd);
 	free(pwd);
 	pwd = get_pwd();
-	envadd(&env->vars, "PWD", pwd);
+	envaddx(&env->vars, "PWD", pwd);
 	free(pwd);
 }
