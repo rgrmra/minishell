@@ -1,26 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   types.h                                            :+:      :+:    :+:   */
+/*   prompt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/29 19:14:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/05 16:50:06 by rde-mour         ###   ########.org.br   */
+/*   Created: 2024/03/02 21:09:24 by rde-mour          #+#    #+#             */
+/*   Updated: 2024/05/20 21:45:37 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TYPES_H
-# define TYPES_H
+#ifndef PROMPT_H
+# define PROMPT_H
 
 # include "expansions.h"
+# include <readline/history.h>
+# include <readline/readline.h>
 
-enum			e_bool
-{
-	false,
-	true
-};
-
-typedef void	(*t_exec_func)(t_env *env, char **args);
+t_env	*tenv(t_env *env);
+int		find_quote(char *tmp);
+char	**format_input(char **input);
+void	prompt(t_env *env);
 
 #endif

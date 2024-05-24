@@ -1,26 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   types.h                                            :+:      :+:    :+:   */
+/*   execute_conditional.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/29 19:14:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/05 16:50:06 by rde-mour         ###   ########.org.br   */
+/*   Created: 2024/04/27 13:43:52 by rde-mour          #+#    #+#             */
+/*   Updated: 2024/05/19 15:49:43 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TYPES_H
-# define TYPES_H
+#include "ast.h"
+#include "execution.h"
+#include <signal.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
-# include "expansions.h"
+extern volatile sig_atomic_t	g_status;
 
-enum			e_bool
+void	execute_conditional(t_env *env, t_ast *ast)
 {
-	false,
-	true
-};
+	int		token;
 
-typedef void	(*t_exec_func)(t_env *env, char **args);
-
-#endif
+	token = ast->content->type;
+	execute(env, ast->left);
+	if ((g_status > 0 && token & AND) || (g_status == 0 && token & OR))
+		return ;
+	execute(env, ast->right);
+}

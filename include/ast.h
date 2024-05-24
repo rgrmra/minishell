@@ -1,26 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   types.h                                            :+:      :+:    :+:   */
+/*   ast.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/29 19:14:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/05 16:50:06 by rde-mour         ###   ########.org.br   */
+/*   Created: 2024/03/18 08:43:01 by rde-mour          #+#    #+#             */
+/*   Updated: 2024/05/19 20:16:57 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TYPES_H
-# define TYPES_H
+#ifndef AST_H
+# define AST_H
 
-# include "expansions.h"
+# include "tokenizer.h"
 
-enum			e_bool
+typedef struct s_ast	t_ast;
+struct s_ast
 {
-	false,
-	true
+	t_ast	*left;
+	t_ast	*right;
+	t_token	*content;
 };
 
-typedef void	(*t_exec_func)(t_env *env, char **args);
+void	ast_print(t_ast **ast);
+t_ast	*ast_new(t_list **tokens);
+t_ast	*ast_node(t_list **tokens);
+t_ast	*ast_clear(t_ast *ast);
+t_ast	*ast_build(t_list **tokens, t_ast **prev);
+t_ast	*ast_build_operators(t_list **tokens, t_ast **root, t_ast **prev);
 
 #endif

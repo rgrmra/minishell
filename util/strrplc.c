@@ -1,26 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   types.h                                            :+:      :+:    :+:   */
+/*   strrplc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/29 19:14:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/05 16:50:06 by rde-mour         ###   ########.org.br   */
+/*   Created: 2024/04/08 10:56:34 by rde-mour          #+#    #+#             */
+/*   Updated: 2024/04/28 19:17:21 by rde-mour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TYPES_H
-# define TYPES_H
+#include <stdlib.h>
 
-# include "expansions.h"
-
-enum			e_bool
+void	strrplc(char *str, char old, char new)
 {
-	false,
-	true
-};
+	size_t	i;
 
-typedef void	(*t_exec_func)(t_env *env, char **args);
-
-#endif
+	if (!str)
+		return ;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == old)
+			str[i] = new;
+		i++;
+	}
+}
