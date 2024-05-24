@@ -6,12 +6,13 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 07:41:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 07:02:20 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/23 23:59:25 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_stdio.h"
 #include "ft_linkedlist.h"
+#include "prompt.h"
 #include "tokenizer.h"
 #include "types.h"
 #include <signal.h>
@@ -69,6 +70,7 @@ int	error(int errors, t_list **tokens)
 	{
 		ft_putendl_fd("minishell: syntax error", STDERR_FILENO);
 		g_status = 2;
+		tenv(NULL)->execute = true;
 		ft_lstclear(tokens, &token_clear);
 		return (true);
 	}
@@ -90,10 +92,8 @@ void	parser(t_list **tokens)
 	while (tmp)
 	{
 		errors += check_controllers((t_token *)tmp->content, tmp->next);
-		if (error(errors, tokens))
-			return ;
 		errors += check_operators((t_token *)tmp->content, tmp->next);
-		if (tmp->next && error(errors, tokens))
+		if (error(errors, tokens))
 			return ;
 		tmp = tmp->next;
 	}

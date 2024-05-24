@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 21:40:29 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 07:05:17 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/23 23:49:48 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ char	**copy_wildcard(char **old_cmd, int size)
 			cmd[j++] = ft_strdup(old_cmd[i]);
 		i++;
 	}
+	if (j == 0)
+		cmd[j++] = ft_strdup("");
 	cmd[j] = NULL;
 	ft_freesplit(old_cmd);
 	return (cmd);
