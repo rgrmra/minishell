@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:51:23 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 06:57:00 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/24 13:08:36 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ static int	get_token(char *literal, int last_token)
 		return (GREATER);
 	else if (!ft_strncmp(literal, "(", 1))
 		return (PAREN);
-	else if (ft_strchr("()|<>&", *literal))
+	else if (!ft_strncmp(literal, ";", 2))
+		return (SEP);
+	else if (ft_strchr("();|<>&", *literal))
 		return (ILLEGAL);
 	else if (last_token & DLESS)
 		return (END);

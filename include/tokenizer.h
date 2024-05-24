@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 15:22:53 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/19 20:28:48 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/24 13:07:52 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ enum					e_token_type
 	OR = 1 << 9,
 	PAREN = 1 << 10,
 	END = 1 << 11,
+	SEP = 1 << 12
 };
 
 typedef struct s_token

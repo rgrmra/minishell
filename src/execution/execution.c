@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 19:06:38 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 18:43:09 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/24 14:57:24 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ void	execute(t_env *env, t_ast *ast)
 		return ;
 	if (ast->content->type & COMMAND)
 		execute_command(env, ast);
+	else if (ast->content->type & SEP)
+		execute_sep(env, ast);
 	else if (ast->content->type & (LESS | DLESS | GREATER | DGREATER))
 		execute_redirection(env, ast);
 	else if (ast->content->type & VBAR)

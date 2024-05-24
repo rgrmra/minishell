@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:42:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 07:11:44 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/24 13:15:41 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,17 @@
 #include <unistd.h>
 
 extern volatile sig_atomic_t	g_status;
+
+void	ast_print(t_ast **ast)
+{
+	if (!ast || !(*ast))
+		return ;
+	if ((*ast)->left)
+		ast_print(&(*ast)->left);
+	if ((*ast)->right)
+		ast_print(&(*ast)->right);
+	printf("%s\n", (*ast)->content->literal);
+}
 
 t_ast	*ast_clear(t_ast *ast)
 {

@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 20:11:06 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 06:53:02 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/24 13:09:56 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static char	*expand_input(char *tmp, char *input)
 	while (input[++i])
 	{
 		quote = check_quote(quote, input, i);
-		if (!quote && ft_strchr("|<>&", input[i]))
+		if (!quote && ft_strchr(";|<>&", input[i]))
 		{
 			if (i && input[i - 1] != input[i])
 				tmp[j++] = ' ';

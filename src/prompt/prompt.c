@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 20:00:16 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 19:01:41 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/24 13:17:24 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ static void	run(t_env *env, char **splitted)
 	ast = ast_new(&run);
 	env->ast = ast;
 	execute(env, ast);
+	//ast_print(&ast);
 	ast_clear(ast);
 }
 

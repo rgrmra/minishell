@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:30:01 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/21 12:20:49 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/24 13:11:22 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_ast	*ast_build_command(t_list **tokens, t_ast **prev)
 			&& ((t_token *)(*tokens)->content)->type & (AND | OR)))
 		return (*prev);
 	ast = ast_node(tokens);
-	if (ast && ast->content->type & VBAR)
+	if (ast && ast->content->type & (VBAR | SEP))
 		ast_build_pipeline(tokens, prev, &ast);
 	return (ast);
 }
@@ -110,7 +110,7 @@ t_ast	*ast_build(t_list **tokens, t_ast **prev)
 		ast = ast_build_command(tokens, &ast);
 	else if (ast->content->type & (LESS | DLESS | GREATER | DGREATER))
 		ast = ast_build_redirect(tokens, prev, &ast);
-	else if (ast->content->type & VBAR)
+	else if (ast->content->type & (VBAR | SEP))
 		ast = ast_build_pipeline(tokens, prev, &ast);
 	if (env->execute)
 		ft_lstclear(tokens, &token_clear);

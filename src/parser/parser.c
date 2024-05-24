@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 07:41:33 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/23 23:59:25 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/24 13:39:33 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	check_controllers(t_token *content, t_list *next_content)
 	if (content->type & (AND | OR) && next->type & (AND | OR | VBAR))
 		return (true);
 	if (content->type & (AND | OR | VBAR | LESS | DLESS | GREATER | DGREATER)
-		&& next->type & (AND | OR))
+		&& next->type & (AND | OR | SEP))
 		return (true);
 	if (content->type & PAREN && next->type & PAREN)
 		return (true);
@@ -57,7 +57,7 @@ static int	check_operators(t_token *content, t_list *next_content)
 	if (content->type & (LESS | DLESS | GREATER | DGREATER) && next->type
 		& (VBAR | AND | OR | LESS | DLESS | GREATER | DGREATER | PAREN))
 		return (true);
-	if (content->type & VBAR && next->type & VBAR)
+	if (content->type & (VBAR | SEP) && next->type & (VBAR | SEP))
 		return (true);
 	if (content->type & FILENAME && next->type & PAREN)
 		return (true);
@@ -86,7 +86,7 @@ void	parser(t_list **tokens)
 		return ;
 	errors = 0;
 	tmp = *tokens;
-	if (!tmp->next && ((t_token *)tmp->content)->type & (VBAR | AND | OR)
+	if (!tmp->next && ((t_token *)tmp->content)->type & (VBAR | AND | OR | SEP)
 		&& error(true, tokens))
 		return ;
 	while (tmp)
