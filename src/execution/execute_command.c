@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 14:09:08 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 18:49:54 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/28 19:44:28 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static void	execution(t_env *env, char **cmd)
 	if (access(*cmd, F_OK) < 0)
 		panic(*cmd, NULL, "No such file or directory", ENOENT);
 	else if (access(*cmd, X_OK) < 0)
-		panic(*cmd, NULL, "Permission Denied", EACCES);
+		panic(*cmd, NULL, "Permission denied", EACCES);
 	else if (execve(*cmd, cmd, tmp) < 0)
 		panic(*cmd, NULL, strerror(errno), errno);
 	ft_freesplit(tmp);
