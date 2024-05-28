@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 18:49:21 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 07:25:01 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/28 19:43:43 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	builtin_exit(t_env *env, char **cmd)
 			break ;
 		}
 	}
-	ft_putendl_fd(*cmd, STDERR_FILENO);
+	ft_putendl_fd(*cmd, STDOUT_FILENO);
 	if (i > 1 && cmd[1] && !check_arg(cmd[1]))
 	{
 		panic(*cmd, cmd[i], "numeric argument required", ARGUMENT_ERROR);
