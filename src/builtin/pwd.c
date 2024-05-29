@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 16:07:24 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 18:19:23 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/28 20:16:55 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "errors.h"
 #include "expansions.h"
 #include "execution.h"
+#include "ft_string.h"
 #include "ft_stdio.h"
 #include <signal.h>
 #include <stdlib.h>
@@ -43,7 +44,7 @@ char	*get_pwd(void)
 		{
 			free(pwd);
 			g_status = EXIT_FAILURE;
-			return (NULL);
+			return (ft_strdup(""));
 		}
 	}
 	return (pwd);
