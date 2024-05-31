@@ -6,7 +6,7 @@
 /*   By: rde-mour <rde-mour@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 20:00:16 by rde-mour          #+#    #+#             */
-/*   Updated: 2024/05/22 19:01:41 by rde-mour         ###   ########.org.br   */
+/*   Updated: 2024/05/31 19:32:50 by rde-mour         ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ void	prompt(t_env *env)
 			input = ft_strdup("exit");
 		else if (*input != '\0')
 			add_history(input);
-		else
-			g_status = EXIT_SUCCESS;
 		run(env, format_input(&input));
 		tcsetattr(STDIN_FILENO, TCSANOW, &fd);
 	}
